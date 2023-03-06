@@ -1,0 +1,12 @@
+{
+	// List of extensions which should be recommended for users of this workspace.
+	"recommendations": [
+		"redhat.java", // Language Support for Java
+		"vscjava.vscode-gradle", // Gradle for Java
+		
+		"nadako.vshaxe", // Haxe
+		"wiggin77.codedox", // Haxe Documentation
+		"vshaxe.haxe-checkstyle", // Haxe Checkstyle
+		"esbenp.prettier-vscode", // Prettier Code Formatter
+	],
+}
