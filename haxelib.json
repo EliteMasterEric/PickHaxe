@@ -3,24 +3,18 @@
     "url": "https://github.com/EliteMasterEric/hxcraft",
     "license": "MIT",
     "tags": [
-      "openfl",
-      "lime",
-      "cpp",
-      "extern",
-      "mp4",
-      "webm",
-      "mkv",
-      "ogg",
-      "vorbis",
-      "audio",
-      "video",
-      "formats"
+      "java",
+      "minecraft",
+      "fabric",
+      "forge",
+      "mods",
+      "modding"
     ],
     "classPath": "src",
-    "description": "Audio and video parsing, manipulation, and playback.",
-    "contributors": ["polybiusproxy", "MasterEric"],
-    "releasenote": "3.0.0 rework",
-    "version": "3.0.0",
+    "description": "Minecraft mod development framework for Haxe",
+    "contributors": ["MasterEric"],
+    "releasenote": "In development",
+    "version": "0.0.1",
     "dependencies": {}
   }
   
