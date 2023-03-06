@@ -16,6 +16,7 @@
       "video",
       "formats"
     ],
+    "classPath": "src",
     "description": "Audio and video parsing, manipulation, and playback.",
     "contributors": ["polybiusproxy", "MasterEric"],
     "releasenote": "3.0.0 rework",
