@@ -1,0 +1,46 @@
+
+buildscript {
+  println "Java: ${System.getProperty('java.version')}, JVM: ${System.getProperty('java.vm.version')} (${System.getProperty('java.vendor')}), Arch: ${System.getProperty('os.arch')}"
+
+  println "HxCraft: ${System.getProperty('hxcraft.version')}, Loader: ${System.getProperty('hxcraft.loader')}"
+} 
+
+archivesBaseName = hxcraft.mod.id
+version = hxcraft.mod.version
+group = hxcraft.mod.parentPackage
+
+// Select the Gradle plugin based on the loader.
+switch(System.getProperty('hxcraft.loader')) {
+  case 'forge':
+    plugins {
+	    id 'maven-publish'
+      id 'net.minecraftforge.gradle' version '5.1.+'
+    }
+    break
+  case 'fabric':
+    plugins {
+	    id 'maven-publish'
+      id 'fabric-loom' version '1.1-SNAPSHOT'
+      id 'legacy-looming' version '1.1-SNAPSHOT'
+    }
+    break
+  case null:
+    throw new Exception("HxCraft: Missing loader")
+  default:
+    throw new Exception("HxCraft: Unknown loader: ${System.getProperty('hxcraft.loader')}")
+}
+
+switch(System.getProperty('hxcraft.java_compatibility')) {
+  case '1.8':
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+  case '17':
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+plugins {
+  id 'maven-publish'
+  id 'net.minecraftforge.gradle' version '5.1.+'
+  id 'fabric-loom' version '1.1-SNAPSHOT'
+}

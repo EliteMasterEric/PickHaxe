@@ -1,0 +1,82 @@
+{
+  "display": {
+    "title": {
+      "text": "HUE SHIFTED",
+      "color": "dark_purple",
+      "bold": false,
+      "underlined": false
+    },
+    "description": {
+      "text": "Equip an Obsidian armor piece"
+    },
+    "icon": {
+      "item": "obsidian-armor:obsidian_chestplate"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "equip_helmet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "player": {
+          "equipment": {
+            "head": {
+              "items": [
+                "obsidian-armor:obsidian_helmet"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "equip_chestplate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "player": {
+          "equipment": {
+            "chest": {
+              "items": [
+                "obsidian-armor:obsidian_chestplate"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "equip_leggings": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "player": {
+          "equipment": {
+            "legs": {
+              "items": [
+                "obsidian-armor:obsidian_leggings"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "equip_boots": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "player": {
+          "equipment": {
+            "feet": {
+              "items": [
+                "obsidian-armor:obsidian_boots"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "requirements": [
+    ["equip_helmet", "equip_chestplate", "equip_leggings", "equip_boots"]
+  ]
+}

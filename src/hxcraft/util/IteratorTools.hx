@@ -1,11 +1,8 @@
 package hxcraft.util;
 
 /**
- * A static extension which provides utility functions for Iterators.
- * 
- * For example, add `using IteratorTools` then call `iterator.array()`.
- * 
- * @see https://haxe.org/manual/lf-static-extension.html
+ * Utility class for iterators.
+ * Use it with `using hxcraft.util.IteratorTools;`
  */
 class IteratorTools
 {

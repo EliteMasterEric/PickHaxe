@@ -14,7 +14,11 @@
     "description": "Minecraft mod development framework for Haxe",
     "contributors": ["MasterEric"],
     "releasenote": "In development",
-    "version": "0.0.1",
-    "dependencies": {}
+    "version": "0.1.0",
+    "dependencies": {
+      "tink_core": "",
+      "tink_macro": "",
+      "tink_xml": ""
+    }
   }
   

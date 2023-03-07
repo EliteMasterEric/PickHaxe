@@ -5,31 +5,15 @@ package hxcraft.tools.commands;
  */
 class Help implements ICommand
 {
-  static final LIBRARY_NAME:String = 'hxcraft';
-  static final VERSION:String = haxe.macro.Compiler.getDefine('hxcraft');
+  public function new() {}
 
   /**
-   * Information about all available commands.
+   * Retrieves information about a command, such as help text and usage.
+   * @return The command information.
    */
-  public static final COMMANDS:Map<String, CommandInfo> = [
-    'init' =>
-    {
-      commandClass: Init,
-      blurb: 'Initialize a new project',
-      description: 'Initializes a new HxCraft project in the current directory.',
-      args: [],
-      options: [
-        {
-          short: 'h',
-          long: 'help',
-          blurb: 'Output usage information',
-          value: null,
-        }
-      ]
-    },
-    'help' =>
-    {
-      commandClass: Help,
+  public function getCommandInfo():CommandInfo
+  {
+    return {
       blurb: 'Display help for a command',
       description: 'Displays help for a single command, or a list of command for the tool.',
       args: [],
@@ -59,10 +43,8 @@ class Help implements ICommand
           value: null,
         }
       ]
-    }
-  ];
-
-  public function new() {}
+    };
+  }
 
   /**
    * Performs the command.
@@ -81,39 +63,82 @@ class Help implements ICommand
   }
 
   /**
+   * Generate a mapping of all available commands.
+   * @return Map<String, ICommand>
+   */
+  public static inline function getCommands():Map<String, ICommand> {
+    return [
+      'help' => new Help(),
+      'setup' => new Setup(),
+      'init' => new Init(),
+      'build' => new Build(),
+      'clean' => new Clean(),
+    ];
+  }
+
+  /**
+   * Generate a list of all available commands.
+   * @return Array<String>
+   */
+  public static inline function getCommandNames():Array<String> {
+    // Necessary because Map isn't ordered.
+    return [
+      'help',
+      'setup',
+      'init',
+      'build',
+      'clean'
+    ];
+  }
+
+  /**
    * Print general help, and a list of all available commands.
    */
-  static function printGeneralHelp():Void
+  function printGeneralHelp():Void
   {
-    Main.print('Usage: haxelib run ${LIBRARY_NAME} <command> [options]');
+    CLI.print('Usage: haxelib run ${Constants.LIBRARY_ID} <command> [options]');
 
-    Main.print('');
+    CLI.print('');
 
-    Main.print('Commands:');
+    CLI.print('Commands:');
 
-    for (command in COMMANDS.keys())
+    var entries:Array<{key:String, value:CommandInfo}> = [];
+    var longestKey:Int = 0;
+    for (command in getCommandNames())
     {
-      var blurb:String = COMMANDS[command].blurb;
-      // TODO: Pad the command name to the longest command name.
-      Main.print('  ${command}    ${blurb}');
+      var commandInfo:CommandInfo = getCommands()[command].getCommandInfo();
+      entries.push({key: command, value: commandInfo});
+      longestKey = Std.int(Math.max(longestKey, command.length));
     }
 
-    Main.print('');
+    for (entry in entries)
+    {
+      var key:String = entry.key;
+      var value:String = entry.value.blurb;
+      var padding:String = '';
+      for (i in 0...longestKey - key.length)
+      {
+        padding += ' ';
+      }
+      CLI.print('  ${key}${padding}    ${value}');
+    }
 
-    printCommandOptions(COMMANDS.get('help').options);
+    CLI.print('');
 
-    Main.print('');
+    printCommandOptions(getCommandInfo().options);
+
+    CLI.print('');
   }
 
   /**
    * Print help information for a specific command.
    * @param command The name of the command to print help for.
    */
-  static function printCommandHelp(command:String):Void
+  function printCommandHelp(command:String):Void
   {
-    var commandInfo:CommandInfo = COMMANDS.get(command);
+    var commandInfo:CommandInfo = getCommands().get(command).getCommandInfo();
 
-    var usageString:String = 'Usage: haxelib run ${LIBRARY_NAME} ${command}';
+    var usageString:String = 'Usage: haxelib run ${Constants.LIBRARY_ID} ${command}';
 
     for (arg in commandInfo.args)
     {
@@ -122,15 +147,15 @@ class Help implements ICommand
 
     usageString += ' [options]';
 
-    Main.print(usageString);
+    CLI.print(usageString);
 
-    Main.print('');
+    CLI.print('');
 
-    Main.print(commandInfo.description);
+    CLI.print(commandInfo.description);
 
-    Main.print('');
+    CLI.print('');
 
-    Main.print('Options:');
+    CLI.print('Options:');
 
     printCommandOptions(commandInfo.options);
   }
@@ -189,15 +214,15 @@ class Help implements ICommand
    */
   public static function printVersion(pretty:Bool = true):Void
   {
-    var versionStr:String = '${LIBRARY_NAME} Command Line Tools (v${VERSION})';
+    var versionStr:String = '${Constants.LIBRARY_NAME} Command Line Tools (v${Constants.VERSION})';
 
     if (pretty)
     {
       // TODO: Add some neat ASCII art here.
     }
 
-    Main.print(versionStr);
-    Main.print('');
+    CLI.print(versionStr);
+    CLI.print('');
   }
 
   /**
@@ -208,7 +233,7 @@ class Help implements ICommand
   {
     for (i in 0...unknownArgs.length)
     {
-      Main.print('Unknown argument: ${unknownArgs[i]}');
+      CLI.print('Unknown argument: ${unknownArgs[i]}');
     }
   }
 }
@@ -218,7 +243,7 @@ class Help implements ICommand
  */
 typedef CommandInfo =
 {
-  commandClass:Class<ICommand>,
+  // commandClass:Class<ICommand>,
   blurb:String,
   description:String,
   args:Array<String>,

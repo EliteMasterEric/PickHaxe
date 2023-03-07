@@ -1,0 +1,24 @@
+// Add necessary Maven repositories
+pluginManagement {
+  repositories {
+    mavenCentral()
+    gradlePluginPortal()
+    maven {
+      name = 'Fabric'
+      url = 'https://maven.fabricmc.net/'
+    }
+    maven {
+      name = 'Forge'
+      url = 'https://maven.minecraftforge.net/'
+    }
+    maven {
+			name = "legacy-fabric"
+			url = "https://repo.legacyfabric.net/repository/legacyfabric/"
+		}
+ 		maven {
+			name = 'Jitpack'
+			url = 'https://jitpack.io'
+		}
+  }
+  // TODO: Create script to enable custom plugins
+}

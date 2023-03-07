@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hxcraft>
+  <mod
+    id="obsidian-armor"
+    version="1.0.0-help"
+    parentPackage="com.elitemastereric"
+    classPath="./src/"
+    resourcePath="./resources/"
+  />
+
+  <!-- CLIENT, SERVER, or * -->
+  <mod-environment value="*" />
+
+  <mod-entry-point value="ObsidianArmorMod" />
+
+  <mod-metadata 
+    name="Obsidian Armor"
+    description="Test"
+  />
+
+  <!-- https://spdx.org/licenses/ -->
+  <mod-license value="MIT" />
+</hxcraft>

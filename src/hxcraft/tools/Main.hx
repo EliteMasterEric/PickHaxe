@@ -1,22 +1,22 @@
 package hxcraft.tools;
 
+import hxcraft.tools.commands.Init;
+import hxcraft.tools.commands.Setup;
+import hxcraft.tools.commands.Build;
 import hxcraft.tools.commands.Help;
 import hxcraft.tools.commands.Init;
-
-using hxcraft.util.IteratorTools;
-using StringTools;
 
 /**
  * The main class of the console application.
  */
-class Main {
-  static var quiet:Bool = false;
-
+class Main
+{
   /**
    * The entry point of the console application.
    */
-  public static function main():Void {
-    parseArgs(Sys.args());
+  public static function main():Void
+  {
+    parseArgs(cleanArgs(Sys.args()));
   }
 
   /**
@@ -24,18 +24,27 @@ class Main {
    * @param args The arguments to clean up.
    * @return The cleaned up arguments.
    */
-  static function cleanArgs(args:Array<String>):Array<String> {
+  static function cleanArgs(args:Array<String>):Array<String>
+  {
     var result:Array<String> = [];
 
     if (args == null || args.length == 0) return result;
-    if (Sys.systemName() == 'Windows') {
-      args.pop();
-    } else {
-      args.shift();
-    }
 
-    for (arg in args) {
-      if (arg != null && arg != '') {
+    #if (!hxcraft.tools.executable)
+    // Project is interpreted as haxelib, so current working directory is actually the last argument.
+    var lastArgument:String = args.pop();
+    if (sys.FileSystem.exists(lastArgument) && sys.FileSystem.isDirectory(lastArgument))
+    {
+      Sys.setCwd(lastArgument);
+    }
+    #else
+    // Project is compiled as an executable, so current working directory is right.
+    #end
+
+    for (arg in args)
+    {
+      if (arg != null && arg != '')
+      {
         result.push(arg.trim());
       }
     }
@@ -43,9 +52,8 @@ class Main {
     return result;
   }
 
-  static function parseArgs(args:Array<String>):Void {
-
-
+  static function parseArgs(args:Array<String>):Void
+  {
     var command:String = null;
     var unknownArgs:Array<String> = [];
     var commandArgs:Array<String> = [];
@@ -54,12 +62,15 @@ class Main {
     var help:Bool = false;
     var verbose:Bool = false;
 
-    while (args.length > 0) {
+    while (args.length > 0)
+    {
       var arg:String = args.shift();
 
-      if (arg.startsWith('-')) {
+      if (arg.startsWith('-'))
+      {
         // Parse a flag.
-        switch (arg) {
+        switch (arg)
+        {
           // Flags
           case '-v':
           case '--version':
@@ -69,42 +80,59 @@ class Main {
           case '--help':
             help = true;
           case '--verbose':
-            verbose = true;
+            CLI.verbose = true;
           case '--quiet':
-            quiet = true;
+            CLI.quiet = true;
           default:
             unknownArgs.push(arg);
         }
-      } else if (command == null) {
+      }
+      else if (command == null)
+      {
         // Parse a command.
-        switch (arg) {
+        switch (arg)
+        {
           case 'help':
             help = true;
           default:
-            if (Help.COMMANDS.keys().array().contains(arg)) {
+            if (Help.getCommandNames().contains(arg))
+            {
               command = arg;
-            } else {
+            }
+            else
+            {
               unknownArgs.push(arg);
             }
         }
-      } else {
+      }
+      else
+      {
         commandArgs.push(arg);
       }
     }
 
-    if (command == null) {
-      if (unknownArgs.length > 0) {
+    if (command == null)
+    {
+      if (unknownArgs.length > 0)
+      {
         Help.printUnknownArgs(unknownArgs);
       }
-      
+
       performCommand('help', [], verbose);
       return;
-    } else {
-      if (unknownArgs.length > 0) {
+    }
+    else
+    {
+      if (unknownArgs.length > 0)
+      {
         Help.printUnknownArgs(unknownArgs);
-      } else if (help) {
+      }
+      else if (help)
+      {
         performCommand('help', [command], verbose);
-      } else {
+      }
+      else
+      {
         performCommand(command, commandArgs, verbose);
       }
     }
@@ -116,26 +144,24 @@ class Main {
    * @param args The arguments to pass to the command.
    * @param verbose Whether the command should print verbose output.
    */
-  public static function performCommand(command:String, args:Array<String>, verbose:Bool):Void {
+  public static function performCommand(command:String, args:Array<String>, verbose:Bool):Void
+  {
     Help.printVersion();
 
-    switch (command) {
-      case 'init':
-        new Init(verbose).perform(args);
+    switch (command)
+    {
       case 'help':
         new Help().perform(args);
+      case 'setup':
+        new Setup().perform(args);
+      case 'init':
+        new Init().perform(args);
+      case 'build':
+        new Build().perform(args);
+      case 'clean':
+        new Build().perform(args);
+      default:
+        CLI.print('Case fallthrough for command ${command}.');
     }
-  }
-
-  /**
-   * Function for printing to the console, unless quiet is set to true.
-   * @param value The value to print.
-   */
-  public static inline function print(value:String):Void {
-    if (quiet) return;
-
-    #if sys
-    Sys.println(value);
-    #end
   }
 }

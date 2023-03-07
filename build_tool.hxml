@@ -1,0 +1,14 @@
+--library tink_xml
+--library tink_core
+--library tink_macro
+--library hxcraft
+
+--class-path src/
+--main hxcraft.tools.Main
+
+-D hxcraft.tools.executable=true
+
+--cpp ./generated/bin/
+
+# Copy the result to templates/bin/hxcraft.exe so people can `haxelib run hxcraft setup`
+--cmd copy "./generated/bin/Main.exe" "./templates/bin/hxcraft.exe"

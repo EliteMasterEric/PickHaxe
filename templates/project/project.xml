@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hxcraft>
+  <mod
+    id="#{hxcraft.mod.id}"
+    version="#{hxcraft.mod.version}"
+    parentPackage="#{hxcraft.mod.parentPackage}"
+    classPath="./src/"
+    resourcePath="./resources/"
+  />
+
+  <!-- CLIENT, SERVER, or * -->
+  <mod-environment value="#{hxcraft.mod.environment}" />
+
+  <mod-entry-point value="#{hxcraft.mod.entryPoint}" />
+
+  <mod-metadata 
+    name="#{hxcraft.mod.name}"
+    description="#{hxcraft.mod.description}"
+  />
+
+  <!-- https://spdx.org/licenses/ -->
+  <mod-license value="MIT" />
+</hxcraft>
