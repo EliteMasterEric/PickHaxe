@@ -3,3 +3,6 @@ dev/
 
 # Java
 generated/
+gradle/.gradle/
+gradle/build/
+gradle/gradle/

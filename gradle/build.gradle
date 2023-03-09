@@ -2,35 +2,31 @@
 buildscript {
   println "Java: ${System.getProperty('java.version')}, JVM: ${System.getProperty('java.vm.version')} (${System.getProperty('java.vendor')}), Arch: ${System.getProperty('os.arch')}"
 
-  println "HxCraft: ${System.getProperty('hxcraft.version')}, Loader: ${System.getProperty('hxcraft.loader')}"
+  println "PickHaxe: ${System.getProperty('pickhaxe.version')}, Loader: ${System.getProperty('pickhaxe.loader')}"
 } 
 
-archivesBaseName = hxcraft.mod.id
-version = hxcraft.mod.version
-group = hxcraft.mod.parentPackage
-
-// Select the Gradle plugin based on the loader.
-switch(System.getProperty('hxcraft.loader')) {
-  case 'forge':
-    plugins {
-	    id 'maven-publish'
-      id 'net.minecraftforge.gradle' version '5.1.+'
-    }
-    break
-  case 'fabric':
-    plugins {
-	    id 'maven-publish'
-      id 'fabric-loom' version '1.1-SNAPSHOT'
-      id 'legacy-looming' version '1.1-SNAPSHOT'
-    }
-    break
-  case null:
-    throw new Exception("HxCraft: Missing loader")
-  default:
-    throw new Exception("HxCraft: Unknown loader: ${System.getProperty('hxcraft.loader')}")
+// Reference all Gradle plugins, with versions.
+plugins {
+  id 'maven-publish' // Common
+  id 'net.minecraftforge.gradle' version '5.1.+' apply false
+  id 'fabric-loom' version '1.1-SNAPSHOT' apply false
 }
 
-switch(System.getProperty('hxcraft.java_compatibility')) {
+// Select the Gradle plugin based on the loader.
+switch(System.getProperty('pickhaxe.loader')) {
+  case 'forge':
+    //apply plugin: 'net.minecraftforge.gradle'
+    break
+  case 'fabric':
+    apply plugin: 'fabric-loom'
+    break
+  case null:
+    throw new Exception("PickHaxe: Missing loader")
+  default:
+    throw new Exception("PickHaxe: Unknown loader: ${System.getProperty('pickhaxe.loader')}")
+}
+
+switch(System.getProperty('pickhaxe.java.version')) {
   case '1.8':
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
@@ -39,8 +35,51 @@ switch(System.getProperty('hxcraft.java_compatibility')) {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-plugins {
-  id 'maven-publish'
-  id 'net.minecraftforge.gradle' version '5.1.+'
-  id 'fabric-loom' version '1.1-SNAPSHOT'
+archivesBaseName = System.getProperty('pickhaxe.mod.id')
+version = System.getProperty('pickhaxe.mod.version')
+group = System.getProperty('pickhaxe.mod.parentPackage')
+
+repositories {
+  mavenCentral()
+  gradlePluginPortal()
+  maven { url = 'https://maven.fabricmc.net' }
+  maven { url = 'https://maven.minecraftforge.net' }
+  maven { url = 'https://maven.parchmentmc.org' }
+}
+
+dependencies {
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	// mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.19.3:2023.02.26@zip")
+    }
+
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${System.getProperty('pickhaxe.loader.fabric.api_version')}"
+
+	// Uncomment the following line to enable the deprecated Fabric API modules. 
+	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
+
+	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
+}
+
+configurations {
+  web
+}
+
+tasks.withType(JavaCompile).configureEach {
+	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+	it.options.release = System.getProperty('pickhaxe.java.version') == '17' ? 17 : 8
+}
+
+// A custom task to copy all the runtime dependencies to a place where they can be easily referenced.
+task copyDependencies(type: Copy) {
+    from configurations.runtimeClasspath
+    into "$buildDir/minecraft"
 }

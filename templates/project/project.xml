@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<hxcraft>
+<pickhaxe>
   <mod
-    id="#{hxcraft.mod.id}"
-    version="#{hxcraft.mod.version}"
-    parentPackage="#{hxcraft.mod.parentPackage}"
+    id="#{pickhaxe.mod.id}"
+    version="#{pickhaxe.mod.version}"
+    parentPackage="#{pickhaxe.mod.parentPackage}"
     classPath="./src/"
     resourcePath="./resources/"
   />
 
   <!-- CLIENT, SERVER, or * -->
-  <mod-environment value="#{hxcraft.mod.environment}" />
+  <mod-environment value="#{pickhaxe.mod.environment}" />
 
-  <mod-entry-point value="#{hxcraft.mod.entryPoint}" />
+  <mod-entry-point value="#{pickhaxe.mod.entryPoint}" />
 
   <mod-metadata 
-    name="#{hxcraft.mod.name}"
-    description="#{hxcraft.mod.description}"
+    name="#{pickhaxe.mod.name}"
+    description="#{pickhaxe.mod.description}"
   />
 
   <!-- https://spdx.org/licenses/ -->
   <mod-license value="MIT" />
-</hxcraft>
+</pickhaxe>

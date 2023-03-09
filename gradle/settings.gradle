@@ -19,6 +19,9 @@ pluginManagement {
 			name = 'Jitpack'
 			url = 'https://jitpack.io'
 		}
+    maven {
+      name = 'ParchmentMC'
+      url = 'https://maven.parchmentmc.org'
+    }
   }
-  // TODO: Create script to enable custom plugins
 }

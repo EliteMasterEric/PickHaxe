@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "",
+  "pattern": [
+    "###",
+    "# #"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "result": {
+    "item": "obsidianarmor:obsidian_helmet",
+    "count": 1
+  }
+}

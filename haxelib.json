@@ -1,6 +1,6 @@
 {
-    "name": "hxcraft",
-    "url": "https://github.com/EliteMasterEric/hxcraft",
+    "name": "PickHaxe",
+    "url": "https://github.com/EliteMasterEric/pickhaxe",
     "license": "MIT",
     "tags": [
       "java",
@@ -11,7 +11,7 @@
       "modding"
     ],
     "classPath": "src",
-    "description": "Minecraft mod development framework for Haxe",
+    "description": "A Haxe framework to build Minecraft mods. Fabric, Forge, and more.",
     "contributors": ["MasterEric"],
     "releasenote": "In development",
     "version": "0.1.0",

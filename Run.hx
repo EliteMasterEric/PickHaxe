@@ -1,5 +1,5 @@
 class Run {
   static function main() {
-    hxcraft.tools.Main.main();
+    net.pickhaxe.tools.Main.main();
   }
 }

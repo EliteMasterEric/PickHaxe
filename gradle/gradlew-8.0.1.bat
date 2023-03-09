@@ -1,9 +1,11 @@
-@if "%DEBUG%" == "" @echo off
+@rem @if "%DEBUG%" == "" @echo off
 @rem ##########################################################################
 @rem
 @rem  Gradle startup script for Windows
 @rem
 @rem ##########################################################################
+
+echo Hello, Gradle!
 
 @rem Set local scope for the variables with windows NT shell
 if "%OS%"=="Windows_NT" setlocal

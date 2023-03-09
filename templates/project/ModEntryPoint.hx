@@ -1,8 +1,10 @@
-package #{hxcraft.mod.parentPackage};
+package #{pickhaxe.mod.parentPackage};
+
+import net.pickhaxe.core.Mod;
 
 @:mod({
-  modId: "#{hxcraft.mod.id}"
+  modId: "#{pickhaxe.mod.id}"
 })
-class #{hxcraft.mod.entryPoint} implements hxcraft.core.Mod {
+class #{pickhaxe.mod.entryPoint} implements Mod {
 
 }

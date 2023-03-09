@@ -1,14 +1,14 @@
 --library tink_xml
 --library tink_core
 --library tink_macro
---library hxcraft
+--library pickhaxe
 
 --class-path src/
---main hxcraft.tools.Main
+--main net.pickhaxe.tools.Main
 
--D hxcraft.tools.executable=true
+-D net.pickhaxe.tools.executable=true
 
 --cpp ./generated/bin/
 
-# Copy the result to templates/bin/hxcraft.exe so people can `haxelib run hxcraft setup`
---cmd copy "./generated/bin/Main.exe" "./templates/bin/hxcraft.exe"
+# Copy the result to templates/bin/pickhaxe.exe so people can `haxelib run pickhaxe setup`
+--cmd copy "./generated/bin/Main.exe" "./templates/bin/pickhaxe.exe"

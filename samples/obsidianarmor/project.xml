@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pickhaxe>
+  <mod
+    id="obsidianarmor"
+    version="1.0.0-haxe"
+    parentPackage="com.elitemastereric.obsidianarmor"
+    classPath="./src/"
+    resourcePath="./resources/"
+  />
+
+  <!-- CLIENT, SERVER, or * -->
+  <mod-environment value="*" />
+
+  <mod-entry-point value="ObsidianArmorMod" />
+
+  <mod-metadata 
+    name="Obsidian Armor"
+    description="A mod written in Haxe!"
+  />
+
+  <mod-contact
+    homepage="htts://github.com/elitemastereric/pickhaxe"
+    email="elitemastereric@gmail.com"
+    irc="irc://irc.esper.net:6667/charset"
+    issues="htts://github.com/elitemastereric/pickhaxe/issues"
+    sources="htts://github.com/elitemastereric/pickhaxe"
+  />
+
+  <mod-author name="EliteMasterEric">
+    <mod-contact email="elitemastereric@gmail.com" />
+  </mod-author>
+
+  <!-- https://spdx.org/licenses/ -->
+  <mod-license value="MIT" />
+</pickhaxe>

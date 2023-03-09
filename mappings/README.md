@@ -2,9 +2,9 @@
 
 This folder doesn't actually contain any Minecraft mappings, but rather information ABOUT mappings, as well as things like required JDK and Gradle versions.
 
-HxCraft tries to stick to Mojmap when possible, but for older versions other mappings are needed.
+PickHaxe tries to adhere to Mojmap when possible, but for older versions other mappings are needed.
 
-Most popular versions are 1.7.10, 1.12.2, and 1.16.5. Latest is 1.19.3 and oldest is Beta 1.7.3.
+**NOTE:** Most popular versions for modding are 1.7.10, 1.12.2, and 1.16.5. Lastest (1.19.3 at time of writing) is less popular, oldest with available tooling is Beta 1.7.3, and other versions are "stretch goals."
 
 # Available Mappings
 - [Parchment](https://parchmentmc.org/docs/getting-started)
