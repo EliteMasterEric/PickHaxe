@@ -21,4 +21,8 @@ Getting started is simple. Install Haxe and PickHaxe, then create a new mod proj
 
 PickHaxe's tools are made available under the MIT License. See [LICENSE.md](/LICENSE.md) for more details.
 
-PickHaxe utilizes mappings modified from Minecraft: Java Edition, and its use is governed by the Minecraft End User License Agreement available at https://account.mojang.com/documents/minecraft_eula.
+PickHaxe's Minecraft API is generated from official mapping names from Mojang for fields and methods in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this license. For the latest license text, refer to the mapping file itself, or the reference copy here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+
+PickHaxe's Minecraft API includes documentation gen
+
+PickHaxe interoperates with the [Fabric](https://fabricmc.net/) mod loader and the [Forge](https://github.com/MinecraftForge/MinecraftForge) mod loader respectively; these are licensed under the Apache v2 and LGPL licenses, respectively.

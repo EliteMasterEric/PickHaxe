@@ -1,8 +1,8 @@
 package net.pickhaxe.core;
 
-#if (pickhaxe.loader == 'fabric')
+#if fabric
 import net.fabricmc.api.ModInitializer;
-#elseif (pickhaxe.loader == 'forge')
+#elseif forge
 
 #end
 
@@ -12,6 +12,5 @@ import net.fabricmc.api.ModInitializer;
  * Triggers the use of build macros to fill in the necessary information.
  */
 @:autoBuild(net.pickhaxe.macro.ModCoreMacro.build())
-interface Mod 
-#if (pickhaxe.loader == 'fabric') extends ModInitializer #end
+interface Mod #if fabric extends ModInitializer #end
 {}

@@ -1,0 +1,7 @@
+{
+  "path": "RELATIVE_TO_PROJECT",
+  "all": [
+    "src/net/minecraft/world/item/ArmorMaterial",
+    "src/net/minecraft/world/item/ArmorMaterials"
+  ]
+}

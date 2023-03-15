@@ -1,5 +1,6 @@
 package net.pickhaxe.tools;
 
+import net.pickhaxe.tools.commands.GradleW;
 import net.pickhaxe.tools.commands.Init;
 import net.pickhaxe.tools.commands.Setup;
 import net.pickhaxe.tools.commands.Build;
@@ -84,7 +85,7 @@ class Main
           case '--quiet':
             CLI.quiet = true;
           default:
-            unknownArgs.push(arg);
+            commandArgs.push(arg);
         }
       }
       else if (command == null)
@@ -160,6 +161,8 @@ class Main
         new Build().perform(args);
       case 'clean':
         new Build().perform(args);
+      case 'gradlew':
+        new GradleW().perform(args);
       default:
         CLI.print('Case fallthrough for command ${command}.');
     }

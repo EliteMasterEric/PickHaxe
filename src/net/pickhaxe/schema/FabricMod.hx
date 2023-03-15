@@ -6,7 +6,8 @@ import haxe.ds.Either;
  * Authoritative metadata for a Fabric mod.
  * @see https://fabricmc.net/wiki/documentation:fabric_mod_json_spec
  */
-typedef FabricMod = {
+typedef FabricMod =
+{
   /**
    * Schema version, denoteing the version of the format.
    */
@@ -56,24 +57,29 @@ typedef FabricMod = {
 /**
  * A dictionary containing contact information. 
  */
-typedef ContactInformation = {
+typedef ContactInformation =
+{
   /**
    * Contact e-mail pertaining to the mod. Must be a valid e-mail address.
    */
   var email:String;
+
   /**
    * IRC channel pertaining to the mod. Must be of a valid URL format - for example: irc://irc.esper.net:6667/charset for #charset at EsperNet
    * the port is optional, and assumed to be 6667 if not present.
    */
   var irc:String;
+
   /**
    * Project or user homepage. Must be a valid HTTP/HTTPS address.
    */
   var homepage:String;
+
   /**
    * Project issue tracker. Must be a valid HTTP/HTTPS address.
    */
   var issues:String;
+
   /**
    * Project source code repository. Must be a valid URL - it can, however, be a specialized URL for a given VCS (such as Git or Mercurial).
    */
@@ -83,7 +89,8 @@ typedef ContactInformation = {
 /**
  * An object containing information about what mod initializer classes to use.
  */
-typedef EntrypointContainer = {
+typedef EntrypointContainer =
+{
   /**
    * Fabric runs all classes and methods named in `main`,
    * with type `ModInitializer`.
@@ -92,6 +99,7 @@ typedef EntrypointContainer = {
    * or objects containing a string and an optional language adapter key.
    */
   var ?main:Array<EntrypointItem>;
+
   /**
    * Fabric runs all classes and methods named in `client`,
    * with type `ClientModInitializer`.
@@ -100,6 +108,7 @@ typedef EntrypointContainer = {
    * or objects containing a string and an optional language adapter key.
    */
   var ?client:Array<EntrypointItem>;
+
   /**
    * Fabric runs all classes and methods named in `server`,
    * with type `DedicatedServerModInitializer`.
@@ -115,11 +124,13 @@ typedef EntrypointItem = Either<String, EntrypointObject>;
 /**
  * An object containing a string and an optional language adapter key.
  */
-typedef EntrypointObject = {
+typedef EntrypointObject =
+{
   /**
    * Optional key denoting the language adapter to use. If empty, assume “default”.
    */
   var adapter:Null<String>;
+
   /**
    * A class or static field to be instantiated.
    */
@@ -129,7 +140,8 @@ typedef EntrypointObject = {
 /**
  * A string value pointing to a path from the root of the mod's JAR file.
  */
-typedef NestedJarEntry = {
+typedef NestedJarEntry =
+{
   /**
    * Path to a nested JAR which should be loaded alongside the outer mod JAR.
    */
@@ -144,11 +156,13 @@ typedef Person = Either<String, PersonObject>;
 /**
  * A person object, containing contact information.
  */
-typedef PersonObject = {
+typedef PersonObject =
+{
   /**
    * The real name, or username, of the person.
    */
   var name:String;
+
   /**
    * An optional ContactInformation object.
    */

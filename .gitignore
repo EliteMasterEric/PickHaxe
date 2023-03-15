@@ -1,5 +1,8 @@
+temp/
+
 # Haxe
 dev/
+dump/
 
 # Java
 generated/

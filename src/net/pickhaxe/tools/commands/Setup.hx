@@ -81,13 +81,15 @@ class Setup implements ICommand
     catch (e:Dynamic) {}
   }
 
-  function setupMac():Void {
+  function setupMac():Void
+  {
     // TODO: Implement this.
     // https://github.com/openfl/lime/blob/develop/tools/utils/PlatformSetup.hx#L824
     CLI.print('Sorry, this command is not supported on your platform.');
   }
 
-  function setupLinux():Void {
+  function setupLinux():Void
+  {
     // TODO: Implement this.
     CLI.print('Sorry, this command is not supported on your platform.');
   }

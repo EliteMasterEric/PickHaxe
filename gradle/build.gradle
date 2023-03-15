@@ -2,7 +2,7 @@
 buildscript {
   println "Java: ${System.getProperty('java.version')}, JVM: ${System.getProperty('java.vm.version')} (${System.getProperty('java.vendor')}), Arch: ${System.getProperty('os.arch')}"
 
-  println "PickHaxe: ${System.getProperty('pickhaxe.version')}, Loader: ${System.getProperty('pickhaxe.loader')}"
+  println "PickHaxe: ${System.getProperty('pickhaxe.version')}, Loader: ${System.getProperty('pickhaxe.loader.current')}"
 } 
 
 // Reference all Gradle plugins, with versions.
@@ -13,9 +13,10 @@ plugins {
 }
 
 // Select the Gradle plugin based on the loader.
-switch(System.getProperty('pickhaxe.loader')) {
+switch(System.getProperty('pickhaxe.loader.current')) {
   case 'forge':
-    //apply plugin: 'net.minecraftforge.gradle'
+    apply plugin: 'net.minecraftforge.gradle'
+    apply plugin: 'org.parchmentmc.librarian.forgegradle'
     break
   case 'fabric':
     apply plugin: 'fabric-loom'
@@ -23,13 +24,16 @@ switch(System.getProperty('pickhaxe.loader')) {
   case null:
     throw new Exception("PickHaxe: Missing loader")
   default:
-    throw new Exception("PickHaxe: Unknown loader: ${System.getProperty('pickhaxe.loader')}")
+    throw new Exception("PickHaxe: Unknown loader: ${System.getProperty('pickhaxe.loader.current')}")
 }
 
 switch(System.getProperty('pickhaxe.java.version')) {
   case '1.8':
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+  case '16':
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
   case '17':
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -49,19 +53,19 @@ repositories {
 
 dependencies {
 	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	minecraft "com.mojang:minecraft:${System.getProperty('pickhaxe.minecraft.version')}"
 	// mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.19.3:2023.02.26@zip")
-    }
+  mappings loom.layered() {
+      officialMojangMappings()
+      parchment("org.parchmentmc.data:parchment-1.19.3:2023.02.26@zip")
+  }
 
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc:fabric-loader:${System.getProperty('pickhaxe.loader.fabric.loaderVersion')}"
 
 
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${System.getProperty('pickhaxe.loader.fabric.api_version')}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${System.getProperty('pickhaxe.loader.fabric.apiVersion')}"
 
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.

@@ -1,12 +1,20 @@
 package com.elitemastereric.obsidianarmor;
 
+import com.elitemastereric.obsidianarmor.items.ModItems;
 import net.pickhaxe.core.Mod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.pickhaxe.core.Environment;
 
 @:mod
-class ObsidianArmorMod implements net.pickhaxe.core.Mod /*implements net.fabricmc.api.ModInitializer*/ {
+class ObsidianArmorMod implements Mod {
   public function onInitialize():Void {
-    LOGGER.info("Hello Haxe! Welcome to Minecraft!");
+    #if fabric
+    LOGGER.info('Hello Fabric! Welcome to Minecraft ${Environment.MINECRAFT_VERSION}!');
+    #end
+
+    #if forge
+    LOGGER.info('Hello Forge! Welcome to Minecraft ${Environment.MINECRAFT_VERSION}!');
+    #end
+
+    ModItems.onInitialize();
   }
 }

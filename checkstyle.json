@@ -1,10 +1,9 @@
 {
     "extendsConfigPath": "",
     "defineCombinations": [],
-    "defaultSeverity": "INFO",
+    "defaultSeverity": "IGNORE",
     "baseDefines": [],
     "version": 1,
-    "exclude": {},
     "checks": [
       {
         "props": {},

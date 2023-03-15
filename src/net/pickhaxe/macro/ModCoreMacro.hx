@@ -14,6 +14,11 @@ class ModCoreMacro
    */
   public static macro function build():Array<Field>
   {
+    #if display
+    // Disable macros in display mode.
+    return null;
+    #end
+
     var target:haxe.macro.Type.ClassType = Context.getLocalClass().get();
 
     MacroUtil.addMetadata('keep'); // Ensure the class is not removed by the compiler.
@@ -24,9 +29,11 @@ class ModCoreMacro
     // Populate with compiler defines.
     var modParams:ModCoreParams = populateModCoreParams();
     // Override with @:mod metadata.
-    if (MacroUtil.hasMetadata(target.meta, ':mod')) {
+    if (MacroUtil.hasMetadata(target.meta, ':mod'))
+    {
       var modMeta:Array<Array<Expr>> = MacroUtil.getMetadata(target.meta, ':mod');
-      for (modMetaInner in modMeta) {
+      for (modMetaInner in modMeta)
+      {
         if (modMetaInner.length != 1) continue;
         modParams = parseModCoreParams(modMetaInner[0], modParams);
       }
@@ -44,7 +51,8 @@ class ModCoreMacro
     ], VERBOSE);
   }
 
-  static function populateModCoreParams():ModCoreParams {
+  static function populateModCoreParams():ModCoreParams
+  {
     return {
       modId: Context.definedValue('pickhaxe.mod.id'),
       modName: Context.definedValue('pickhaxe.mod.name'),
@@ -57,7 +65,8 @@ class ModCoreMacro
    * @param params
    * @param cb
    */
-  static function buildConstructor(params:ModCoreParams, cb:ClassBuilder):Void {
+  static function buildConstructor(params:ModCoreParams, cb:ClassBuilder):Void
+  {
     // Create a constructor if one does not exist.
     // Then, make the constructor public.
     cb.getConstructor().publish();
@@ -72,11 +81,12 @@ class ModCoreMacro
   {
     var modIdValue:Expr = macro $v{params.modId};
 
-    var modId:Member = {
-      name: 'MOD_ID',
-      kind: FVar(Types.asComplexType('String'), modIdValue),
-      pos: MacroApi.pos(),
-    };
+    var modId:Member =
+      {
+        name: 'MOD_ID',
+        kind: FVar(Types.asComplexType('String'), modIdValue),
+        pos: MacroApi.pos(),
+      };
 
     modId.doc = 'The internal identifier for this mod.';
     modId.overrides = false;
@@ -96,11 +106,12 @@ class ModCoreMacro
   {
     var loggerValue:Expr = macro org.slf4j.LoggerFactory.getLogger(MOD_ID);
 
-    var logger:Member = {
-      name: 'LOGGER',
-      kind: FVar(Types.asComplexType('org.slf4j.Logger'), loggerValue),
-      pos: MacroApi.pos(),
-    };
+    var logger:Member =
+      {
+        name: 'LOGGER',
+        kind: FVar(Types.asComplexType('org.slf4j.Logger'), loggerValue),
+        pos: MacroApi.pos(),
+      };
 
     logger.doc = 'The logger for this mod.';
     logger.overrides = false;
@@ -111,12 +122,17 @@ class ModCoreMacro
     cb.addMember(logger);
   }
 
-  static function parseModCoreParams(paramExpr:Expr, params:ModCoreParams):ModCoreParams {
-    if (paramExpr != null) {
-      switch (paramExpr.expr) {
+  static function parseModCoreParams(paramExpr:Expr, params:ModCoreParams):ModCoreParams
+  {
+    if (paramExpr != null)
+    {
+      switch (paramExpr.expr)
+      {
         case EObjectDecl(fields):
-          for (field in fields) {
-            switch (field.field) {
+          for (field in fields)
+          {
+            switch (field.field)
+            {
               // Parse each parameter by type.
               case 'modId':
                 params.modId = MacroUtil.parseExprAsString(field.expr);
@@ -132,8 +148,10 @@ class ModCoreMacro
     return params;
   }
 
-  static function validateModCoreParams(params:ModCoreParams):Void {
-    if (params.modId == null) {
+  static function validateModCoreParams(params:ModCoreParams):Void
+  {
+    if (params.modId == null)
+    {
       Context.error('Missing modId parameter', MacroApi.pos());
     }
   }
@@ -142,17 +160,20 @@ class ModCoreMacro
 /**
  * Information about the mod.
  */
-typedef ModCoreParams = {
+typedef ModCoreParams =
+{
   /**
    * The ID of the mod.
    * Automatically populated by `pickhaxe build`.
    */
   modId:String,
+
   /**
    * The name of the mod.
    * Automatically populated by `pickhaxe build`.
    */
   modName:String,
+
   /**
    * The version of the mod.
    * Automatically populated by `pickhaxe build`.

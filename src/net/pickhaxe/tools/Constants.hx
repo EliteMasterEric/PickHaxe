@@ -23,5 +23,5 @@ class Constants
   /**
    * The default Minecraft version to build for.
    */
-  public static final DEFAULT_MINECRAFT_VERSION:String = '1.19.3';
+  public static final DEFAULT_MINECRAFT_VERSION:String = '1.16.5';
 }

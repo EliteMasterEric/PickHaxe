@@ -4,7 +4,7 @@ import net.pickhaxe.tools.commands.Help.CommandInfo;
 
 /**
  * Command for initializing a new project.
-*/
+ */
 class Init implements ICommand
 {
   public function new() {}
@@ -157,7 +157,8 @@ class Init implements ICommand
   {
     if (input.length < 2) return false;
 
-    if (input.contains('-')) {
+    if (input.contains('-'))
+    {
       CLI.print('WARNING: Due to a Haxe bug, PickHaxe does not allow hyphens in mod IDs.');
       return false;
     }

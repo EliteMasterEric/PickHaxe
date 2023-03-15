@@ -22,7 +22,12 @@ class Haxe extends CLIProcess
    */
   public function performBuild(args:Array<String>):String
   {
-    var output:String = getProcessOutput(args);
+    // We have to write the args to an HXML file,
+    // because Windows can't handle long command lines.
+
+    IO.writeFile(IO.workingDir().joinPaths('generated/build.hxml'), args.join('\n'));
+
+    var output:String = getProcessOutput(['generated/build.hxml'], true);
 
     return output;
   }

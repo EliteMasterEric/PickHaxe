@@ -14,28 +14,47 @@ class CLIProcess
     this.baseCmd = baseCmd;
   }
 
-  function getProcessOutput(args:Array<String>):String
+  function getProcessOutput(args:Array<String>, ?detached:Bool = false):String
   {
     try
     {
       CLI.print('Command: $baseCmd ${args.join(' ')}', Verbose);
-      var process:Process = new Process(baseCmd, args);
+      
       var output:String = '';
+      
+      if (detached) {
+        var result:Int = Sys.command(baseCmd, args);
 
-      try
-      {
-        output = process.stdout.readAll().toString();
-        output += process.stderr.readAll().toString();
+        // while (isProcessRunning(process)) {
+          // trace('Waiting for process to finish...');
+          // try {
+            // var out:String = process.stdout.readAll().toString();
+            // var err:String = process.stderr.readAll().toString();
+            // if (out.length > 0) {
+              // CLI.print(out, Verbose);
+            // }
+            // if (err.length > 0) {
+              // CLI.print(err, Verbose);
+            // }
+          // } catch (error) { }
+        // }
+        return '${result}';
+      } else {
+        var process:Process = new Process(baseCmd, args, detached);
+        try
+        {
+          output = process.stdout.readAll().toString();
+          output += process.stderr.readAll().toString();
+        }
+        catch (error)
+        {
+          CLI.print('Error reading output.');
+        }
+        process.close();
+        
+        CLI.print('Output: $output', Verbose);
+        return output;
       }
-      catch (error)
-      {
-        CLI.print('Error reading output.');
-      }
-
-      CLI.print('Output: $output', Verbose);
-
-      process.close();
-      return output;
     }
     catch (error)
     {
@@ -43,5 +62,9 @@ class CLIProcess
       CLI.print('${error}');
     }
     return '';
+  }
+
+  static function isProcessRunning(p:Process):Bool {
+    return p.exitCode == null;
   }
 }

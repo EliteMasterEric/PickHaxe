@@ -1,5 +1,7 @@
 package net.pickhaxe.tools.commands;
 
+import haxe.ds.Either;
+
 /**
  * Command for displaying help information, both general and for specific commands.
  */
@@ -66,7 +68,8 @@ class Help implements ICommand
    * Generate a mapping of all available commands.
    * @return Map<String, ICommand>
    */
-  public static inline function getCommands():Map<String, ICommand> {
+  public static inline function getCommands():Map<String, ICommand>
+  {
     return [
       'help' => new Help(),
       'setup' => new Setup(),
@@ -80,15 +83,10 @@ class Help implements ICommand
    * Generate a list of all available commands.
    * @return Array<String>
    */
-  public static inline function getCommandNames():Array<String> {
+  public static inline function getCommandNames():Array<String>
+  {
     // Necessary because Map isn't ordered.
-    return [
-      'help',
-      'setup',
-      'init',
-      'build',
-      'clean'
-    ];
+    return ['help', 'setup', 'init', 'build', 'clean', 'gradlew'];
   }
 
   /**
@@ -142,7 +140,7 @@ class Help implements ICommand
 
     for (arg in commandInfo.args)
     {
-      usageString += ' <${arg}>';
+      usageString += ' ${arg}';
     }
 
     usageString += ' [options]';
@@ -162,49 +160,88 @@ class Help implements ICommand
 
   /**
    * Prints a list of command options.
+   * // 
    * @param commandOptions The list of command options to print.
    */
   static function printCommandOptions(commandOptions:Array<CommandOption>):Void
   {
+    var optionStrings:Array<{arg:String, desc:String, descAdditional:Array<String>}> = [];
     for (option in commandOptions)
     {
-      var optionString:String = '';
+      var optionOut = {
+        arg: '',
+        desc: '',
+        descAdditional: []
+      };
 
       if (option.short != null && option.long != null)
       {
         if (option.value != null)
         {
-          optionString += '-${option.short} <${option.value}>, --${option.long} <${option.value}>';
+          optionOut.arg += '-${option.short} ${option.value}, --${option.long} ${option.value}';
         }
         else
         {
-          optionString += '-${option.short}, --${option.long}';
+          optionOut.arg += '-${option.short}, --${option.long}';
         }
       }
       else if (option.short != null)
       {
         if (option.value != null)
         {
-          optionString += '-${option.short} <${option.value}>';
+          optionOut.arg += '-${option.short} ${option.value}';
         }
         else
         {
-          optionString += '-${option.short}';
+          optionOut.arg += '-${option.short}';
         }
       }
       else if (option.long != null)
       {
         if (option.value != null)
         {
-          optionString += '--${option.long} <${option.value}>';
+          optionOut.arg += '--${option.long} ${option.value}';
         }
         else
         {
-          optionString += '--${option.long}';
+          optionOut.arg += '--${option.long}';
         }
       }
 
-      optionString += '    ${option.blurb}';
+      var blurbLines:Array<String> = option.blurb.replace("%n", "\n").split("\n");
+
+      optionOut.desc += '${blurbLines.shift().trim()}';
+      optionOut.descAdditional = blurbLines;
+
+      optionStrings.push(optionOut);
+    }
+
+    var longestArg:Int = 0;
+    for (option in optionStrings)
+    {
+      longestArg = Std.int(Math.max(longestArg, option.arg.length));
+    }
+
+    for (option in optionStrings)
+    {
+      var padding:String = '';
+      for (i in 0...(longestArg - option.arg.length + 4))
+      {
+        padding += ' ';
+      }
+      CLI.print('  ${option.arg}${padding}${option.desc}');
+
+      if (option.descAdditional.length > 0)
+      {
+        for (i in 0...(option.arg.length + 2)) {
+          padding += ' ';
+        }
+        
+        for (line in option.descAdditional)
+        {
+          CLI.print('${padding}${line.trim()}');
+        }
+      }
     }
   }
 

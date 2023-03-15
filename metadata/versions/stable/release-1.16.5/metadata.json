@@ -1,0 +1,13 @@
+{
+  "type": "stable",
+  "version": "1.16.5",
+
+  "releaseDate": "2021-01-15",
+
+  "javaVersion": "1.8",
+  "gradleVersion": "7.6",
+
+  "fabricVersion": "0.42.0+1.16",
+  "fabricLoaderVersion": "0.14.17",
+  "forgeVersion": null
+}

@@ -29,7 +29,8 @@ class Haxelib extends CLIProcess
 
     for (i in 1...lines.length)
     {
-      if (lines[i].startsWith('-D $library')) {
+      if (lines[i].startsWith('-D $library'))
+      {
         result = lines[i - 1].trim();
       }
     }

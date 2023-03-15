@@ -1,5 +1,7 @@
 package net.pickhaxe.tools.util;
 
+import haxe.io.Path;
+import sys.io.File;
 import net.pickhaxe.schema.FabricMod.EntrypointItem;
 import haxe.Json as HaxeJson;
 
@@ -19,6 +21,16 @@ class JSON
   }
 
   /**
+   * Read a JSON file and deserialize it.
+   * @param path Path to the file.
+   * @return Structured data.
+   */
+  public static function fromJSONFile(path:Path):Dynamic
+  {
+    return fromJSON(IO.readFile(path));
+  }
+
+  /**
    * Custom JSON serializer.
    * @param obj Structured data.
    * @return String data.
@@ -33,26 +45,30 @@ class JSON
    */
   static function replacer(key:String, value:Dynamic):Dynamic
   {
-    switch (value) {
+    switch (value)
+    {
       case Std.isOfType(_, EntrypointItem) => true:
-        switch (value) {
+        switch (value)
+        {
           case EntrypointItem.Left(value):
             return value;
           case EntrypointItem.Right(value):
             return value;
         }
       case Std.isOfType(_, Array) => true:
-        if (value.length == 0) {
+        if (value.length == 0)
+        {
           return null;
         }
-        return value.map(function (item:Dynamic):Dynamic {
+        return value.map(function(item:Dynamic):Dynamic {
           return replacer(key, item);
         });
       default:
         // Fallthrough.
     }
 
-    return switch (key) {
+    return switch (key)
+    {
       default:
         value;
     }

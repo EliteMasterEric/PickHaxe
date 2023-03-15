@@ -20,6 +20,7 @@ class IO
   }
 
   static var _libraryDir:Path = null;
+
   /**
    * Get the directory where haxelib stores this library.
    * @return The directory where haxelib stores this library.
@@ -35,8 +36,21 @@ class IO
    * @param path The path to check for existence.
    * @return True if the path exists, false otherwise.
    */
-  public static function exists(path:Path):Bool {
+  public static function exists(path:Path):Bool
+  {
     return sys.FileSystem.exists(path.toString());
+  }
+
+  public static function fileStartingWithExists(path:Path):Bool
+  {
+    var dir:Path = new Path(path.dir);
+    var file:String = path.file;
+    var files:Array<String> = readDirectory(dir, true, false);
+    for (f in files)
+    {
+      if (f.startsWith(file)) return true;
+    }
+    return false;
   }
 
   /**
@@ -90,21 +104,25 @@ class IO
    * @param dirs Whether to include directories in the listing.
    * @return A list of entries, relative to the given path.
    */
-  public static function readDirectory(path:Path, files:Bool = true, dirs:Bool = false):Array<String> {
+  public static function readDirectory(path:Path, files:Bool = true, dirs:Bool = false):Array<String>
+  {
     if (!files && !dirs) return [];
 
     var entries:Array<String> = sys.FileSystem.readDirectory(path.toString());
 
-    if (files && !dirs) {
+    if (files && !dirs)
+    {
       return entries.filter(function(entry:String):Bool {
         return !sys.FileSystem.isDirectory(path.joinPaths(entry).toString());
       });
-    } else if (!files && dirs) {
+    }
+    else if (!files && dirs)
+    {
       return entries.filter(function(entry:String):Bool {
         return sys.FileSystem.isDirectory(path.joinPaths(entry).toString());
       });
     }
-    
+
     return entries;
   }
 
@@ -115,25 +133,32 @@ class IO
    * @param dirs Whether to include directories in the listing.
    * @return A list of entries, relative to the given path.
    */
-  public static function readDirectoryRecursive(path:Path, files:Bool = true, dirs:Bool = false):Array<String> {
+  public static function readDirectoryRecursive(path:Path, files:Bool = true, dirs:Bool = false):Array<String>
+  {
     if (!files && !dirs) return [];
 
     var entries:Array<String> = sys.FileSystem.readDirectory(path.toString());
 
-    for (entry in entries) {
+    for (entry in entries)
+    {
       var entryPath:Path = path.joinPaths(entry);
-      if (sys.FileSystem.isDirectory(entryPath.toString())) {
-        for (subEntry in readDirectoryRecursive(entryPath, files, dirs)) {
+      if (sys.FileSystem.isDirectory(entryPath.toString()))
+      {
+        for (subEntry in readDirectoryRecursive(entryPath, files, dirs))
+        {
           entries.push('$entry/$subEntry');
         }
       }
     }
 
-    if (files && !dirs) {
+    if (files && !dirs)
+    {
       return entries.filter(function(entry:String):Bool {
         return !sys.FileSystem.isDirectory(path.joinPaths(entry).toString());
       });
-    } else if (!files && dirs) {
+    }
+    else if (!files && dirs)
+    {
       return entries.filter(function(entry:String):Bool {
         return sys.FileSystem.isDirectory(path.joinPaths(entry).toString());
       });
@@ -146,7 +171,8 @@ class IO
    * Delete a file.
    * @param path The path to the file to delete.
    */
-  public static function deleteFile(path:Path):Void {
+  public static function deleteFile(path:Path):Void
+  {
     sys.FileSystem.deleteFile(path.toString());
   }
 
@@ -154,18 +180,24 @@ class IO
    * Delete a directory.
    * @param path The path to the directory to delete.
    */
-  public static function deleteDirectory(path:Path):Void {
+  public static function deleteDirectory(path:Path):Void
+  {
     var files:Array<String> = readDirectoryRecursive(path, true, false);
     var dirs:Array<String> = readDirectoryRecursive(path, false, true);
     // Delete files
-    for (file in files) {
+    for (file in files)
+    {
+      CLI.print('- Deleting file "$file"', Verbose);
       deleteFile(path.joinPaths(file));
     }
     // Delete directories
-    for (dir in dirs) {
+    for (dir in dirs)
+    {
+      CLI.print('- Deleting directory "$dir"', Verbose);
       sys.FileSystem.deleteDirectory(path.joinPaths(dir).toString());
     }
     // Delete the root directory
+    CLI.print('- Deleting directory "$path"', Verbose);
     sys.FileSystem.deleteDirectory(path.toString());
   }
 
@@ -173,10 +205,14 @@ class IO
    * Delete a file or directory.
    * @param path The path to the file or directory to delete.
    */
-  public static function delete(path:Path):Void {
-    if (sys.FileSystem.isDirectory(path.toString())) {
+  public static function delete(path:Path):Void
+  {
+    if (sys.FileSystem.isDirectory(path.toString()))
+    {
       deleteDirectory(path);
-    } else {
+    }
+    else
+    {
       deleteFile(path);
     }
   }
@@ -186,7 +222,8 @@ class IO
    * @param source The path to the file to copy.
    * @param dest The path to copy the file to.
    */
-  public static function copyFile(source:Path, dest:Path):Void {
+  public static function copyFile(source:Path, dest:Path):Void
+  {
     sys.io.File.copy(source.toString(), dest.toString());
   }
 
