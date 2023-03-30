@@ -12,7 +12,8 @@ class Haxe extends CLIProcess
 
   public function new()
   {
-    super('haxe');
+    // super('haxe');
+    super('C:/Haxe/haxe_430_develop/haxe.exe');
   }
 
   /**

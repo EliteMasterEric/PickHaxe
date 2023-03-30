@@ -105,7 +105,7 @@ class Init implements ICommand
    */
   function buildXML(modParams:ModInitParameters):Void
   {
-    var xmlData:String = IO.readFile(IO.libraryDir().joinPaths('templates/project.xml'));
+    var xmlData:String = IO.readFile(IO.libraryDir().joinPaths('templates/project/project.xml'));
 
     var xmlDataResult:String = applyModParams(xmlData, modParams);
 
@@ -124,7 +124,7 @@ class Init implements ICommand
     // Make the class path.
     var classPath:String = modParams.parentPackage.split('.').join('/');
 
-    var classTemplate:String = IO.readFile(IO.libraryDir().joinPaths('templates/ModEntryPoint.hx'));
+    var classTemplate:String = IO.readFile(IO.libraryDir().joinPaths('templates/project/ModEntryPoint.hx'));
 
     CLI.print('Writing to classpath...', Verbose);
     IO.makeDir(IO.workingDir().joinPaths('src', classPath));
@@ -133,7 +133,8 @@ class Init implements ICommand
     IO.writeFile(IO.workingDir().joinPaths('src', classPath, '${modParams.entryClass}.hx'), classResult);
 
     CLI.print('Writing to resourcepath...', Verbose);
-    IO.makeDir(IO.workingDir().joinPaths('resources', classPath));
+    IO.makeDir(IO.workingDir().joinPaths('resources', 'assets', modParams.modId));
+    IO.makeDir(IO.workingDir().joinPaths('resources', 'data', modParams.modId));
   }
 
   function applyModParams(input:String, modParams:ModInitParameters):String
@@ -157,11 +158,11 @@ class Init implements ICommand
   {
     if (input.length < 2) return false;
 
-    if (input.contains('-'))
-    {
-      CLI.print('WARNING: Due to a Haxe bug, PickHaxe does not allow hyphens in mod IDs.');
-      return false;
-    }
+    //if (input.contains('-'))
+    //{
+    //  CLI.print('WARNING: Due to a Haxe bug, PickHaxe does not allow hyphens in mod IDs.');
+    //  return false;
+    //}
 
     return ~/^[a-z0-9_-]+$/.match(input);
   }

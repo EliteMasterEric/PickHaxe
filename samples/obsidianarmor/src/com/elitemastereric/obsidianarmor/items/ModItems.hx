@@ -1,30 +1,28 @@
 package com.elitemastereric.obsidianarmor.items;
 
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.HoeItem;
-import net.minecraft.world.item.PickaxeItem;
-import net.minecraft.world.item.ShovelItem;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.Rarity;
-//import net.minecraft.util.Rarity;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import com.elitemastereric.obsidianarmor.materials.ObsidianArmorMaterial;
+import com.elitemastereric.obsidianarmor.materials.ObsidianToolMaterial;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.CreativeModeTab;
-
-import com.elitemastereric.obsidianarmor.materials.ObsidianArmorMaterial;
-import com.elitemastereric.obsidianarmor.materials.ObsidianToolMaterial;
-
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.ShovelItem;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tier;
 
 class ModItems {
   // References to our items.
@@ -47,11 +45,21 @@ class ModItems {
 
   // Item Groups
   public static final ITEM_GROUP:CreativeModeTab = FabricItemGroup.builder(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_armor"))
-      .icon(() -> new ItemStack(OBSIDIAN_CHESTPLATE))
+      .icon(getCreativeTabIcon)
       .build();
 
   public static function onInitialize():Void {
     // Add each of our items to the item registry.
+
+    ObsidianArmorMod.LOGGER.info("Registering items...");
+
+    var fieldNames:Array<String> = Type.getClassFields(BuiltInRegistries);
+
+    ObsidianArmorMod.LOGGER.info('Fetched registries.');
+
+    for (fieldName in fieldNames) {
+      ObsidianArmorMod.LOGGER.info('Registry: ' + fieldName);
+    }
 
     // Tools
     Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_pickaxe"), OBSIDIAN_PICKAXE);
@@ -66,7 +74,7 @@ class ModItems {
     Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_leggings"), OBSIDIAN_LEGGINGS);
     Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_boots"), OBSIDIAN_BOOTS);
 
-    ItemGroupEvents.modifyEntriesEvent(ITEM_GROUP).register(new BaseModifyEntries(content -> {
+    ItemGroupEvents.modifyEntriesEvent(ITEM_GROUP).register(new ModifyEntriesHaxe(function(content:FabricItemGroupEntries) {
       content.add(OBSIDIAN_AXE);
       content.add(OBSIDIAN_PICKAXE);
       content.add(OBSIDIAN_SHOVEL);
@@ -78,5 +86,9 @@ class ModItems {
       content.add(OBSIDIAN_LEGGINGS);
       content.add(OBSIDIAN_BOOTS);
     }));
+  }
+
+  static function getCreativeTabIcon():ItemStack {
+    return new ItemStack(OBSIDIAN_CHESTPLATE);
   }
 }

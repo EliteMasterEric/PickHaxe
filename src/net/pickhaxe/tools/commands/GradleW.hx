@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.commands;
 
+import net.pickhaxe.tools.util.MCVersion;
 import net.pickhaxe.schema.FabricMod;
 import net.pickhaxe.tools.commands.Help.CommandInfo;
 import net.pickhaxe.tools.process.GradleW as GradleWProcess;
@@ -17,6 +18,7 @@ class GradleW implements ICommand
   var mcVersion:String;
 
   var task:String;
+  var additionalArgs:Array<String>;
 
   public function new() {}
 
@@ -29,7 +31,7 @@ class GradleW implements ICommand
     return {
       blurb: 'Runs a Gradle task',
       description: 'Runs a Gradle task with a specific version and loader configured.',
-      args: ['loader', 'version', 'task'],
+      args: ['[loader]', '[version]', '[task]'],
       options: [
         {
           short: 'h',
@@ -51,7 +53,7 @@ class GradleW implements ICommand
 
     CLI.print('Performing gradle task for ${loader} ${mcVersion}...');
 
-    var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(mcVersion, loader);
+    var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(loader, mcVersion);
 
     performGradleTask(defines);
   }
@@ -60,6 +62,7 @@ class GradleW implements ICommand
   {
     var i:Int = 0;
     var unknownArgs:Array<String> = [];
+    additionalArgs = [];
     while (i < args.length)
     {
       var arg:String = args[i];
@@ -73,7 +76,7 @@ class GradleW implements ICommand
           case '--help': // Gets processed elsewhere.
             return false;
           default:
-            unknownArgs.push(arg);
+            additionalArgs.push(arg);
         }
       }
       else
@@ -93,7 +96,7 @@ class GradleW implements ICommand
         else
         {
           // Extra arguments.
-          unknownArgs.push(arg);
+          additionalArgs.push(arg);
         }
       }
 
@@ -104,6 +107,10 @@ class GradleW implements ICommand
     {
       CLI.print('Error: No loader specified.');
       return false;
+    } else if (!MCVersion.isLoaderValid(loader))
+    {
+      CLI.print('Error: Invalid loader specified, expected ${Constants.MINECRAFT_LOADERS}.');
+      return false;
     }
 
     if (mcVersion == null)
@@ -113,8 +120,9 @@ class GradleW implements ICommand
 
     if (task == null)
     {
-      CLI.print('Error: No task specified.');
-      return false;
+      task = Constants.DEFAULT_GRADLE_TASK;
+      // CLI.print('Error: No task specified.');
+      // return false;
     }
 
     return true;
@@ -126,6 +134,6 @@ class GradleW implements ICommand
     Sys.setCwd(IO.workingDir().joinPaths('./generated/').toString());
 
     var gradleW:GradleWProcess = new GradleWProcess(defines);
-    gradleW.performTask([task]);
+    gradleW.performTask([task].concat(additionalArgs));
   }
 }

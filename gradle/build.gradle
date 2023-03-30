@@ -1,4 +1,9 @@
 
+//
+// NOTICE: This Gradle build script is COMPLETELY CUSTOM and necessary for PickHaxe to run.
+//         If you need to modify this file, I can 
+// 
+
 buildscript {
   println "Java: ${System.getProperty('java.version')}, JVM: ${System.getProperty('java.vm.version')} (${System.getProperty('java.vendor')}), Arch: ${System.getProperty('os.arch')}"
 
@@ -7,9 +12,20 @@ buildscript {
 
 // Reference all Gradle plugins, with versions.
 plugins {
-  id 'maven-publish' // Common
+  //
+  // Forge
+  //
   id 'net.minecraftforge.gradle' version '5.1.+' apply false
+
+  // 
+  // Fabric
+  //
   id 'fabric-loom' version '1.1-SNAPSHOT' apply false
+
+  //
+  // Common
+  //
+  id 'maven-publish'
 }
 
 // Select the Gradle plugin based on the loader.
@@ -46,8 +62,11 @@ group = System.getProperty('pickhaxe.mod.parentPackage')
 repositories {
   mavenCentral()
   gradlePluginPortal()
+  // Fabric plugins and API libraries
   maven { url = 'https://maven.fabricmc.net' }
+  // Forge plugins and API libraries
   maven { url = 'https://maven.minecraftforge.net' }
+  // ParchmentMC Mappings
   maven { url = 'https://maven.parchmentmc.org' }
 }
 
@@ -62,19 +81,9 @@ dependencies {
 
 	modImplementation "net.fabricmc:fabric-loader:${System.getProperty('pickhaxe.loader.fabric.loaderVersion')}"
 
-
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${System.getProperty('pickhaxe.loader.fabric.apiVersion')}"
 
-	// Uncomment the following line to enable the deprecated Fabric API modules. 
-	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
-
-	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
-}
-
-configurations {
-  web
+	//modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -82,8 +91,41 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release = System.getProperty('pickhaxe.java.version') == '17' ? 17 : 8
 }
 
-// A custom task to copy all the runtime dependencies to a place where they can be easily referenced.
-task copyDependencies(type: Copy) {
-    from configurations.runtimeClasspath
-    into "$buildDir/minecraft"
+sourceSets {
+  // Haxe generates Java source in a different spot.
+  main.java.srcDirs = ['java/src']
+  // LOL we can just reuse the resources folder.
+  main.resources.srcDirs = ['resources']
 }
+
+task copyDependencies(type: Copy) {
+  from configurations.compileClasspath
+  into "$buildDir/minecraft"
+}
+copyDependencies.group = 'PickHaxe'
+copyDependencies.description = 'Copies all runtime dependencies to a place where they can be easily referenced by Haxe.'
+
+task copyBuildArtifacts(type: Copy) {
+  def buildFile = file("$buildDir/libs/${archivesBaseName}-${version}.jar")
+  from buildFile
+  into "../build/${System.getProperty('pickhaxe.loader.current')}/${System.getProperty('pickhaxe.minecraft.version')}/"
+}
+copyBuildArtifacts.group = 'PickHaxe'
+copyBuildArtifacts.description = 'Copies the built Minecraft mod JAR to a place where it can be easily accessed.'
+
+// Modify the `build` task to include additional metadata in the MANIFEST.
+tasks.jar {
+  manifest {
+    attributes(
+      'PickHaxe-Library-Version': System.getProperty('pickhaxe.version'),
+      'PickHaxe-Haxe-Version': System.getProperty('pickhaxe.haxe.version'),
+      'PickHaxe-Minecraft-Version': System.getProperty('pickhaxe.minecraft.version'),
+      'PickHaxe-Loader': System.getProperty('pickhaxe.loader.current'),
+      'PickHaxe-Mod-Metadata-Id': System.getProperty('pickhaxe.mod.id'),
+      'PickHaxe-Mod-Metadata-Version': System.getProperty('pickhaxe.mod.version'),
+    )
+  }
+}
+
+// Run the copyBuildArtifacts task after the build task.
+build.finalizedBy(copyBuildArtifacts)

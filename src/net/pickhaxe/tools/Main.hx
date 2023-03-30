@@ -98,6 +98,7 @@ class Main
           default:
             if (Help.getCommandNames().contains(arg))
             {
+              CLI.print('Command: ${arg}');
               command = arg;
             }
             else

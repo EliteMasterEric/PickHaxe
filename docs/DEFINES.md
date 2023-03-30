@@ -3,6 +3,10 @@
 PickHaxe makes many compile definitions available to Haxe.
 
 - `pickhaxe`: The current version of the PickHaxe library.
+- `fabric`: True if the current mod loader is Fabric.
+- `forge`: True if the current mod loader is Forge.
+- 
+
 - `pickhaxe.java.version`:
 - `pickhaxe.minecraft.version`:
 - `pickhaxe.loader`:

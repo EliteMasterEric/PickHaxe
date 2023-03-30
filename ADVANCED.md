@@ -32,6 +32,12 @@ Yarn: Mappings provided by the Fabric Team.
 MCP: A set of mappings made by the MCP team, one of the oldest mapping teams. 
   - Notably under a restrictive license that prevented use by other coding projects, which was why the Fabric team created Yarn.
 
+## Build process
+
+- Built Fabric JARs use intermediary class and field names, and not obfuscated names?
+- Built Forge JARs use READABLE class names? Obfuscated method names? What about field names?
+  - Original enum field names?
+
 ## Additional Links
 
 Fabric Intermediaries: Maps sourcenames->unique mappings common to all versions but not readable by humans
@@ -41,4 +47,4 @@ https://fabricmc.net/wiki/tutorial:vscode_setup#generating_minecraft_source
 
 Minecraft JavaDocs:
 - Fabric: https://maven.fabricmc.net/docs/yarn-1.19.3+build.5/
-- Forge: https://nekoyue.github.io/ForgeJavaDocs-NG/javadoc/1.19.3/
+- Forge: https://nekoyue.github.io/ForgeJavaDocs-NG/

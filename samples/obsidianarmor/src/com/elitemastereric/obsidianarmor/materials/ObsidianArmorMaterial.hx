@@ -11,16 +11,14 @@ import net.minecraft.world.item.Items;
 class ObsidianArmorMaterial implements ArmorMaterial
 {
   private static final NAME:String = "obsidian";
-  private static final TOUGHNESS:Float = 0.0;
+  private static final TOUGHNESS:Single = 0.0;
   private static final DURABILITY:Array<Int> = [137, 158, 168, 116]; // Durability of Boots, Leggings, Chestplate, Helmet
   private static final PROTECTION:Array<Int> = [2, 4, 6, 2]; // Armor points of Boots, Leggings, Chestplate, Helmet
   private static final ENCHANTABILITY:Int = 20;
   private static final EQUIP_SOUND:SoundEvent = SoundEvents.ARMOR_EQUIP_DIAMOND;
-  // TODO: Fix this shit via proper extern.
-  private static final BULLSHITBULLSHIT:Array<net.minecraft.world.level.ItemLike> = [Items.OBSIDIAN];
-  private static final BULLSHIT:java.NativeArray<net.minecraft.world.level.ItemLike> = java.Lib.nativeArray(BULLSHITBULLSHIT, true);
-  private static final REPAIR_INGREDIENT:Ingredient = Ingredient.of(BULLSHIT);
-  private static final KNOCKBACK_RESISTANCE:Float = 0.0;
+  // TODO: Fix rest/spread operator
+  private static final REPAIR_INGREDIENT:Ingredient = Ingredient.ofItems([Items.OBSIDIAN]);
+  private static final KNOCKBACK_RESISTANCE:Single = 0.0;
 
   public function new() {
     // Unlike Java, Haxe requires a constructor on constructable classes, even if it's empty.
@@ -56,12 +54,12 @@ class ObsidianArmorMaterial implements ArmorMaterial
     return NAME;
   }
 
-  public function getToughness():Float
+  public function getToughness():Single
   {
     return TOUGHNESS;
   }
 
-  public function getKnockbackResistance():Float
+  public function getKnockbackResistance():Single
   {
     return KNOCKBACK_RESISTANCE;
   }

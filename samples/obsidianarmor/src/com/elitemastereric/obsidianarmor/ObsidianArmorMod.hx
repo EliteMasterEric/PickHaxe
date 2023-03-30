@@ -16,5 +16,7 @@ class ObsidianArmorMod implements Mod {
     #end
 
     ModItems.onInitialize();
+
+    //var test:net.minecraft.advancements.critereon.BlockPredicate = null;
   }
 }

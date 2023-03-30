@@ -6,16 +6,27 @@ PickHaxe is a flexible, powerful Haxe framework to supercharge your Minecraft mo
 
 Getting started is simple. Install Haxe and PickHaxe, then create a new mod project and get developing. When you're ready to test, PickHaxe will compile your mod for Fabric or Forge, for the Minecraft version of your choice.
 
-# To-Do Items
-- Get basic Fabric mod working.
-- Get basic Forge mod working.
-- Make externs for the entire Mojmap codebase.
-- Port over Obsidian Armor.
+# Installation
 
-# Known Issues
+Install the following prerequisites:
+- Any version of the Java Development Kit.
+- Haxe 4.3.0+
+
+Then, install PickHaxe via HaxeLib:
+
+```
+haxelib git pickhaxe https://github.com/EliteMasterEric/pickhaxe
+```
+
+# Usage
+
+See the `samples` folder for examples.
+
+# Known Related Issues
 
 - [x45 gets appended to dashes in resource file names](https://community.haxe.org/t/jvm-how-to-add-custom-resources-into-output-jar/3205)
   - Mitigated by disallowing dashes in mod IDs.
+- 
 
 # License
 

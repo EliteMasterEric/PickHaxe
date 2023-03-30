@@ -21,8 +21,8 @@ class ModCoreMacro
 
     var target:haxe.macro.Type.ClassType = Context.getLocalClass().get();
 
-    MacroUtil.addMetadata('keep'); // Ensure the class is not removed by the compiler.
-    MacroUtil.addMetadata('nativeGen'); // Tell Haxe to generate cleaner native code.
+    MacroUtil.addClassMetadata('keep'); // Ensure the class is not removed by the compiler.
+    MacroUtil.addClassMetadata('nativeGen'); // Tell Haxe to generate cleaner native code.
 
     // Metadata of Mods is populated by compiler defines but can be overridden by @:mod metadata.
 
@@ -49,6 +49,16 @@ class ModCoreMacro
       buildModIdField.bind(modParams),
       buildLoggerField.bind(modParams),
     ], VERBOSE);
+  }
+
+  /**
+   * Add an annotation to the class to tell Haxe to generate cleaner native code.
+   * @return Null, to indicate no fields were added.
+   */
+  public static macro function enableNativeGen():Array<Field> {
+    MacroUtil.addClassMetadata('nativeGen'); // Tell Haxe to generate cleaner native code.
+
+    return null;
   }
 
   static function populateModCoreParams():ModCoreParams

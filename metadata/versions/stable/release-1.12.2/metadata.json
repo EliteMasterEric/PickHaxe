@@ -1,10 +1,8 @@
 {
   "type": "stable",
   "version": "1.12.2",
-
   "releaseDate": "2017-09-18",
 
-  "javaVersion": "1.8",
   "gradleVersion": "4.9",
 
   "fabricVersion": null,

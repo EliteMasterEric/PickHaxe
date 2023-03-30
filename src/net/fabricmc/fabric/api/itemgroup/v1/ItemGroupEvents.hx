@@ -16,20 +16,20 @@ extern interface ModifyEntries
   function modifyEntries(param1:net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries):Void;
 }
 
-@:dce
-class BaseModifyEntries implements ModifyEntries {
-  public var fun:(net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries)->Void;
+typedef ItemGroupEvents_ModifyEntries = ModifyEntries;
 
-  public function new(fun:(net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries)->Void) {
-    this.fun = fun;
+/**
+ * @see https://github.com/HaxeFoundation/haxe/issues/11054
+ */
+class ModifyEntriesHaxe implements ModifyEntries {
+  var callback:FabricItemGroupEntries->Void;
+  public function new(callback:FabricItemGroupEntries->Void) {
+    this.callback = callback;
   }
-
-  public function modifyEntries(param1:net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries):Void {
-    fun(param1);
+  public function modifyEntries(entries:FabricItemGroupEntries):Void {
+    callback(entries);
   }
 }
-
-typedef ItemGroupEvents_ModifyEntries = ModifyEntries;
 
 @:native("net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents$ModifyEntriesAll")
 extern interface ModifyEntriesAll
@@ -38,3 +38,16 @@ extern interface ModifyEntriesAll
 }
 
 typedef ItemGroupEvents_ModifyEntriesAll = ModifyEntriesAll;
+
+/**
+ * @see https://github.com/HaxeFoundation/haxe/issues/11054
+ */
+ class ModifyEntriesAllHaxe implements ModifyEntriesAll {
+  var callback:(net.minecraft.world.item.CreativeModeTab, FabricItemGroupEntries)->Void;
+  public function new(callback:(net.minecraft.world.item.CreativeModeTab, FabricItemGroupEntries)->Void) {
+    this.callback = callback;
+  }
+  public function modifyEntries(tab:net.minecraft.world.item.CreativeModeTab, entries:FabricItemGroupEntries):Void {
+    callback(tab, entries);
+  }
+}

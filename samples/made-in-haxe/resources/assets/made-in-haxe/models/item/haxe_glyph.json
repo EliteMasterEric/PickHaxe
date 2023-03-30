@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "made-in-haxe:item/haxe_glyph"
+  }
+}

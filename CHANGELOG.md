@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [1.0.0] - 2023-XX-XX
 Initial release.
 ## Added
+- Implemented basic support for Fabric (1.19.3)
+- Added Made in Haxe sample project
+
 ## Changed
 ## Fixed
 ## Removed

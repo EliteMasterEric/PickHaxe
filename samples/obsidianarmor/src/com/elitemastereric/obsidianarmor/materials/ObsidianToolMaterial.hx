@@ -8,15 +8,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 class ObsidianToolMaterial implements Tier
 {
   // TODO: How to get `Tiers.STONE` to work?
-  // private static final MINING_LEVEL:Int = Tiers.STONE.getLevel();
-  private static final MINING_LEVEL:Int = 1;
+  private static final MINING_LEVEL:Int = Tiers.STONE.getLevel();
+  // private static final MINING_LEVEL:Int = 1;
   private static final DURABILITY:Int = 64;
-  private static final MINING_SPEED:Float = 9.0;
-  private static final ATTACK_DAMAGE:Float = 1.0;
+  private static final MINING_SPEED:Single = 9.0;
+  private static final ATTACK_DAMAGE:Single = 1.0;
   private static final ENCHANTABILITY:Int = 20;
-  private static final BULLSHITBULLSHIT:Array<net.minecraft.world.level.ItemLike> = [Items.OBSIDIAN];
-  private static final BULLSHIT:java.NativeArray<net.minecraft.world.level.ItemLike> = java.Lib.nativeArray(BULLSHITBULLSHIT, true);
-  private static final REPAIR_INGREDIENT:Ingredient = Ingredient.of(BULLSHIT);
+  private static final REPAIR_INGREDIENT:Ingredient = Ingredient.ofItems([Items.OBSIDIAN]);
 
   public function new() {
     // Unlike Java, Haxe requires a constructor on constructable classes, even if it's empty.
@@ -27,12 +25,12 @@ class ObsidianToolMaterial implements Tier
     return DURABILITY;
   }
 
-  public function getSpeed():Float
+  public function getSpeed():Single
   {
     return MINING_SPEED;
   }
 
-  public function getAttackDamageBonus():Float
+  public function getAttackDamageBonus():Single
   {
     return ATTACK_DAMAGE;
   }

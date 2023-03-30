@@ -1,7 +1,10 @@
 package net.pickhaxe.tools.util;
 
+import net.pickhaxe.api.FabricMeta;
+import net.pickhaxe.api.Parchment;
 import haxe.io.Path;
 import net.pickhaxe.tools.schema.PickHaxeProject;
+import net.pickhaxe.tools.schema.MavenMetadata;
 
 /**
  * Utilities for parsing XML data.
@@ -31,6 +34,46 @@ class XML
         return file;
       case Failure(err):
         CLI.print('Failed to parse file: ${path}');
+        CLI.print('${err}');
+    }
+    return null;
+  }
+
+  public static function readFabricAPIMavenMetadata():MavenMetadata
+  {
+    var mavenMetaStr = FabricMeta.fetchMavenMetadataStr();
+    if (mavenMetaStr == null)
+    {
+      CLI.print('Failed to fetch maven metadata');
+      return null;
+    }
+
+    switch new tink.xml.Structure<MavenMetadata>().read(mavenMetaStr)
+    {
+      case Success(file):
+        return file;
+      case Failure(err):
+        CLI.print('Failed to parse maven metadata');
+        CLI.print('${err}');
+    }
+    return null;
+  }
+
+  public static function readParchmentMavenMetadata(gameVersion:String):MavenMetadata
+  {
+    var mavenMetaStr = Parchment.fetchParchmentMavenMetadataStr(gameVersion);
+    if (mavenMetaStr == null)
+    {
+      CLI.print('Failed to fetch maven metadata');
+      return null;
+    }
+
+    switch new tink.xml.Structure<MavenMetadata>().read(mavenMetaStr)
+    {
+      case Success(file):
+        return file;
+      case Failure(err):
+        CLI.print('Failed to parse maven metadata');
         CLI.print('${err}');
     }
     return null;

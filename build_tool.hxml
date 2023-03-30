@@ -1,3 +1,8 @@
+# Performing a build with this will create an executable which
+# contains the PickHaxe tools, so people don't have to use Haxe eval.
+
+# As a bonus, this also fixes issues with code completion.
+
 --library tink_xml
 --library tink_core
 --library tink_macro
@@ -6,7 +11,7 @@
 --class-path src/
 --main net.pickhaxe.tools.Main
 
--D net.pickhaxe.tools.executable=true
+-D pickhaxe.tools.executable=true
 
 --cpp ./generated/bin/
 

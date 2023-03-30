@@ -76,6 +76,7 @@ class Help implements ICommand
       'init' => new Init(),
       'build' => new Build(),
       'clean' => new Clean(),
+      'gradlew' => new GradleW(),
     ];
   }
 
@@ -102,13 +103,19 @@ class Help implements ICommand
 
     var entries:Array<{key:String, value:CommandInfo}> = [];
     var longestKey:Int = 0;
+
     for (command in getCommandNames())
     {
-      var commandInfo:CommandInfo = getCommands()[command].getCommandInfo();
+      var commandData:ICommand = getCommands()[command];
+      if (commandData == null) {
+        CLI.print('  NO DATA for Command ${command}');
+        continue;
+      }
+      var commandInfo:CommandInfo = commandData.getCommandInfo();
       entries.push({key: command, value: commandInfo});
       longestKey = Std.int(Math.max(longestKey, command.length));
     }
-
+    
     for (entry in entries)
     {
       var key:String = entry.key;
@@ -249,17 +256,20 @@ class Help implements ICommand
    * Prints information about the current version of the library.
    * @param pretty Whether or not to print pretty ASCII art.
    */
-  public static function printVersion(pretty:Bool = true):Void
+  public static function printVersion(pretty:Bool = false):Void
   {
     var versionStr:String = '${Constants.LIBRARY_NAME} Command Line Tools (v${Constants.LIBRARY_VERSION})';
+    
+    CLI.print(versionStr);
+    CLI.print('');
 
     if (pretty)
     {
       // TODO: Add some neat ASCII art here.
+    } else {
+      CLI.print('Haxe v${Constants.HAXE_VERSION}');
     }
 
-    CLI.print(versionStr);
-    CLI.print('');
   }
 
   /**
