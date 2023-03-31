@@ -51,8 +51,7 @@ typedef PickHaxeDefinesPickHaxe =
   },
   mappings:
   {
-    enabled:Bool,
-    current:String, yarn:
+    enabled:Bool, current:String, yarn:
     {
       version:String
     }, parchment:
@@ -78,6 +77,14 @@ typedef PickHaxeDefinesMod =
   description:String,
 }
 
+typedef BuildParams =
+{
+  loader:String,
+  mcVersion:String,
+  ?noMapping:Bool,
+  ?mappings:String,
+}
+
 /**
  * Fills out the PickHaxeDefines based on the current environment.
  */
@@ -94,8 +101,10 @@ class Builder
    * @param loader The loader to build for.
    * @return An object of compile defines.
    */
-  public static function build(loader:String, mcVersion:String = null, noMapping:Bool = false):PickHaxeDefines
+  public static function build(params:BuildParams):PickHaxeDefines
   {
+    params = validateBuildParams(params);
+
     var projectFile:PickHaxeProject = net.pickhaxe.tools.util.XML.readProjectFile(IO.workingDir().joinPaths('project.xml'));
 
     if (projectFile == null)
@@ -103,29 +112,66 @@ class Builder
       throw 'Could not find project.xml file.';
     }
 
-    return switch (loader)
+    return switch (params.loader)
     {
-      case 'fabric': buildFabric(projectFile, mcVersion, noMapping);
-      case 'forge': buildForge(projectFile, mcVersion, noMapping);
-      default: throw 'Unknown loader: ' + loader;
+      case 'fabric': buildFabric(projectFile, params);
+      case 'forge': buildForge(projectFile, params);
+      default: throw 'Unknown loader: ' + params.loader;
     }
   }
 
-  static function buildFabric(projectFile:PickHaxeProject, mcVersion:String, noMapping:Bool):PickHaxeDefines
+  /**
+   * Throws when required values are missing, and populates defaults.
+   */
+  static function validateBuildParams(params:BuildParams):BuildParams
   {
-    var mojangVersionData:VersionData = Mojang.fetchVersionData(mcVersion);
-    if (mojangVersionData == null) throw 'Could not load Mojang version data from API for version $mcVersion';
-    var fabricLoaderData:FabricMetaLoaderVersionData = FabricMeta.fetchLoaderDataForGameVersion(mcVersion)[0];
-    if (fabricLoaderData == null) throw 'Could not load Fabric loader data from API for version $mcVersion';
-    var fabricYarnData:FabricMetaYarnDataItem = FabricMeta.fetchYarnData(mcVersion)[0];
-    if (fabricYarnData == null) throw 'Could not load Fabric Yarn data from API for version $mcVersion';
-    var fabricIntermediaryData:FabricMetaIntermediaryDataItem = FabricMeta.fetchIntermediaryData(mcVersion)[0];
-    if (fabricIntermediaryData == null) throw 'Could not load Fabric Intermediary data from API for version $mcVersion';
-    
-    var parchmentVersion:String = Parchment.fetchParchmentVersion(mcVersion);
-    if (parchmentVersion == null) throw 'Could not load Parchment version from API for version $mcVersion';
-    var fabricAPIVersion:String = FabricMeta.getApiVersionForMinecraft(mcVersion);
-    if (fabricAPIVersion == null) throw 'Could not load Fabric API version from API for version $mcVersion';
+    if (params.loader == null) throw 'Loader must be specified.';
+    if (params.mcVersion == null) throw 'Minecraft version must be specified.';
+    if (params.noMapping == null) params.noMapping = false;
+    if (params.mappings == null) params.mappings = 'parchment';
+
+    return params;
+  }
+
+  static function buildFabric(projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
+  {
+    var mojangVersionData:VersionData = Mojang.fetchVersionData(params.mcVersion);
+    if (mojangVersionData == null) throw 'Could not load Mojang version data from API for version ${params.mcVersion}';
+    var fabricLoaderData:FabricMetaLoaderVersionData = FabricMeta.fetchLoaderDataForGameVersion(params.mcVersion)[0];
+    if (fabricLoaderData == null) throw 'Could not load Fabric loader data from API for version ${params.mcVersion}';
+    var fabricYarnData:FabricMetaYarnDataItem = FabricMeta.fetchYarnData(params.mcVersion)[0];
+    if (fabricYarnData == null) throw 'Could not load Fabric Yarn data from API for version ${params.mcVersion}';
+    var fabricIntermediaryData:FabricMetaIntermediaryDataItem = FabricMeta.fetchIntermediaryData(params.mcVersion)[0];
+    if (fabricIntermediaryData == null) throw 'Could not load Fabric Intermediary data from API for version ${params.mcVersion}';
+
+    var currentMappings:String = params.mappings;
+
+    var parchmentVersion:String = Parchment.fetchParchmentVersion(params.mcVersion);
+    if (parchmentVersion == null && params.mappings == 'parchment')
+    {
+      var previousVersion:String = MCVersion.getPreviousVersion(params.mcVersion);
+      CLI.print('Warning: Could not load Parchment version from API for version ${params.mcVersion}, trying $previousVersion');
+      parchmentVersion = Parchment.fetchParchmentVersion(previousVersion);
+
+      if (parchmentVersion == null)
+      {
+        CLI.print('Warning: Could not load Parchment version from API for version $previousVersion, falling back to plain MojMaps with no Parchment.');
+        currentMappings = 'mojang';
+      }
+      else
+      {
+        // Reformat the mappings version.
+        parchmentVersion = 'parchment-${previousVersion}:${parchmentVersion}';
+      }
+    }
+    else
+    {
+      // Reformat the mappings version.
+      parchmentVersion = 'parchment-${params.mcVersion}:${parchmentVersion}';
+    }
+
+    var fabricAPIVersion:String = FabricMeta.getApiVersionForMinecraft(params.mcVersion);
+    if (fabricAPIVersion == null) throw 'Could not load Fabric API version from API for version ${params.mcVersion}';
 
     return {
       pickhaxe:
@@ -133,9 +179,9 @@ class Builder
           version: Constants.LIBRARY_VERSION,
 
           haxe:
-          {
-            version: Constants.HAXE_VERSION,
-          },
+            {
+              version: Constants.HAXE_VERSION,
+            },
 
           java:
             {
@@ -151,7 +197,7 @@ class Builder
 
           minecraft:
             {
-              version: mcVersion
+              version: params.mcVersion
             },
 
           loader:
@@ -166,8 +212,8 @@ class Builder
 
           mappings:
             {
-              enabled: !noMapping,
-              current: 'parchment',
+              enabled: !params.noMapping,
+              current: currentMappings,
               yarn:
                 {
                   version: fabricYarnData.version,
@@ -199,10 +245,10 @@ class Builder
     };
   }
 
-  static function buildForge(projectFile:PickHaxeProject, mcVersion:String, noMapping:Bool):PickHaxeDefines
+  static function buildForge(projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
   {
-    var versionMetadata:PickHaxeVersionMetadata = PickHaxeVersionMetadataReader.read(mcVersion, MCVersion.isVersionStable(mcVersion));
-    var versionMappings:PickHaxeVersionMappings = PickHaxeVersionMappingsReader.read(mcVersion, MCVersion.isVersionStable(mcVersion));
+    var versionMetadata:PickHaxeVersionMetadata = PickHaxeVersionMetadataReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
+    var versionMappings:PickHaxeVersionMappings = PickHaxeVersionMappingsReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
 
     return {
       pickhaxe:
@@ -210,9 +256,9 @@ class Builder
           version: Constants.LIBRARY_VERSION,
 
           haxe:
-          {
-            version: Constants.HAXE_VERSION,
-          },
+            {
+              version: Constants.HAXE_VERSION,
+            },
 
           java:
             {
@@ -226,7 +272,7 @@ class Builder
 
           minecraft:
             {
-              version: mcVersion
+              version: params.mcVersion
             },
 
           loader:
@@ -241,12 +287,12 @@ class Builder
 
           mappings:
             {
-              enabled: !noMapping,
+              enabled: !params.noMapping,
               current: 'parchment',
               parchment:
-              {
-                version: versionMappings.parchment,
-              },
+                {
+                  version: versionMappings.parchment,
+                },
               yarn:
                 {
                   version: null,
@@ -306,8 +352,8 @@ class Builder
     // Add a define for the current loader (#if fabric, #if forge)
     result.append(DEFINE, defines.pickhaxe.loader.current);
 
-    // Add a define for the current Minecraft version (#if minecraft_1.19.3, #if minecraft_1.12.2)
-    result.append(DEFINE, 'minecraft_${defines.pickhaxe.minecraft.version}');
+    // Add a define for the current Minecraft version (#if minecraft == 1.19.3, #if minecraft >= 1.12.2)
+    result.append(DEFINE, 'minecraft=${defines.pickhaxe.minecraft.version}');
 
     return result;
   }

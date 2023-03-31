@@ -107,7 +107,8 @@ class Help implements ICommand
     for (command in getCommandNames())
     {
       var commandData:ICommand = getCommands()[command];
-      if (commandData == null) {
+      if (commandData == null)
+      {
         CLI.print('  NO DATA for Command ${command}');
         continue;
       }
@@ -115,7 +116,7 @@ class Help implements ICommand
       entries.push({key: command, value: commandInfo});
       longestKey = Std.int(Math.max(longestKey, command.length));
     }
-    
+
     for (entry in entries)
     {
       var key:String = entry.key;
@@ -175,11 +176,12 @@ class Help implements ICommand
     var optionStrings:Array<{arg:String, desc:String, descAdditional:Array<String>}> = [];
     for (option in commandOptions)
     {
-      var optionOut = {
-        arg: '',
-        desc: '',
-        descAdditional: []
-      };
+      var optionOut =
+        {
+          arg: '',
+          desc: '',
+          descAdditional: []
+        };
 
       if (option.short != null && option.long != null)
       {
@@ -240,10 +242,11 @@ class Help implements ICommand
 
       if (option.descAdditional.length > 0)
       {
-        for (i in 0...(option.arg.length + 2)) {
+        for (i in 0...(option.arg.length + 2))
+        {
           padding += ' ';
         }
-        
+
         for (line in option.descAdditional)
         {
           CLI.print('${padding}${line.trim()}');
@@ -259,17 +262,18 @@ class Help implements ICommand
   public static function printVersion(pretty:Bool = false):Void
   {
     var versionStr:String = '${Constants.LIBRARY_NAME} Command Line Tools (v${Constants.LIBRARY_VERSION})';
-    
+
     CLI.print(versionStr);
     CLI.print('');
 
     if (pretty)
     {
       // TODO: Add some neat ASCII art here.
-    } else {
+    }
+    else
+    {
       CLI.print('Haxe v${Constants.HAXE_VERSION}');
     }
-
   }
 
   /**

@@ -24,13 +24,16 @@ class APIBase
   {
     print('Performing HTTP request: ${url}');
 
-    try {
+    try
+    {
       var request:Http = new Http(url);
 
       request.request(false);
-  
+
       return request.responseBytes;
-    } catch (e) {
+    }
+    catch (e)
+    {
       throw 'Failed to create HTTP request: ${e}';
     }
   }

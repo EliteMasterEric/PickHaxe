@@ -25,7 +25,7 @@ class Build implements ICommand
   var clean:Bool = false;
   var loader:String;
   var mcVersion:String;
-
+  var mappings:String;
 
   public function new() {}
 
@@ -84,6 +84,14 @@ class Build implements ICommand
         },
         {
           short: null,
+          long: 'mappings',
+          blurb: 'Force the mapping to use for the build.
+                  Valid values include: "mojang", "parchment", "yarn", "mcp"
+                  Defaults to Parchment.',
+          value: '[mappings]',
+        },
+        {
+          short: null,
           long: 'gen-sources',
           blurb: 'Produce .java files rather than a .jar file',
           value: null,
@@ -123,7 +131,13 @@ class Build implements ICommand
 
     CLI.print('Building project for ${loader} ${mcVersion}...');
 
-    var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(loader, mcVersion, noMapping);
+    var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(
+      {
+        loader: loader,
+        mcVersion: mcVersion,
+        noMapping: noMapping,
+        mappings: mappings,
+      });
 
     performGradleSetup(defines);
 
@@ -172,6 +186,18 @@ class Build implements ICommand
             else
             {
               dumpType = 'pretty';
+            }
+          case '--mappings':
+            var nextArg:String = args[i + 1];
+            if (nextArg != null && !nextArg.startsWith('-'))
+            {
+              mappings = nextArg;
+              i++;
+            }
+            else
+            {
+              CLI.print('Error: No mappings specified.');
+              return false;
             }
           case '--no-resources':
             noResources = true;
@@ -250,7 +276,6 @@ class Build implements ICommand
     }
 
     // Create the `generated` folder and all subfolders.
-    CLI.print("Setting up Gradle...", Verbose);
     IO.makeDir(IO.workingDir().joinPaths('generated'));
     var gradleDirs:Array<String> = IO.readDirectory(IO.libraryDir().joinPaths('gradle'), false, true);
     for (gradleDir in gradleDirs)
@@ -448,7 +473,9 @@ class Build implements ICommand
         {
           args = args.concat(['--resource', 'resources/${resource}@${resource}']);
         }
-      } else {
+      }
+      else
+      {
         // We actually need to copy these files to the `generated/resources` folder.
         var resourceDirs:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'), false, true);
         for (resourceDir in resourceDirs)
@@ -457,7 +484,7 @@ class Build implements ICommand
         }
         var resourceFiles:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'), true, false);
         for (resourceFile in resourceFiles)
-        {    
+        {
           if (!IO.exists(IO.workingDir().joinPaths('generated/resources', resourceFile)))
           {
             IO.copyFile(IO.workingDir().joinPaths('resources', resourceFile), IO.workingDir().joinPaths('generated/resources', resourceFile));

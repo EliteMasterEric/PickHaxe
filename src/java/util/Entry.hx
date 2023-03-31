@@ -22,4 +22,4 @@
 
 package java.util;
 
-typedef Entry<K,V> = java.util.Map.Map_Entry<K,V>;
+typedef Entry<K, V> = java.util.Map.Map_Entry<K, V>;

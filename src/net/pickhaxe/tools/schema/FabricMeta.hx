@@ -3,17 +3,18 @@ package net.pickhaxe.tools.schema;
 /**
  * @see https://meta.fabricmc.net/v2/versions
  */
-typedef FabricMetaVersionData = {
+typedef FabricMetaVersionData =
+{
   // List of game versions
-  game: FabricMetaGameData,
+  game:FabricMetaGameData,
   // List of Yarn mapping versions
-  mappings: FabricMetaYarnData,
+  mappings:FabricMetaYarnData,
   // List of Intermediary versions
-  intermediary: FabricMetaIntermediaryData,
+  intermediary:FabricMetaIntermediaryData,
   // List of Fabric loader versions
-  loader: FabricMetaLoaderData,
+  loader:FabricMetaLoaderData,
   // List of Fabric installer versions
-  installer: FabricMetaInstallerData,
+  installer:FabricMetaInstallerData,
 };
 
 /**
@@ -22,7 +23,8 @@ typedef FabricMetaVersionData = {
  */
 typedef FabricMetaGameData = Array<FabricMetaGameDataItem>;
 
-typedef FabricMetaGameDataItem = {
+typedef FabricMetaGameDataItem =
+{
   version:String,
   stable:Bool,
 };
@@ -33,7 +35,8 @@ typedef FabricMetaGameDataItem = {
  */
 typedef FabricMetaYarnData = Array<FabricMetaYarnDataItem>;
 
-typedef FabricMetaYarnDataItem = {
+typedef FabricMetaYarnDataItem =
+{
   gameVersion:String,
   separator:String,
   build:Int,
@@ -48,7 +51,8 @@ typedef FabricMetaYarnDataItem = {
  */
 typedef FabricMetaIntermediaryData = Array<FabricMetaIntermediaryDataItem>;
 
-typedef FabricMetaIntermediaryDataItem = {
+typedef FabricMetaIntermediaryDataItem =
+{
   maven:String,
   version:String,
   stable:Bool,
@@ -60,7 +64,8 @@ typedef FabricMetaIntermediaryDataItem = {
  */
 typedef FabricMetaLoaderData = Array<FabricMetaLoaderDataItem>;
 
-typedef FabricMetaLoaderDataItem = {
+typedef FabricMetaLoaderDataItem =
+{
   separator:String,
   build:Int,
   maven:String,
@@ -74,7 +79,8 @@ typedef FabricMetaLoaderDataItem = {
  */
 typedef FabricMetaInstallerData = Array<FabricMetaInstallerDataItem>;
 
-typedef FabricMetaInstallerDataItem = {
+typedef FabricMetaInstallerDataItem =
+{
   url:String,
   maven:String,
   version:String,
@@ -89,31 +95,33 @@ typedef FabricMetaLoaderVersions = Array<FabricMetaLoaderVersionData>;
 /**
  * @see https://meta.fabricmc.net/v2/versions/loader/:game_version/:loader_version
  */
-typedef FabricMetaLoaderVersionData = {
+typedef FabricMetaLoaderVersionData =
+{
   // A specific loader version.
-  loader: FabricMetaLoaderDataItem,
+  loader:FabricMetaLoaderDataItem,
   // A specific intermediary version.
-  intermediary: FabricMetaIntermediaryDataItem,
+  intermediary:FabricMetaIntermediaryDataItem,
   // Launcher metadata.
-  launcherMeta: FabricMetaLauncherMeta,
+  launcherMeta:FabricMetaLauncherMeta,
 };
 
-typedef FabricMetaLauncherMeta = {
-  version: Int,
-  libraries: {
-    client: Array<FabricMetaLibrary>,
-    common: Array<FabricMetaLibrary>,
-    server: Array<FabricMetaLibrary>,
+typedef FabricMetaLauncherMeta =
+{
+  version:Int,
+  libraries:
+  {
+    client:Array<FabricMetaLibrary>, common:Array<FabricMetaLibrary>, server:Array<FabricMetaLibrary>,
   },
-  mainClass: {
-    client: String,
-    server: String,
+  mainClass:
+  {
+    client:String, server:String,
   }
 };
 
-typedef FabricMetaLibrary = {
-  name: String,
-  url: String
+typedef FabricMetaLibrary =
+{
+  name:String,
+  url:String
 };
 
 typedef FabricAPIVersion = Array<FabricAPIVersionData>;
@@ -121,7 +129,8 @@ typedef FabricAPIVersion = Array<FabricAPIVersionData>;
 /**
  * Example `0.76.0+1.19.4` has base version `0.76.0` and Minecraft version `1.19.4`.
  */
-typedef FabricAPIVersionData = {
+typedef FabricAPIVersionData =
+{
   version:String,
 
   baseVersion:String,

@@ -21,7 +21,7 @@ class ModItems {
   // Item Groups
   public static final ITEM_GROUP:CreativeModeTab = FabricItemGroup.builder(new ResourceLocation(MadeInHaxeMod.MOD_ID, "made_in_haxe"))
       .icon(getCreativeTabIcon)
-      .displayItems(new DisplayItemsGeneratorHaxe((enabledFeatures:FeatureFlagSet, entries:CreativeModeTabOutput, operatorEnabled:Bool) -> {
+      .displayItems(DisplayItemsGeneratorHaxe.buildB((enabledFeatures:FeatureFlagSet, entries:CreativeModeTabOutput, operatorEnabled:Bool) -> {
         entries.accept(cast (HAXE_GLYPH, ItemLike));
       }))
       .build();

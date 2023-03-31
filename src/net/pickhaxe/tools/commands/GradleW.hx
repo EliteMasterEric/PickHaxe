@@ -53,7 +53,11 @@ class GradleW implements ICommand
 
     CLI.print('Performing gradle task for ${loader} ${mcVersion}...');
 
-    var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(loader, mcVersion);
+    var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(
+      {
+        loader: loader,
+        mcVersion: mcVersion,
+      });
 
     performGradleTask(defines);
   }
@@ -107,7 +111,8 @@ class GradleW implements ICommand
     {
       CLI.print('Error: No loader specified.');
       return false;
-    } else if (!MCVersion.isLoaderValid(loader))
+    }
+    else if (!MCVersion.isLoaderValid(loader))
     {
       CLI.print('Error: Invalid loader specified, expected ${Constants.MINECRAFT_LOADERS}.');
       return false;

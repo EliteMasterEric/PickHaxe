@@ -73,10 +73,23 @@ repositories {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${System.getProperty('pickhaxe.minecraft.version')}"
-	// mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-  mappings loom.layered() {
-      officialMojangMappings()
-      parchment("org.parchmentmc.data:parchment-1.19.3:2023.02.26@zip")
+
+  // Configure mappings for the Fabric loader.
+  switch(System.getProperty('pickhaxe.mappings.current')) {
+    case 'official':
+    case 'mojmaps':
+    case 'mojang':
+      mappings loom.officialMojangMappings()
+      break;
+    case 'parchment':
+      mappings loom.layered() {
+          officialMojangMappings()
+          parchment("org.parchmentmc.data:${System.getProperty('pickhaxe.mappings.parchment.version')}@zip")
+      }
+      break;
+    case 'yarn':
+      mappings "net.fabricmc:yarn:${System.getProperty('pickhaxe.mappings.yarn.version')}"
+      break;
   }
 
 	modImplementation "net.fabricmc:fabric-loader:${System.getProperty('pickhaxe.loader.fabric.loaderVersion')}"

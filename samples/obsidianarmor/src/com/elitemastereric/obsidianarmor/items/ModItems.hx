@@ -1,15 +1,16 @@
 package com.elitemastereric.obsidianarmor.items;
 
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import com.elitemastereric.obsidianarmor.materials.ObsidianArmorMaterial;
 import com.elitemastereric.obsidianarmor.materials.ObsidianToolMaterial;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem.ArmorItem_Type;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.AxeItem;
@@ -38,10 +39,10 @@ class ModItems {
 
   // Armor
   public static final OBSIDIAN_ARMOR_MATERIAL:ArmorMaterial = new ObsidianArmorMaterial();
-  public static final OBSIDIAN_HELMET:Item = new ArmorItem(OBSIDIAN_ARMOR_MATERIAL, EquipmentSlot.HEAD, new Item_Properties().rarity(Rarity.RARE).fireResistant());
-  public static final OBSIDIAN_CHESTPLATE:Item = new ArmorItem(OBSIDIAN_ARMOR_MATERIAL, EquipmentSlot.CHEST, new Item_Properties().rarity(Rarity.RARE).fireResistant());
-  public static final OBSIDIAN_LEGGINGS:Item = new ArmorItem(OBSIDIAN_ARMOR_MATERIAL, EquipmentSlot.LEGS, new Item_Properties().rarity(Rarity.RARE).fireResistant());
-  public static final OBSIDIAN_BOOTS:Item = new ArmorItem(OBSIDIAN_ARMOR_MATERIAL, EquipmentSlot.FEET, new Item_Properties().rarity(Rarity.RARE).fireResistant());
+  public static final OBSIDIAN_HELMET:Item = new ArmorItem(OBSIDIAN_ARMOR_MATERIAL, ArmorItem_Type.HELMET, new Item_Properties().rarity(Rarity.RARE).fireResistant());
+  public static final OBSIDIAN_CHESTPLATE:Item = new ArmorItem(OBSIDIAN_ARMOR_MATERIAL, ArmorItem_Type.CHESTPLATE, new Item_Properties().rarity(Rarity.RARE).fireResistant());
+  public static final OBSIDIAN_LEGGINGS:Item = new ArmorItem(OBSIDIAN_ARMOR_MATERIAL, ArmorItem_Type.LEGGINGS, new Item_Properties().rarity(Rarity.RARE).fireResistant());
+  public static final OBSIDIAN_BOOTS:Item = new ArmorItem(OBSIDIAN_ARMOR_MATERIAL, ArmorItem_Type.BOOTS, new Item_Properties().rarity(Rarity.RARE).fireResistant());
 
   // Item Groups
   public static final ITEM_GROUP:CreativeModeTab = FabricItemGroup.builder(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_armor"))

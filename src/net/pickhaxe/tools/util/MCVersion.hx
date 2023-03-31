@@ -45,7 +45,8 @@ class MCVersion
    * @param version The version to check.
    * @return True if the version is an old beta.
    */
-  public static function isVersionBeta(version:String):Bool {
+  public static function isVersionBeta(version:String):Bool
+  {
     var versionData:VersionData = Mojang.fetchVersionData(version);
     return versionData != null && versionData.type == OldBeta;
   }
@@ -55,7 +56,39 @@ class MCVersion
    * @param loader The loader to check.
    * @return True if the loader is valid.
    */
-  public static function isLoaderValid(loader:String) {
+  public static function isLoaderValid(loader:String)
+  {
     return Constants.MINECRAFT_LOADERS.contains(loader);
+  }
+
+  /**
+   * Get the previous Minecraft version.
+   * Only works for release versions.
+   * 
+   * TODO: 1.19.0 goes to 1.18.0
+   * 
+   * @param mcVersion The version to get the previous version of.
+   * @return The previous version.
+   */
+  public static function getPreviousVersion(mcVersion:String):String
+  {
+    var pieces:Array<String> = mcVersion.split(".");
+    switch (pieces.length)
+    {
+      case 2:
+        return pieces[0] + "." + (Std.parseInt(pieces[1]) - 1);
+      case 3:
+        var lastPiece:Int = Std.parseInt(pieces[2]);
+        if (lastPiece > 0)
+        {
+          return pieces[0] + "." + pieces[1] + "." + (lastPiece - 1);
+        }
+        else
+        {
+          // Parse 1.19.0 as 1.19
+          return getPreviousVersion(pieces[0] + "." + pieces[1]);
+        }
+    }
+    return mcVersion; // LOL should never happen.
   }
 }

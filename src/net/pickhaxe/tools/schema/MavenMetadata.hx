@@ -1,13 +1,15 @@
 package net.pickhaxe.tools.schema;
 
-typedef MavenMetadata = {
+typedef MavenMetadata =
+{
   var groupId:String;
   var artifactId:String;
 
-  var versioning: MavenVersioning;
+  var versioning:MavenVersioning;
 };
 
-typedef MavenVersioning = {
+typedef MavenVersioning =
+{
   var latest:String;
   var release:String;
   var versions:Array<String>; // Array of <version> tags with string values

@@ -55,7 +55,8 @@ class ModCoreMacro
    * Add an annotation to the class to tell Haxe to generate cleaner native code.
    * @return Null, to indicate no fields were added.
    */
-  public static macro function enableNativeGen():Array<Field> {
+  public static macro function enableNativeGen():Array<Field>
+  {
     MacroUtil.addClassMetadata('nativeGen'); // Tell Haxe to generate cleaner native code.
 
     return null;

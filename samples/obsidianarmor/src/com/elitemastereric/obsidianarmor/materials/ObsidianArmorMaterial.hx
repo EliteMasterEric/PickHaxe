@@ -1,5 +1,6 @@
 package com.elitemastereric.obsidianarmor.materials;
 
+import net.minecraft.world.item.ArmorItem.ArmorItem_Type;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -29,9 +30,19 @@ class ObsidianArmorMaterial implements ArmorMaterial
     return DURABILITY[slot.getIndex()];
   }
 
+  public function getDurabilityForType(type:ArmorItem_Type):Int
+  {
+    return DURABILITY[type.getSlot().getIndex()];
+  }
+
   public function getDefenseForSlot(slot:EquipmentSlot):Int
   {
     return PROTECTION[slot.getIndex()];
+  }
+
+  public function getDefenseForType(type:ArmorItem_Type):Int
+  {
+    return PROTECTION[type.getSlot().getIndex()];
   }
 
   public function getEnchantmentValue():Int

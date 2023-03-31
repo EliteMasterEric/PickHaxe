@@ -21,12 +21,17 @@ typedef ItemGroupEvents_ModifyEntries = ModifyEntries;
 /**
  * @see https://github.com/HaxeFoundation/haxe/issues/11054
  */
-class ModifyEntriesHaxe implements ModifyEntries {
+class ModifyEntriesHaxe implements ModifyEntries
+{
   var callback:FabricItemGroupEntries->Void;
-  public function new(callback:FabricItemGroupEntries->Void) {
+
+  public function new(callback:FabricItemGroupEntries->Void)
+  {
     this.callback = callback;
   }
-  public function modifyEntries(entries:FabricItemGroupEntries):Void {
+
+  public function modifyEntries(entries:FabricItemGroupEntries):Void
+  {
     callback(entries);
   }
 }
@@ -42,12 +47,17 @@ typedef ItemGroupEvents_ModifyEntriesAll = ModifyEntriesAll;
 /**
  * @see https://github.com/HaxeFoundation/haxe/issues/11054
  */
- class ModifyEntriesAllHaxe implements ModifyEntriesAll {
-  var callback:(net.minecraft.world.item.CreativeModeTab, FabricItemGroupEntries)->Void;
-  public function new(callback:(net.minecraft.world.item.CreativeModeTab, FabricItemGroupEntries)->Void) {
+class ModifyEntriesAllHaxe implements ModifyEntriesAll
+{
+  var callback:(net.minecraft.world.item.CreativeModeTab, FabricItemGroupEntries) -> Void;
+
+  public function new(callback:(net.minecraft.world.item.CreativeModeTab, FabricItemGroupEntries) -> Void)
+  {
     this.callback = callback;
   }
-  public function modifyEntries(tab:net.minecraft.world.item.CreativeModeTab, entries:FabricItemGroupEntries):Void {
+
+  public function modifyEntries(tab:net.minecraft.world.item.CreativeModeTab, entries:FabricItemGroupEntries):Void
+  {
     callback(tab, entries);
   }
 }

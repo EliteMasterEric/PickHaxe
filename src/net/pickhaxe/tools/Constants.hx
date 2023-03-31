@@ -46,5 +46,5 @@ class Constants
   /**
    * The list of valid loaders.
    */
-  public static final MINECRAFT_LOADERS:Array<String> = [ 'forge', 'fabric' ];
+  public static final MINECRAFT_LOADERS:Array<String> = ['forge', 'fabric'];
 }

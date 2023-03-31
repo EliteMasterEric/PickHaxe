@@ -3,7 +3,6 @@ package net.pickhaxe.core;
 #if fabric
 import net.fabricmc.api.ModInitializer;
 #elseif forge
-
 #end
 
 /**

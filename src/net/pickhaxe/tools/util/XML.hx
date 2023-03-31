@@ -39,7 +39,7 @@ class XML
     return null;
   }
 
-  public static function readFabricAPIMavenMetadata():MavenMetadata
+  public static function readFabricAPIMavenMetadata(?verbose:Bool = false):MavenMetadata
   {
     var mavenMetaStr = FabricMeta.fetchMavenMetadataStr();
     if (mavenMetaStr == null)
@@ -54,7 +54,7 @@ class XML
         return file;
       case Failure(err):
         CLI.print('Failed to parse maven metadata');
-        CLI.print('${err}');
+        CLI.print('${err}', Verbose);
     }
     return null;
   }
@@ -74,7 +74,7 @@ class XML
         return file;
       case Failure(err):
         CLI.print('Failed to parse maven metadata');
-        CLI.print('${err}');
+        CLI.print('${err}', Verbose);
     }
     return null;
   }

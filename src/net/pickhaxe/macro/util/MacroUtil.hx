@@ -15,7 +15,8 @@ class MacroUtil
    * @param define The name of the define to set.
    * @param value The value to set the define to.
    */
-  public static function setDefine(define:String, value:String):Void {
+  public static function setDefine(define:String, value:String):Void
+  {
     Compiler.define(define, value);
   }
 
@@ -24,7 +25,8 @@ class MacroUtil
    * 
    * @param define The name of the define to check.
    */
-  public static function isDefined(define:String):Bool {
+  public static function isDefined(define:String):Bool
+  {
     return Context.defined(define);
   }
 
@@ -34,7 +36,8 @@ class MacroUtil
    * 
    * @param define The name of the define to retrieve.
    */
-  public static function getDefine(define:String):Dynamic {
+  public static function getDefine(define:String):Dynamic
+  {
     return Context.definedValue(define);
   }
 
@@ -60,60 +63,74 @@ class MacroUtil
    * Add metadata to the field, if an annotation of that name is not already present.
    * If the annotation is present, the metadata will replace the existing annotation.
    */
-  public static function setFieldMetadata(field:haxe.macro.Expr.Field, name:String, values:Array<Expr>):Void {
+  public static function setFieldMetadata(field:haxe.macro.Expr.Field, name:String, values:Array<Expr>):Void
+  {
     // Remove existing matching metadata
     var matchingMetas:Array<MetadataEntry> = [];
-    for (meta in field.meta) {
-      if (meta.name == name) {
+    for (meta in field.meta)
+    {
+      if (meta.name == name)
+      {
         matchingMetas.push(meta);
       }
     }
-    for (meta in matchingMetas) {
+    for (meta in matchingMetas)
+    {
       field.meta.remove(meta);
     }
 
     // Add new metadata
-    field.meta.push({
-      name: name,
-      params: values,
-      pos: MacroApi.pos()
-    });
+    field.meta.push(
+      {
+        name: name,
+        params: values,
+        pos: MacroApi.pos()
+      });
   }
-  
+
   /**
    * Add metadata to the field, if an annotation of that name is not already present.
    * If the annotation is present, the new metadata will be skipped.
    */
-  public static function addFieldMetadata(field:haxe.macro.Expr.Field, name:String, values:Array<Expr>):Void {
+  public static function addFieldMetadata(field:haxe.macro.Expr.Field, name:String, values:Array<Expr>):Void
+  {
     // Check for existing matching metadata
-    for (meta in field.meta) {
-      if (meta.name == name) {
+    for (meta in field.meta)
+    {
+      if (meta.name == name)
+      {
         return;
       }
     }
 
     // Add new metadata
-    field.meta.push({
-      name: name,
-      params: values,
-      pos: MacroApi.pos()
-    });
+    field.meta.push(
+      {
+        name: name,
+        params: values,
+        pos: MacroApi.pos()
+      });
   }
 
-  public static function removeFieldMetadata(field:haxe.macro.Expr.Field, name:String):Void {
+  public static function removeFieldMetadata(field:haxe.macro.Expr.Field, name:String):Void
+  {
     // Remove existing matching metadata
     var matchingMetas:Array<MetadataEntry> = [];
-    for (meta in field.meta) {
-      if (meta.name == name) {
+    for (meta in field.meta)
+    {
+      if (meta.name == name)
+      {
         matchingMetas.push(meta);
       }
     }
-    for (meta in matchingMetas) {
+    for (meta in matchingMetas)
+    {
       field.meta.remove(meta);
     }
   }
 
-  public static function setClassMetadata(meta:haxe.macro.Type.MetaAccess, name:String, values:Array<Expr>):Void {
+  public static function setClassMetadata(meta:haxe.macro.Type.MetaAccess, name:String, values:Array<Expr>):Void
+  {
     // Remove existing matching metadata
     meta.remove(name);
 
@@ -121,7 +138,8 @@ class MacroUtil
     meta.add(name, values, MacroApi.pos());
   }
 
-  public static function removeClassMetadata(meta:haxe.macro.Type.MetaAccess, name:String):Void {
+  public static function removeClassMetadata(meta:haxe.macro.Type.MetaAccess, name:String):Void
+  {
     // Remove existing matching metadata
     meta.remove(name);
   }
