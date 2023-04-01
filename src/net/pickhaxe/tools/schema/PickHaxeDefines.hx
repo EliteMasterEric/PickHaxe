@@ -56,6 +56,7 @@ typedef PickHaxeDefinesPickHaxe =
       version:String
     }, parchment:
     {
+      maven:String,
       version:String
     }, intermediary:
     {
@@ -147,6 +148,7 @@ class Builder
     var currentMappings:String = params.mappings;
 
     var parchmentVersion:String = Parchment.fetchParchmentVersion(params.mcVersion);
+    var parchmentMaven:String = null;
     if (parchmentVersion == null && params.mappings == 'parchment')
     {
       var previousVersion:String = MCVersion.getPreviousVersion(params.mcVersion);
@@ -161,13 +163,15 @@ class Builder
       else
       {
         // Reformat the mappings version.
-        parchmentVersion = 'parchment-${previousVersion}:${parchmentVersion}';
+        parchmentMaven = 'parchment-${previousVersion}:${parchmentVersion}';
+        parchmentVersion = '${parchmentVersion}-${previousVersion}';
       }
     }
     else
     {
       // Reformat the mappings version.
-      parchmentVersion = 'parchment-${params.mcVersion}:${parchmentVersion}';
+      parchmentMaven = 'parchment-${params.mcVersion}:${parchmentVersion}';
+      parchmentVersion = '${parchmentVersion}-${params.mcVersion}';
     }
 
     var fabricAPIVersion:String = FabricMeta.getApiVersionForMinecraft(params.mcVersion);
@@ -220,6 +224,7 @@ class Builder
                 },
               parchment:
                 {
+                  maven: parchmentMaven,
                   version: parchmentVersion, // TODO: Does Parchment have an API?
                 },
               intermediary:
@@ -250,6 +255,7 @@ class Builder
     var versionMetadata:PickHaxeVersionMetadata = PickHaxeVersionMetadataReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
     var versionMappings:PickHaxeVersionMappings = PickHaxeVersionMappingsReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
 
+    
     return {
       pickhaxe:
         {
@@ -291,6 +297,7 @@ class Builder
               current: 'parchment',
               parchment:
                 {
+                  maven: null,
                   version: versionMappings.parchment,
                 },
               yarn:
@@ -335,6 +342,7 @@ class Builder
     result.append(DEFINE, 'pickhaxe.mappings.current=${defines.pickhaxe.mappings.current}');
     result.append(DEFINE, 'pickhaxe.mappings.intermediary.maven=${defines.pickhaxe.mappings.intermediary.maven}');
     result.append(DEFINE, 'pickhaxe.mappings.intermediary.version=${defines.pickhaxe.mappings.intermediary.version}');
+    result.append(DEFINE, 'pickhaxe.mappings.parchment.maven=${defines.pickhaxe.mappings.parchment.maven}');
     result.append(DEFINE, 'pickhaxe.mappings.parchment.version=${defines.pickhaxe.mappings.parchment.version}');
     result.append(DEFINE, 'pickhaxe.mappings.yarn.version=${defines.pickhaxe.mappings.yarn.version}');
     result.append(DEFINE, 'pickhaxe.minecraft.version=${defines.pickhaxe.minecraft.version}');

@@ -1,5 +1,8 @@
 package net.pickhaxe.tools;
 
+import net.pickhaxe.tools.commands.Make;
+import net.pickhaxe.tools.process.Haxe;
+import net.pickhaxe.tools.commands.Clean;
 import net.pickhaxe.tools.commands.GradleW;
 import net.pickhaxe.tools.commands.Init;
 import net.pickhaxe.tools.commands.Setup;
@@ -98,7 +101,7 @@ class Main
           default:
             if (Help.getCommandNames().contains(arg))
             {
-              CLI.print('Command: ${arg}');
+              // CLI.print('Command: ${arg}');
               command = arg;
             }
             else
@@ -113,20 +116,29 @@ class Main
       }
     }
 
+    try {
+      Haxe.instance.validateVersion();
+    } catch (error) {
+      CLI.print('A fatal exception occurred within PickHaxe while performing this operation.');
+     
+      CLI.print('${error}');
+      return;
+    }
+
     if (command == null)
     {
+      performCommand('help', [], verbose);
+
       if (unknownArgs.length > 0)
       {
         Help.printUnknownArgs(unknownArgs);
       }
-
-      performCommand('help', [], verbose);
-      return;
     }
     else
     {
       if (unknownArgs.length > 0)
       {
+        performCommand('help', [command], verbose);
         Help.printUnknownArgs(unknownArgs);
       }
       else if (help)
@@ -150,22 +162,31 @@ class Main
   {
     Help.printVersion();
 
-    switch (command)
+    try
     {
-      case 'help':
-        new Help().perform(args);
-      case 'setup':
-        new Setup().perform(args);
-      case 'init':
-        new Init().perform(args);
-      case 'build':
-        new Build().perform(args);
-      case 'clean':
-        new Build().perform(args);
-      case 'gradlew':
-        new GradleW().perform(args);
-      default:
-        CLI.print('Case fallthrough for command ${command}.');
+      switch (command)
+      {
+        case 'help':
+          new Help().perform(args);
+        case 'setup':
+          new Setup().perform(args);
+        case 'init':
+          new Init().perform(args);
+        case 'build':
+          new Build().perform(args);
+        case 'make':
+          new Make().perform(args);
+        case 'clean':
+          new Clean().perform(args);
+        case 'gradlew':
+          new GradleW().perform(args);
+        default:
+          CLI.print('Case fallthrough for command ${command}.');
+      }
+    } catch (error) {
+      CLI.print('A fatal exception occurred within PickHaxe while performing this operation.');
+     
+      CLI.print('${error}');
     }
   }
 }

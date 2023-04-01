@@ -15,6 +15,8 @@ import net.pickhaxe.tools.util.JSON;
  */
 class Build implements ICommand
 {
+  var commandName:String = 'build';
+
   var debug:Bool = false;
   var skipGradle:Bool = false;
   var forceGradle:Bool = false;
@@ -38,7 +40,7 @@ class Build implements ICommand
     return {
       blurb: 'Builds a PickHaxe project',
       description: 'Builds a PickHaxe project for a specific loader and Minecraft version.',
-      args: ['loader', 'version'],
+      args: ['[loader]', '[version]'],
       options: [
         {
           short: 'h',
@@ -105,11 +107,11 @@ class Build implements ICommand
         {
           short: null,
           long: 'dump',
-          blurb: 'Generates a dump of the generated Java classes.
+          blurb: 'Generates a dump of Haxe\'s auto-generated extern classes.
                   Useful for debugging compilation issues.
-                  Mode defaults to "pretty".
+                  Mode defaults to "pretty", but no dump is generated if `--dump` is not specified.
                   Valid values: "pretty", "record", "position", "legacy", "raw"',
-          value: '[mode]',
+          value: '<mode>',
         },
         {
           short: null,
@@ -238,12 +240,16 @@ class Build implements ICommand
 
     if (loader == null)
     {
-      CLI.print('Error: No loader specified.');
+      printUsage();
+      CLI.print('');
+      CLI.print('Error: No loader specified, expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].');
       return false;
     }
     else if (!MCVersion.isLoaderValid(loader))
     {
-      CLI.print('Error: Invalid loader specified, expected ${Constants.MINECRAFT_LOADERS}.');
+      printUsage();
+      CLI.print('');
+      CLI.print('Error: Invalid loader specified, expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].');
       return false;
     }
 

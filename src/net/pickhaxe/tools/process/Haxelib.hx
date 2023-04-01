@@ -22,19 +22,8 @@ class Haxelib extends CLIProcess
    */
   public function getLibraryPath(library:String):String
   {
-    var output:String = getProcessOutput(['path', library]);
+    var output:String = getProcessOutput(['libpath', library]);
 
-    var result:String = null;
-    var lines:Array<String> = output.split('\n');
-
-    for (i in 1...lines.length)
-    {
-      if (lines[i].startsWith('-D $library'))
-      {
-        result = lines[i - 1].trim();
-      }
-    }
-
-    return result;
+    return output;
   }
 }

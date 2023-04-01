@@ -41,7 +41,7 @@ class Haxe extends CLIProcess
   }
 
   public function getVersion():thx.semver.Version {
-    var output:String = getProcessOutput(['-version'], true);
+    var output:String = getProcessOutput(['-version'], false);
     return output;
   }
 }

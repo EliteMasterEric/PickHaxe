@@ -151,7 +151,7 @@ class Help implements ICommand
       usageString += ' ${arg}';
     }
 
-    usageString += ' [options]';
+    usageString += ' <options>';
 
     CLI.print(usageString);
 
