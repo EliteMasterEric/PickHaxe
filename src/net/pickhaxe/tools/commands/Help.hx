@@ -272,7 +272,7 @@ class Help implements ICommand
     }
     else
     {
-      CLI.print('Haxe v${Constants.HAXE_VERSION}');
+      // CLI.print('Haxe v${Constants.HAXE_VERSION}');
     }
   }
 

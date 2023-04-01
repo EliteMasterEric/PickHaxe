@@ -12,8 +12,8 @@ class Haxe extends CLIProcess
 
   public function new()
   {
-    // super('haxe');
-    super('C:/Haxe/haxe_430_develop/haxe.exe');
+    super('haxe');
+    // super('C:/Haxe/haxe_430_develop/haxe.exe');
   }
 
   /**
@@ -30,6 +30,18 @@ class Haxe extends CLIProcess
 
     var output:String = getProcessOutput(['generated/build.hxml'], true);
 
+    return output;
+  }
+
+  public function validateVersion():Void {
+    var version:thx.semver.Version = getVersion();
+    if (version.major < 4 || version.minor < 3) {
+      throw 'Haxe version 4.3.0 or higher is required.';
+    }
+  }
+
+  public function getVersion():thx.semver.Version {
+    var output:String = getProcessOutput(['-version'], true);
     return output;
   }
 }
