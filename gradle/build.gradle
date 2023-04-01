@@ -16,6 +16,7 @@ plugins {
   // Forge
   //
   id 'net.minecraftforge.gradle' version '5.1.+' apply false
+  id 'org.parchmentmc.librarian.forgegradle' version '1.+' apply false
 
   // 
   // Fabric
@@ -45,19 +46,64 @@ switch(System.getProperty('pickhaxe.loader.current')) {
 
 switch(System.getProperty('pickhaxe.java.version')) {
   case '1.8':
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    switch(System.getProperty('pickhaxe.loader.current')) {
+      case 'fabric':
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        break;
+      case 'forge':
+        // Nothing
+        break;
+      default:
+        throw new Exception("PickHaxe: Unknown loader: ${System.getProperty('pickhaxe.loader.current')}")
+    }
   case '16':
-    sourceCompatibility = JavaVersion.VERSION_16
-    targetCompatibility = JavaVersion.VERSION_16
+    switch(System.getProperty('pickhaxe.loader.current')) {
+      case 'fabric':
+        sourceCompatibility = JavaVersion.VERSION_16
+        targetCompatibility = JavaVersion.VERSION_16
+        break;
+      case 'forge':
+        // Nothing
+        break;
+      default:
+        throw new Exception("PickHaxe: Unknown loader: ${System.getProperty('pickhaxe.loader.current')}")
+    }
   case '17':
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    switch(System.getProperty('pickhaxe.loader.current')) {
+      case 'fabric':
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        break;
+      case 'forge':
+        java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+        break;
+      default:
+        throw new Exception("PickHaxe: Unknown loader: ${System.getProperty('pickhaxe.loader.current')}")
+    }
 }
 
 archivesBaseName = System.getProperty('pickhaxe.mod.id')
 version = System.getProperty('pickhaxe.mod.version')
 group = System.getProperty('pickhaxe.mod.parentPackage')
+
+if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
+  minecraft {
+    switch(System.getProperty('pickhaxe.mappings.current')) {
+      case 'official':
+      case 'mojmaps':
+      case 'mojang':
+        mappings channel: 'official', version: System.getProperty('pickhaxe.minecraft.version')
+        break;
+      case 'parchment':
+        mappings channel: 'parchment', version: System.getProperty('pickhaxe.mappings.parchment.version')
+        break;
+      case 'yarn':
+        // mappings channel: 'snapshot', version: System.getProperty('pickhaxe.minecraft.version')
+        break;
+    }
+  }
+}
 
 repositories {
   mavenCentral()
@@ -71,37 +117,48 @@ repositories {
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${System.getProperty('pickhaxe.minecraft.version')}"
-
-  // Configure mappings for the Fabric loader.
-  switch(System.getProperty('pickhaxe.mappings.current')) {
-    case 'official':
-    case 'mojmaps':
-    case 'mojang':
-      mappings loom.officialMojangMappings()
+  switch(System.getProperty('pickhaxe.loader.current')) {
+    case 'forge':
+      minecraft "net.minecraftforge:forge:${System.getProperty('pickhaxe.minecraft.version')}-${System.getProperty('pickhaxe.loader.forge.apiVersion')}"
       break;
-    case 'parchment':
-      mappings loom.layered() {
-          officialMojangMappings()
-          parchment("org.parchmentmc.data:${System.getProperty('pickhaxe.mappings.parchment.version')}@zip")
+    case 'fabric':
+      // To change the versions see the gradle.properties file
+	    minecraft "com.mojang:minecraft:${System.getProperty('pickhaxe.minecraft.version')}"
+
+      // Configure mappings for the Fabric loader.
+      switch(System.getProperty('pickhaxe.mappings.current')) {
+        case 'official':
+        case 'mojmaps':
+        case 'mojang':
+          mappings loom.officialMojangMappings()
+          break;
+        case 'parchment':
+          mappings loom.layered() {
+              officialMojangMappings()
+              parchment("org.parchmentmc.data:${System.getProperty('pickhaxe.mappings.parchment.maven')}@zip")
+          }
+          break;
+        case 'yarn':
+          mappings "net.fabricmc:yarn:${System.getProperty('pickhaxe.mappings.yarn.version')}"
+          break;
       }
+
+	    modImplementation "net.fabricmc:fabric-loader:${System.getProperty('pickhaxe.loader.fabric.loaderVersion')}"
+
+	    modImplementation "net.fabricmc.fabric-api:fabric-api:${System.getProperty('pickhaxe.loader.fabric.apiVersion')}"
+
+	    //modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
       break;
-    case 'yarn':
-      mappings "net.fabricmc:yarn:${System.getProperty('pickhaxe.mappings.yarn.version')}"
-      break;
+
+    default:
+      throw new Exception("PickHaxe: Unknown loader: ${System.getProperty('pickhaxe.loader.current')}")
   }
-
-	modImplementation "net.fabricmc:fabric-loader:${System.getProperty('pickhaxe.loader.fabric.loaderVersion')}"
-
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${System.getProperty('pickhaxe.loader.fabric.apiVersion')}"
-
-	//modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 }
 
 tasks.withType(JavaCompile).configureEach {
 	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
 	it.options.release = System.getProperty('pickhaxe.java.version') == '17' ? 17 : 8
+  options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
 sourceSets {
@@ -136,8 +193,20 @@ tasks.jar {
       'PickHaxe-Loader': System.getProperty('pickhaxe.loader.current'),
       'PickHaxe-Mod-Metadata-Id': System.getProperty('pickhaxe.mod.id'),
       'PickHaxe-Mod-Metadata-Version': System.getProperty('pickhaxe.mod.version'),
+
+      // "Specification-Title"     : "examplemod",
+      // "Specification-Vendor"    : "examplemodsareus",
+      // "Specification-Version"   : "1", // We are version 1 of ourselves
+      // "Implementation-Title"    : project.name,
+      // "Implementation-Version"  : project.jar.archiveVersion,
+      // "Implementation-Vendor"   : "examplemodsareus",
+      "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
     )
   }
+}
+
+if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
+  jar.finalizedBy('reobfJar')
 }
 
 // Run the copyBuildArtifacts task after the build task.

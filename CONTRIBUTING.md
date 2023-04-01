@@ -1,7 +1,7 @@
 # CONTRIBUTING
 
 Some quick notes on contributing:
-- Enable Haxe Formatting.
+- Enable (and adhere to) Haxe Formatting and Haxe Checkstyle.
 - `net.minecraft_draft` contains unverified classes generated from JavaDocs.
 - `net.minecraft` contains verified/manually fixed classes based on the draft classes.
 - `net.pickhaxe` contains internal library stuff (such as classes for the build tool) as well as Fabric/Forge interop.

@@ -5,7 +5,7 @@ package net.minecraft.world.item;
  */
 @:native("net.minecraft.world.item.CreativeModeTab")
 @:mapping("net.minecraft.class_1761")
-extern class CreativeModeTab implements net.fabricmc.fabric.api.itemgroup.v1.IdentifiableItemGroup
+extern class CreativeModeTab #if fabric implements net.fabricmc.fabric.api.itemgroup.v1.IdentifiableItemGroup #end
 {
   public function new(row:net.minecraft.world.item.CreativeModeTab.Row, i:Int, type:net.minecraft.world.item.CreativeModeTab.Type,
     component:net.minecraft.network.chat.Component, supplier:java.util.function.Supplier<net.minecraft.world.item.ItemStack>,

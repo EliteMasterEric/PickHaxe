@@ -1,23 +1,16 @@
 {
-    "name": "PickHaxe",
-    "url": "https://github.com/EliteMasterEric/pickhaxe",
-    "license": "MIT",
-    "tags": [
-      "java",
-      "minecraft",
-      "fabric",
-      "forge",
-      "mods",
-      "modding"
-    ],
-    "classPath": "src",
-    "description": "A Haxe framework to build Minecraft mods. Fabric, Forge, and more.",
-    "contributors": ["MasterEric"],
-    "releasenote": "In development",
-    "version": "0.2.0",
-    "dependencies": {
-      "tink_macro": "",
-      "tink_xml": ""
-    }
+  "name": "pickhaxe",
+  "url": "https://github.com/EliteMasterEric/pickhaxe",
+  "license": "MIT",
+  "tags": ["java", "minecraft", "fabric", "forge", "mods", "modding"],
+  "classPath": "src",
+  "description": "A Haxe framework to build Minecraft mods. Fabric, Forge, and more.",
+  "contributors": ["MasterEric"],
+  "releasenote": "In development",
+  "version": "0.1.0",
+  "dependencies": {
+    "tink_lang": "",
+    "tink_macro": "",
+    "tink_xml": ""
   }
-  
+}

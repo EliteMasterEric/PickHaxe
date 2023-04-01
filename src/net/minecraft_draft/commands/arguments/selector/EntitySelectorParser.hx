@@ -5,7 +5,7 @@ package net.minecraft.commands.arguments.selector;
  */
 @:native("net.minecraft.commands.arguments.selector.EntitySelectorParser")
 @:mapping("net.minecraft.class_2303")
-extern class EntitySelectorParser implements net.fabricmc.fabric.api.command.v2.FabricEntitySelectorReader
+extern class EntitySelectorParser #if fabric implements net.fabricmc.fabric.api.command.v2.FabricEntitySelectorReader #end
 {
   @:mapping("field_33069")
   public static final SYNTAX_SELECTOR_START:Int;

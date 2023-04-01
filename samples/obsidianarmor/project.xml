@@ -8,10 +8,9 @@
     resourcePath="./resources/"
   />
 
-  <!-- CLIENT, SERVER, or * -->
-  <mod-environment value="*" />
-
-  <mod-entry-point value="ObsidianArmorMod" />
+  <mod-entry-point
+    environment="*"
+    value="ObsidianArmorMod" />
 
   <mod-metadata 
     name="Obsidian Armor"

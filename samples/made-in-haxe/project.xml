@@ -8,10 +8,9 @@
     resourcePath="./resources/"
   />
 
-  <!-- CLIENT, SERVER, or * -->
-  <mod-environment value="*" />
-
-  <mod-entry-point value="MadeInHaxeMod" />
+  <mod-entry-point 
+    environment="*"
+    value="MadeInHaxeMod" />
 
   <mod-metadata 
     name="Made In Haxe"
@@ -19,5 +18,5 @@
   />
 
   <!-- https://spdx.org/licenses/ -->
-  <mod-license value="MIT" />
+  <mod-license value="LGPLv3 License" />
 </pickhaxe>

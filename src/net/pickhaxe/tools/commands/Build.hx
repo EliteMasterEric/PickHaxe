@@ -1,5 +1,7 @@
 package net.pickhaxe.tools.commands;
 
+import net.pickhaxe.tools.util.Template;
+import haxe.io.Path;
 import net.pickhaxe.tools.util.MCVersion;
 import net.pickhaxe.api.FabricMeta;
 import net.pickhaxe.schema.FabricMod;
@@ -144,7 +146,13 @@ class Build implements ICommand
     switch (loader)
     {
       case 'fabric':
-        writeFabricModJson(defines);
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources'));
+        var outputPath:Path = IO.workingDir().joinPaths('generated/resources/fabric.mod.json');
+        Template.writeFabricManifest(defines, outputPath);
+      case 'forge':
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
+        var outputPath:Path = IO.workingDir().joinPaths('generated/resources/META-INF/mods.toml');
+        Template.writeForgeManifest(defines, outputPath);
     }
 
     performHaxeBuild(defines, !genSources);
@@ -317,57 +325,34 @@ class Build implements ICommand
       CLI.print('Fetching dependency JARs...');
       gradleWProcess.copyDependencies(); // Copies all of Minecraft's dependencies to the `generated/build/minecraft` folder.
 
-      CLI.print('Generating sources...');
-      gradleWProcess.genSources(); // Generates mapped sources for Minecraft.
+      if (loader == "fabric") {
+        CLI.print('Generating sources...');
+        gradleWProcess.genSources(); // Generates mapped sources for Minecraft.
 
-      CLI.print('Moving sources...');
-      var loomCache:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven'), false, true);
-      for (loomCacheFile in loomCache)
-      {
-        if (loomCacheFile.endsWith('-sources.jar'))
+        CLI.print('Moving sources...');
+        var loomCache:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven'), false, true);
+        for (loomCacheFile in loomCache)
         {
-          IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
-            IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
+          if (loomCacheFile.endsWith('-sources.jar'))
+          {
+            IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
+              IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
+          }
+          else if (loomCacheFile.endsWith('.jar'))
+          {
+            IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
+              IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
+          }
         }
-        else if (loomCacheFile.endsWith('.jar'))
-        {
-          IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
-            IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
-        }
+      } else {
+        // The copyDependencies task already generates and moves the sources in Forge.
+        // Note that the sources are in `forge-<version>.jar` rather than `minecraft.jar`
       }
     }
     // Cleanup after Gradle.
 
     // Move back to the project root.
     Sys.setCwd(IO.workingDir().joinPaths('../').toString());
-  }
-
-  function writeFabricModJson(defines:PickHaxeDefines):Void
-  {
-    // Copy the `fabric.mod.json` file to the `generated/resources` folder.
-    var entrypoint:EntrypointItem = EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${defines.pickhaxe.mod.entryPoint}');
-
-    var fabricModData:FabricMod =
-      {
-        schemaVersion: 1,
-        id: defines.pickhaxe.mod.id,
-        version: defines.pickhaxe.mod.version,
-
-        name: defines.pickhaxe.mod.name,
-        description: defines.pickhaxe.mod.description,
-
-        // TODO: Add support for client-only and server-only mods.
-        environment: '*',
-        entrypoints:
-          {
-            main: [entrypoint]
-          }
-      };
-
-    var fabricModStr:String = JSON.toJSON(fabricModData);
-
-    IO.makeDir(IO.workingDir().joinPaths('generated/resources'));
-    IO.writeFile(IO.workingDir().joinPaths('generated/resources/fabric.mod.json'), fabricModStr);
   }
 
   /**
@@ -401,6 +386,11 @@ class Build implements ICommand
     args = args.concat([
       '--macro',
       "addGlobalMetadata('net.fabricmc', '@:build(net.pickhaxe.macro.MappingMacro.build())', true, true, false)"
+    ]);
+    // Map the `net.minecraftforge` package.
+    args = args.concat([
+      '--macro',
+      "addGlobalMetadata('net.minecraftforge', '@:build(net.pickhaxe.macro.MappingMacro.build())', true, true, false)"
     ]);
 
     // Include necessary Java libraries as externs.
@@ -498,8 +488,11 @@ class Build implements ICommand
     // Add compile definitions.
     args = args.concat(PickHaxeDefinesBuilder.toHaxeDefines(defines));
 
-    // Include the mod's main class in the build.
-    args.push('${defines.pickhaxe.mod.parentPackage}.${defines.pickhaxe.mod.entryPoint}');
+    // Include the mod's entry points in the build.
+    for (entryPoint in defines.pickhaxe.mod.entryPoints)
+    {
+      args.push('${defines.pickhaxe.mod.parentPackage}.${entryPoint.value}');
+    }
 
     var exitCode:String = Haxe.instance.performBuild(args);
 

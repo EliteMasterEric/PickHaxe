@@ -13,9 +13,9 @@ typedef PickHaxeVersionMetadata =
 
   releaseDate:String,
   javaVersion:String,
-  gradleVersion:String,
-  fabricVersion:String,
-  fabricLoaderVersion:String,
+  fabricGradleVersion:String,
+  forgeGradleVersion:String,
+
   forgeVersion:String
 }
 
