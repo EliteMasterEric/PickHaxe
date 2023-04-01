@@ -72,6 +72,12 @@ class MCVersion
    */
   public static function getPreviousVersion(mcVersion:String):String
   {
+    // HARDCODED BS
+    if (mcVersion == "23w13a_or_b")
+    {
+      return "1.19.3";
+    }
+
     var pieces:Array<String> = mcVersion.split(".");
     switch (pieces.length)
     {

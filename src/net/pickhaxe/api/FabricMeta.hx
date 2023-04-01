@@ -86,7 +86,7 @@ class FabricMeta
     var url:String = ENDPOINT_LOADER_BY_GAMEVERSION.replace(':game_version', gameVersion);
 
     var dataStr:String = APIBase.performGETRequest(url);
-    if (dataStr == null) return null;
+    if (dataStr == null || dataStr == "") return null;
     var response:FabricMetaLoaderVersions = cast Json.parse(dataStr.trim());
     return response;
   }
@@ -96,7 +96,7 @@ class FabricMeta
     var url:String = ENDPOINT_LOADER_BY_GAMEVERSION_LOADERVERSION.replace(':game_version', gameVersion).replace(':loader_version', loaderVersion);
 
     var dataStr:String = APIBase.performGETRequest(url);
-    if (dataStr == null) return null;
+    if (dataStr == null || dataStr == "") return null;
     var response:FabricMetaLoaderVersionData = cast Json.parse(dataStr.trim());
     return response;
   }
@@ -110,7 +110,7 @@ class FabricMeta
     }
 
     var dataStr:String = APIBase.performGETRequest(url);
-    if (dataStr == null) return null;
+    if (dataStr == null || dataStr == "") return null;
     var response:FabricMetaYarnData = cast Json.parse(dataStr.trim());
     return response;
   }

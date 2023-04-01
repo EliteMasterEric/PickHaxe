@@ -361,7 +361,11 @@ class Builder
     result.append(DEFINE, defines.pickhaxe.loader.current);
 
     // Add a define for the current Minecraft version (#if minecraft == 1.19.3, #if minecraft >= 1.12.2)
-    result.append(DEFINE, 'minecraft=${defines.pickhaxe.minecraft.version}');
+    if (defines.pickhaxe.minecraft.version == "23w13a_or_b") {
+      result.append(DEFINE, 'minecraft=1.19.4');
+    } else {
+      result.append(DEFINE, 'minecraft=${defines.pickhaxe.minecraft.version}');
+    }
 
     return result;
   }

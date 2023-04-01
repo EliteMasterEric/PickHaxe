@@ -118,10 +118,11 @@ class Main
 
     try {
       Haxe.instance.validateVersion();
-    } catch (error) {
+    } catch (error:haxe.Exception) {
       CLI.print('A fatal exception occurred within PickHaxe while performing this operation.');
      
-      CLI.print('${error}');
+      CLI.print('${error.message}');
+      CLI.print('${error.stack}');
       return;
     }
 
@@ -186,7 +187,8 @@ class Main
     } catch (error) {
       CLI.print('A fatal exception occurred within PickHaxe while performing this operation.');
      
-      CLI.print('${error}');
+      CLI.print('${error.message}');
+      CLI.print('${error.stack}');
     }
   }
 }

@@ -44,7 +44,7 @@ class XML
     var mavenMetaStr = FabricMeta.fetchMavenMetadataStr();
     if (mavenMetaStr == null)
     {
-      CLI.print('Failed to fetch maven metadata');
+      CLI.print('Failed to fetch metadata retrieved from Maven server (Parchment)');
       return null;
     }
 
@@ -53,7 +53,7 @@ class XML
       case Success(file):
         return file;
       case Failure(err):
-        CLI.print('Failed to parse maven metadata');
+        CLI.print('Failed to parse metadata retrieved from Maven server (Fabric API)');
         CLI.print('${err}', Verbose);
     }
     return null;
@@ -64,7 +64,14 @@ class XML
     var mavenMetaStr = Parchment.fetchParchmentMavenMetadataStr(gameVersion);
     if (mavenMetaStr == null)
     {
-      CLI.print('Failed to fetch maven metadata');
+      CLI.print('Failed to fetch metadata retrieved from Maven server (Parchment)');
+      return null;
+    }
+
+    if (!mavenMetaStr.startsWith('<')) {
+      CLI.print('Failed to parse metadata retrieved from Maven server (Parchment)');
+      CLI.print('Got unexpected response, JSON or something?');
+      CLI.print('Response: ${mavenMetaStr}', Verbose);
       return null;
     }
 
@@ -73,8 +80,9 @@ class XML
       case Success(file):
         return file;
       case Failure(err):
-        CLI.print('Failed to parse maven metadata');
+        CLI.print('Failed to parse metadata retrieved from Maven server (Parchment)');
         CLI.print('${err}', Verbose);
+        CLI.print('Response: ${mavenMetaStr}', Verbose);
     }
     return null;
   }

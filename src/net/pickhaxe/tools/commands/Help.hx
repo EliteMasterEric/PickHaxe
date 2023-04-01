@@ -87,7 +87,7 @@ class Help implements ICommand
   public static inline function getCommandNames():Array<String>
   {
     // Necessary because Map isn't ordered.
-    return ['help', 'setup', 'init', 'build', 'clean', 'gradlew'];
+    return ['help', 'setup', 'init', 'build', 'make', 'clean', 'gradlew'];
   }
 
   /**

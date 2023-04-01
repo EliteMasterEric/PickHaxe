@@ -16,4 +16,5 @@
 --cpp ./generated/bin/
 
 # Copy the result to templates/bin/pickhaxe.exe so people can `haxelib run pickhaxe setup`
+# This doesn't work in the build script for some reason, you have to copy and run it manually.
 --cmd copy "./generated/bin/Main.exe" "./templates/bin/pickhaxe.exe"

@@ -258,7 +258,9 @@ class DisplayItemsGeneratorHaxe implements DisplayItemsGenerator
     switch(callback) {
       case Left(callbackA):
         this.callbackA = callbackA;
+        this.callbackB = (featureFlagSet, output, hasPermissions) -> callbackA(new CreativeModeTab_ItemDisplayParameters(featureFlagSet, hasPermissions, null), output);
       case Right(callbackB):
+        this.callbackA = (context, output) -> callbackB(context.enabledFeatures(), output, context.hasPermissions());
         this.callbackB = callbackB;
       default:
         throw new java.lang.IllegalArgumentException("callback must be a valid DisplayItemsGenerator callback");
@@ -275,23 +277,13 @@ class DisplayItemsGeneratorHaxe implements DisplayItemsGenerator
     return new DisplayItemsGeneratorHaxe(Right(callback));
   }
       
-  #if (minecraft >= "1.19.4")
   public overload function accept(context:ItemDisplayParameters, output:net.minecraft.world.item.CreativeModeTab.Output):Void
   {
     callbackA(context, output);
   }
-  public overload function accept(featureFlagSet:net.minecraft.world.flag.FeatureFlagSet, output:net.minecraft.world.item.CreativeModeTab.Output, hasPermissions:Bool):Void
-  {
-    callbackA(new ItemDisplayParameters(featureFlagSet, hasPermissions, null), output);
-  }
-  #else
+
   public overload function accept(featureFlagSet:net.minecraft.world.flag.FeatureFlagSet, output:net.minecraft.world.item.CreativeModeTab.Output, hasPermissions:Bool):Void
   {
     callbackB(featureFlagSet, output, hasPermissions);
   }
-  public overload function accept(context:ItemDisplayParameters, output:net.minecraft.world.item.CreativeModeTab.Output):Void
-  {
-    callbackB(context.enabledFeatures(), output, context.hasPermissions());
-  }
-  #end
 }
