@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.1] - 2023-04-01
+## [0.1.1] - 2023-04-02
 A day 1 patch to resolve a couple of issues people were having.
 ## Added
 - Added the `make` command to convert the generated Java code into a valid mod JAR.
@@ -38,6 +38,7 @@ A day 1 patch to resolve a couple of issues people were having.
 - Fixed an issue with Parchment version strings not being built correctly.
 - Fixed an issue where the Haxe installation directory was hard-coded.
 - Fixed an issue with passing Parchment versions to the gradle script.
+- Fixed an issue where `-v` and `-h` would not be recognized properly.
 - Fixed an issue where the wrong template path for `project.xml` would be used.
 - Fixed an issue where the `clean` command actually called the `build` command.
 
