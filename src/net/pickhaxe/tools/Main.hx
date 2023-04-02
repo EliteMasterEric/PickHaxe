@@ -77,10 +77,13 @@ class Main
         {
           // Flags
           case '-v':
+            Help.printVersion();
+            return;
           case '--version':
             Help.printVersion();
             return;
           case '-h':
+            help = true;
           case '--help':
             help = true;
           case '--verbose':
