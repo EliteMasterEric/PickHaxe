@@ -32,8 +32,10 @@ A day 1 patch to resolve a couple of issues people were having.
 - Cleaned up externs for `BuiltInRegistries` and `SoundEvents`.
 ## Fixed
 - Fixed an issue with `DisplayItemsGeneratorHaxe` that would cause crashes on `1.19.4`.
+- Fixed an issue where the `clean` command would be unable to delete child directories before parent directories.
 - Fixed an issue where certain network requests would fail during the build step.
 - Fixed an issue where the build script would spam the Mojang servers with web requests.
+- Fixed an issue with Parchment version strings not being built correctly.
 - Fixed an issue where the Haxe installation directory was hard-coded.
 - Fixed an issue with passing Parchment versions to the gradle script.
 - Fixed an issue where the wrong template path for `project.xml` would be used.

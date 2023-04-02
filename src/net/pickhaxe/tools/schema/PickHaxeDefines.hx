@@ -171,7 +171,7 @@ class Builder
     var currentMappings:String = params.mappings;
 
     var parchmentVersion:String = Parchment.fetchParchmentVersion(params.mcVersion);
-    var parchmentMaven:String = null;
+    var parchmentMaven:String = 'parchment-${params.mcVersion}:${parchmentVersion}';
     if (params.mappings == 'parchment')
     {
       // Make behavior intuitive:

@@ -53,8 +53,9 @@ class Init implements ICommand
 
     var parentPackage:String = CLI.prompt(
       {
-        question: 'Enter your parent package (e.g. com.example): ',
-        validator: validateJavaPackage
+        question: 'Enter your parent package (default: com.example.${sanitizeModId(modId)}): ',
+        validator: validateJavaPackage,
+        defaultValue: 'com.example.${sanitizeModId(modId)}'
       });
 
     var modEnvironment:String = CLI.prompt(
@@ -165,6 +166,13 @@ class Init implements ICommand
     // }
 
     return ~/^[a-z0-9_-]+$/.match(input);
+  }
+
+  /**
+   * Reformat a mod ID for use as a package name.
+   */
+  function sanitizeModId(input:String):String {
+    return input.replace('-', '').replace('_', '');
   }
 
   /**

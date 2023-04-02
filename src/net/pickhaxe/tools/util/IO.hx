@@ -137,9 +137,9 @@ class IO
   {
     if (!files && !dirs) return [];
 
-    var entries:Array<String> = sys.FileSystem.readDirectory(path.toString());
+    var entries:Array<String> = [];
 
-    for (entry in entries)
+    for (entry in sys.FileSystem.readDirectory(path.toString()))
     {
       var entryPath:Path = path.joinPaths(entry);
       if (sys.FileSystem.isDirectory(entryPath.toString()))
@@ -149,6 +149,7 @@ class IO
           entries.push('$entry/$subEntry');
         }
       }
+      entries.push(entry);
     }
 
     if (files && !dirs)
