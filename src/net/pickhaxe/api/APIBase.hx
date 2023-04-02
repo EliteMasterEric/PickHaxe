@@ -1,5 +1,6 @@
 package net.pickhaxe.api;
 
+import net.pickhaxe.tools.util.CLI;
 import tink.CoreApi.Error;
 import tink.core.Outcome;
 import tink.core.Future;
@@ -13,16 +14,22 @@ class APIBase
 {
   public static function performGETRequest(url:String):String
   {
-    var request:Http = new Http(url);
+    CLI.print('Performing HTTP request: ${url}', Verbose);
 
-    request.request(false);
+    try {
+      var request:Http = new Http(url);
 
-    return request.responseData;
+      request.request(false);
+  
+      return request.responseData;
+    } catch (e) {
+      throw 'Failed to perform HTTP request: ${e}';
+    }
   }
 
   public static function performGETRequestBytes(url:String):Bytes
   {
-    print('Performing HTTP request: ${url}');
+    CLI.print('Performing HTTP request: ${url}', Verbose);
 
     try
     {
@@ -36,14 +43,5 @@ class APIBase
     {
       throw 'Failed to create HTTP request: ${e}';
     }
-  }
-
-  static inline function print(msg:String)
-  {
-    #if macro
-    haxe.macro.Context.info('[PICKHAXE] $msg', haxe.macro.Context.currentPos());
-    #else
-    trace(msg);
-    #end
   }
 }

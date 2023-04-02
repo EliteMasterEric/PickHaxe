@@ -99,7 +99,12 @@ if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
         mappings channel: 'parchment', version: System.getProperty('pickhaxe.mappings.parchment.version')
         break;
       case 'yarn':
-        // mappings channel: 'snapshot', version: System.getProperty('pickhaxe.minecraft.version')
+        if (System.getProperty('pickhaxe.minecraft.snapshot')) {
+          // mappings channel: 'snapshot', version: System.getProperty('pickhaxe.minecraft.version')
+          mappings "net.fabricmc:yarn:23w13a_or_b+build.2:v2"
+        } else {
+          mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+        }
         break;
     }
   }

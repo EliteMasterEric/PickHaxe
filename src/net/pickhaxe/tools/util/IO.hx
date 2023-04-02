@@ -173,6 +173,7 @@ class IO
    */
   public static function deleteFile(path:Path):Void
   {
+    if (!exists(path)) return;
     sys.FileSystem.deleteFile(path.toString());
   }
 

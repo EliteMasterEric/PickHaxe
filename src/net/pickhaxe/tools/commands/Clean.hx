@@ -38,6 +38,7 @@ class Clean implements ICommand
   {
     CLI.print('Cleaning build files...');
 
+    IO.delete(IO.workingDir().joinPaths('dump'));
     IO.delete(IO.workingDir().joinPaths('generated'));
   }
 }

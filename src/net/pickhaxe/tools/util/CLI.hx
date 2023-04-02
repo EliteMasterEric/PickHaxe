@@ -6,7 +6,7 @@ package net.pickhaxe.tools.util;
 class CLI
 {
   public static var quiet:Bool = false;
-  public static var verbose:Bool = false;
+  public static var verbose:Bool = #if macro true #else false #end;
 
   /**
    * Function for printing to the console, unless quiet is set to true.
@@ -17,7 +17,7 @@ class CLI
   {
     if (mode == PrintMode.Force || (mode == PrintMode.Default && !quiet) || (mode == PrintMode.Verbose && verbose))
     {
-      Sys.println(value);
+      printNow(value);
     }
   }
 
@@ -31,8 +31,21 @@ class CLI
   {
     if (mode == PrintMode.Force || (mode == PrintMode.Default && !quiet) || (mode == PrintMode.Verbose && verbose))
     {
-      Sys.print(value);
+      printNow(value);
     }
+  }
+
+  /**
+   * Function for printing to the console, unconditionally.
+   * Works even from within macros.
+   * @param value The message to print. 
+   */
+  public static inline function printNow(value:String):Void
+  {
+    #if macro
+    haxe.macro.Context.info(value, haxe.macro.Context.currentPos());
+    #end
+    Sys.println(value);
   }
 
   /**

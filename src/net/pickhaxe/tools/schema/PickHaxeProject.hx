@@ -26,6 +26,8 @@ typedef PickHaxe =
   @:tag('mod-entry-point') var entryPoint:ModEntryPoint;
   @:tag('mod-metadata') var metadata:ModMetadata;
   @:tag('mod-license') var license:ModLicense;
+
+  @:list('haxelib') var haxelibs:Array<HaxelibEntry>;
 }
 
 /**
@@ -73,6 +75,30 @@ typedef ModEnvironment =
 typedef ModEntryPoint =
 {
   > ValueTag,
+};
+
+/**
+ * `<haxelib>` tag.
+ */
+ typedef HaxelibEntry =
+ {
+   /**
+    * The name of the library to include.
+    */
+   @:attr var name:String;
+ 
+   /**
+    * The version of the library to include.
+    * Optional.
+    */
+   @:attr var version:Null<String>;
+
+  /**
+   * The URL to a Git repository.
+   * You may suffix with `#<branch>` to specify a branch.
+   * Optional.
+   */
+  @:attr var git:Null<String>;
 };
 
 /**

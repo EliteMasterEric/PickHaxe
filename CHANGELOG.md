@@ -8,19 +8,18 @@ A day 1 patch to resolve a couple of issues people were having.
 ## Added
 - Added the `make` command to convert the generated Java code into a valid mod JAR.
   - This was previously done through manually calling the `gradle build` command.
-- [ ] The `build` command now automatically calls the `make` command once it completes.
-  - This means the build process is now a single step by default. Yay!
-  - [ ] Added the `--no-make` to disable this behavior for testing.
+- Added a new set of compile defines which is more compatible with snapshot versions.
+  - Each version should have defines for `eq`, `neq`, `gt`, `gteq`, `lt`, and `lteq`, for each comparison operation.
+  - Instead of `#if (minecraft >= "1.19.3")`, it is recommended to use `#if minecraft_gteq_1_19_3` if compatibility with snapshots is needed.
 ## Changed
+- Improved handling of version checks.
+  - Previous version is now calculated based on Mojang's version manifest rather than trying to parse the Semantic Version as a string.
+  - Added function to calculate next version.
 - Slightly improved handling of snapshot versions.
-  - PickHaxe relies on official Mojang mappings, so you might have no trouble or might have a broken mod (depending on whether the given snapshot refactored the code you are using).
+  - PickHaxe relies on official Mojang mappings, so you might have no trouble or might have a broken mod (depending on whether the given snapshot refactored the code you are using), but some snapshots can be targeted properly.
 - Added a version check for Haxe; if the Haxe version is not 4.3.0 (or greater), builds will fail.
-- [ ] Added a verison check for Java; if the Minecraft version's associated Java version exceeds the JDK's version, builds will fail.
-  - [ ] This means that new versions of Minecraft will fail if JDK 8 is installed, since they require JDK 17.
-  - [ ] Old versions of Minecraft don't fail when building with newer JDKs.
 - Improved the error message when no loader is specified when performing the `build` command.
 - Improved the error message when Maven API parser fails.
-- [ ] The `build` command now halts if one of the operations fails (such as a Gradle build failing).
 ## Fixed
 - Fixed an issue with `DisplayItemsGeneratorHaxe` that would cause crashes on `1.19.4`.
 - Fixed an issue where the Haxe installation directory was hard-coded.
@@ -36,3 +35,11 @@ Initial release.
 - Implemented basic support for Fabric 1.19.4
 - Added Made in Haxe sample project.
 - Added Obsidian Armor sample project.
+
+## Pending Tasks
+- [ ] The `build` command now automatically calls the `make` command once it completes. This means the build process is now a single step by default. Yay!
+  - [ ] Added the `--no-make` to disable this behavior for testing.
+- [ ] Added a verison check for Java; if the Minecraft version's associated Java version exceeds the JDK's version, builds will fail.
+  - [ ] This means that new versions of Minecraft will fail if JDK 8 is installed, since they require JDK 17.
+  - [ ] Old versions of Minecraft don't fail when building with newer JDKs.
+- [ ] The `build` command now halts if one of the operations fails (such as a Gradle build failing).

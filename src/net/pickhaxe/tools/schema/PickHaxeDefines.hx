@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.schema;
 
+import net.pickhaxe.tools.schema.PickHaxeProject.HaxelibEntry;
 import net.pickhaxe.tools.schema.FabricMeta.FabricMetaLoaderVersionData;
 import net.pickhaxe.api.Parchment;
 import net.pickhaxe.api.FabricMeta;
@@ -28,6 +29,7 @@ typedef PickHaxeDefinesPickHaxe =
   version:String,
   haxe:
   {
+    libraries:Array<HaxelibEntry>,
     version:String,
   },
   gradle:
@@ -40,6 +42,8 @@ typedef PickHaxeDefinesPickHaxe =
   },
   minecraft:
   {
+    release:Bool,
+    snapshot:Bool,
     version:String,
   },
   loader:
@@ -137,41 +141,72 @@ class Builder
   static function buildFabric(projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
   {
     var mojangVersionData:VersionData = Mojang.fetchVersionData(params.mcVersion);
-    if (mojangVersionData == null) throw 'Could not load Mojang version data from API for version ${params.mcVersion}';
+    if (mojangVersionData == null) {
+      throw 'Could not load Mojang version data from API for version ${params.mcVersion}';
+    } else {
+      CLI.print('Mojang version: ${mojangVersionData.id}', Verbose);
+    }
+
     var fabricLoaderData:FabricMetaLoaderVersionData = FabricMeta.fetchLoaderDataForGameVersion(params.mcVersion)[0];
-    if (fabricLoaderData == null) throw 'Could not load Fabric loader data from API for version ${params.mcVersion}';
+    if (fabricLoaderData == null) {
+      throw 'Could not load Fabric loader data from API for version ${params.mcVersion}';
+    } else {
+      CLI.print('Fabric loader version: ${fabricLoaderData.loader.version}', Verbose);
+    }
+
     var fabricYarnData:FabricMetaYarnDataItem = FabricMeta.fetchYarnData(params.mcVersion)[0];
-    if (fabricYarnData == null) throw 'Could not load Fabric Yarn data from API for version ${params.mcVersion}';
+    if (fabricYarnData == null) {
+      throw 'Could not load Fabric Yarn data from API for version ${params.mcVersion}';
+    } else {
+      CLI.print('Fabric yarn version: ${fabricYarnData.version}', Verbose);
+    }
+
     var fabricIntermediaryData:FabricMetaIntermediaryDataItem = FabricMeta.fetchIntermediaryData(params.mcVersion)[0];
-    if (fabricIntermediaryData == null) throw 'Could not load Fabric Intermediary data from API for version ${params.mcVersion}';
+    if (fabricIntermediaryData == null) {
+      throw 'Could not load Fabric Intermediary data from API for version ${params.mcVersion}';
+    } else {
+      CLI.print('Fabric intermediary version: ${fabricIntermediaryData.version}', Verbose);
+    }
 
     var currentMappings:String = params.mappings;
 
     var parchmentVersion:String = Parchment.fetchParchmentVersion(params.mcVersion);
     var parchmentMaven:String = null;
-    if (parchmentVersion == null && params.mappings == 'parchment')
+    if (params.mappings == 'parchment')
     {
-      var previousVersion:String = MCVersion.getPreviousVersion(params.mcVersion);
-      CLI.print('Warning: Could not load Parchment version from API for version ${params.mcVersion}, trying $previousVersion');
-      parchmentVersion = Parchment.fetchParchmentVersion(previousVersion);
+      // Make behavior intuitive:
+      // If the current version is a snapshot, we check for mappings of the previous snapshot.
+      // Otherwise, we check for mappings of the previous release.
+      var isSnapshot = MCVersion.isVersionSnapshot(params.mcVersion);
 
-      if (parchmentVersion == null)
-      {
-        CLI.print('Warning: Could not load Parchment version from API for version $previousVersion, falling back to plain MojMaps with no Parchment.');
-        currentMappings = 'mojang';
+      var currentVersion = params.mcVersion;
+      var previousVersion:String = params.mcVersion;
+      while (parchmentVersion == null) {
+        previousVersion = isSnapshot ? MCVersion.getPreviousSnapshotVersion(previousVersion) : MCVersion.getPreviousVersion(previousVersion);
+        
+        if (previousVersion == null) {
+          CLI.print('Warning: Could not load Parchment version from API for version $previousVersion, falling back to plain MojMaps with no Parchment.');
+          currentMappings = 'mojang';
+          break;
+        } else {
+          CLI.print('Warning: Could not load Parchment version from API for version ${currentVersion}, trying $previousVersion');
+        }
+
+        currentVersion = previousVersion;
+
+        parchmentVersion = Parchment.fetchParchmentVersion(currentVersion);
+
+        if (parchmentVersion == null) {
+          continue;
+        }
+        else
+        {
+          // Reformat the mappings version.
+          CLI.print('Success: Loaded Parchment version from API for version $currentVersion. (Parchment version: $parchmentVersion)');
+          parchmentMaven = 'parchment-${currentVersion}:${parchmentVersion}';
+          parchmentVersion = '${parchmentVersion}-${currentVersion}';
+        }
       }
-      else
-      {
-        // Reformat the mappings version.
-        parchmentMaven = 'parchment-${previousVersion}:${parchmentVersion}';
-        parchmentVersion = '${parchmentVersion}-${previousVersion}';
-      }
-    }
-    else
-    {
-      // Reformat the mappings version.
-      parchmentMaven = 'parchment-${params.mcVersion}:${parchmentVersion}';
-      parchmentVersion = '${parchmentVersion}-${params.mcVersion}';
     }
 
     var fabricAPIVersion:String = FabricMeta.getApiVersionForMinecraft(params.mcVersion);
@@ -184,6 +219,7 @@ class Builder
 
           haxe:
             {
+              libraries: projectFile.haxelibs,
               version: Constants.HAXE_VERSION,
             },
 
@@ -201,6 +237,8 @@ class Builder
 
           minecraft:
             {
+              snapshot: MCVersion.isVersionSnapshot(params.mcVersion),
+              release: MCVersion.isVersionStable(params.mcVersion),
               version: params.mcVersion
             },
 
@@ -255,6 +293,41 @@ class Builder
     var versionMetadata:PickHaxeVersionMetadata = PickHaxeVersionMetadataReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
     var versionMappings:PickHaxeVersionMappings = PickHaxeVersionMappingsReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
 
+    var currentMappings:String = params.mappings;
+
+    var parchmentVersion:String = Parchment.fetchParchmentVersion(params.mcVersion);
+    var parchmentMaven:String = null;
+    if (currentMappings == 'parchment')
+    {
+      // Make behavior intuitive:
+      // If the current version is a snapshot, we check for mappings of the previous snapshot.
+      // Otherwise, we check for mappings of the previous release.
+      var isSnapshot = MCVersion.isVersionSnapshot(params.mcVersion);
+
+      while (parchmentVersion == null) {
+        var previousVersion:String = isSnapshot ? MCVersion.getPreviousSnapshotVersion(params.mcVersion) : MCVersion.getPreviousVersion(params.mcVersion);
+        CLI.print('Warning: Could not load Parchment version from API for version ${params.mcVersion}, trying $previousVersion');
+
+        if (previousVersion == null) {
+          CLI.print('Warning: Could not load Parchment version from API for version $previousVersion, falling back to plain MojMaps with no Parchment.');
+          currentMappings = 'mojang';
+          break;
+        }
+
+        parchmentVersion = Parchment.fetchParchmentVersion(previousVersion);
+
+        if (parchmentVersion == null) {
+          continue;
+        }
+        else
+        {
+          // Reformat the mappings version.
+          CLI.print('Success: Loaded Parchment version from API for version $previousVersion. (Parchment version: $parchmentVersion)');
+          parchmentMaven = 'parchment-${previousVersion}:${parchmentVersion}';
+          parchmentVersion = '${parchmentVersion}-${previousVersion}';
+        }
+      }
+    }
     
     return {
       pickhaxe:
@@ -263,6 +336,7 @@ class Builder
 
           haxe:
             {
+              libraries: projectFile.haxelibs,
               version: Constants.HAXE_VERSION,
             },
 
@@ -278,6 +352,8 @@ class Builder
 
           minecraft:
             {
+              release: MCVersion.isVersionStable(params.mcVersion),
+              snapshot: MCVersion.isVersionSnapshot(params.mcVersion),
               version: params.mcVersion
             },
 
@@ -294,11 +370,11 @@ class Builder
           mappings:
             {
               enabled: !params.noMapping,
-              current: 'parchment',
+              current: currentMappings,
               parchment:
                 {
-                  maven: null,
-                  version: versionMappings.parchment,
+                  version: parchmentVersion,
+                  maven: parchmentMaven
                 },
               yarn:
                 {
@@ -361,11 +437,7 @@ class Builder
     result.append(DEFINE, defines.pickhaxe.loader.current);
 
     // Add a define for the current Minecraft version (#if minecraft == 1.19.3, #if minecraft >= 1.12.2)
-    if (defines.pickhaxe.minecraft.version == "23w13a_or_b") {
-      result.append(DEFINE, 'minecraft=1.19.4');
-    } else {
-      result.append(DEFINE, 'minecraft=${defines.pickhaxe.minecraft.version}');
-    }
+    result.append(DEFINE, 'minecraft=${defines.pickhaxe.minecraft.version}');
 
     return result;
   }

@@ -392,12 +392,26 @@ class Build implements ICommand
     // Include the pickhaxe library.
     args = args.concat(['--library', Constants.LIBRARY_ID]);
 
+    // Include user-provided libraries.
+    for (library in defines.pickhaxe.haxe.libraries)
+    {
+      if (library.git != null) {
+        args = args.concat(['--library', '${library.name}:git:${library.git}']);
+      } else if (library.version != null) {
+        args = args.concat(['--library', '${library.name}:${library.version}']);
+      } else {
+        args = args.concat(['--library', '${library.name}']);
+      }
+    }
+
     // Pass options to the native Java compiler.
     // Any values passed here will be passed to `javac` when generating a JAR.
 
     // Include compilation and mapping macros.
     // Download and parse mappings.
     args = args.concat(['--macro', "net.pickhaxe.macro.MappingMacro.initialize()"]);
+    // Add `minecraft_eq_<version>` defines.
+    args = args.concat(['--macro', "net.pickhaxe.macro.MinecraftVersionMacro.initialize()"]);
     // Map the `net.minecraft` package.
     args = args.concat([
       '--macro',

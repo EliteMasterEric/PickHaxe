@@ -25,6 +25,14 @@ class MappingMacro
 
   public static macro function initialize():Void
   {
+    var mappingsEnabled:String = MacroUtil.getDefine('pickhaxe.mappings.enabled');
+
+    if (mappingsEnabled == null || mappingsEnabled != 'true')
+    {
+      Context.info('[PICKHAXE] Skipping retrieval of Intermediary mappings (mappings disabled)', Context.currentPos());
+      return;
+    }
+
     var intermediaryVersion = MacroUtil.getDefine('pickhaxe.mappings.intermediary.version');
 
     if (intermediaryVersion == null)

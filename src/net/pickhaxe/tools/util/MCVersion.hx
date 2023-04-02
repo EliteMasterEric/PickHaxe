@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.util;
 
+import net.pickhaxe.tools.schema.MinecraftManifest;
 import net.pickhaxe.tools.schema.MinecraftManifest.VersionData;
 import net.pickhaxe.api.Mojang;
 
@@ -9,13 +10,19 @@ import net.pickhaxe.api.Mojang;
 class MCVersion
 {
   /**
+   * Limit how far back the previousVersion function will go.
+   * This prevents the compiler from generating defines of hundreds of different Minecraft versions.
+   */
+  static final HARD_STOP:String = '1.12';
+
+  /**
    * Return true if the string is a valid Minecraft version.
    * @param version The version to check.
    * @return True if the version is valid.
    */
   public static function isVersionValid(version:String):Bool
   {
-    return Mojang.fetchVersionData(version) != null;
+    return Mojang.fetchMinecraftVersion(version) != null;
   }
 
   /**
@@ -25,7 +32,7 @@ class MCVersion
    */
   public static function isVersionStable(version:String):Bool
   {
-    var versionData:VersionData = Mojang.fetchVersionData(version);
+    var versionData:MinecraftVersion = Mojang.fetchMinecraftVersion(version);
     return versionData != null && versionData.type == Release;
   }
 
@@ -36,7 +43,7 @@ class MCVersion
    */
   public static function isVersionSnapshot(version:String):Bool
   {
-    var versionData:VersionData = Mojang.fetchVersionData(version);
+    var versionData:MinecraftVersion = Mojang.fetchMinecraftVersion(version);
     return versionData != null && versionData.type == Snapshot;
   }
 
@@ -47,7 +54,7 @@ class MCVersion
    */
   public static function isVersionBeta(version:String):Bool
   {
-    var versionData:VersionData = Mojang.fetchVersionData(version);
+    var versionData:MinecraftVersion = Mojang.fetchMinecraftVersion(version);
     return versionData != null && versionData.type == OldBeta;
   }
 
@@ -63,38 +70,112 @@ class MCVersion
 
   /**
    * Get the previous Minecraft version.
-   * Only works for release versions.
-   * 
-   * TODO: 1.19.0 goes to 1.18.0
+   * Result will always be a release version.
    * 
    * @param mcVersion The version to get the previous version of.
    * @return The previous version.
    */
   public static function getPreviousVersion(mcVersion:String):String
   {
-    // HARDCODED BS
-    if (mcVersion == "23w13a_or_b")
-    {
-      return "1.19.3";
+    if (!isVersionValid(mcVersion)) {
+      throw 'Not a valid Minecraft version: ' + mcVersion;
+    } else if (mcVersion == HARD_STOP) {
+      CLI.print('WARNING: Hard stop, no previous snapshot found for $mcVersion.', Verbose);
+      return null;
     }
 
-    var pieces:Array<String> = mcVersion.split(".");
-    switch (pieces.length)
-    {
-      case 2:
-        return pieces[0] + "." + (Std.parseInt(pieces[1]) - 1);
-      case 3:
-        var lastPiece:Int = Std.parseInt(pieces[2]);
-        if (lastPiece > 0)
-        {
-          return pieces[0] + "." + pieces[1] + "." + (lastPiece - 1);
-        }
-        else
-        {
-          // Parse 1.19.0 as 1.19
-          return getPreviousVersion(pieces[0] + "." + pieces[1]);
-        }
+    var versionIndex:Int = Mojang.indexOfVersion(mcVersion);
+
+    var previousVersion:MinecraftVersion = Mojang.getByIndex(versionIndex + 1);
+
+    if (previousVersion == null) {
+      CLI.print('WARNING: No previous version found for $mcVersion.', Verbose);
+      return null;
     }
-    return mcVersion; // LOL should never happen.
+
+    if (previousVersion.type == Snapshot) {
+      CLI.print('Previous version (${previousVersion.id}) is a snapshot, getting previous version recursively.', Verbose);
+      return getPreviousVersion(previousVersion.id);
+    }
+
+    return previousVersion.id;
+  }
+
+  /**
+   * Get the previous snapshot version.
+   * Result may be a release version, if the snapshot is the first snapshot after a release.
+   * @param mcVersion The version to get the previous version of.
+   * @return The previous version.
+   */
+  public static function getPreviousSnapshotVersion(mcVersion:String):String {
+    if (!isVersionValid(mcVersion)) {
+      throw 'Not a valid Minecraft version: ' + mcVersion;
+    } else if (mcVersion == HARD_STOP) {
+      CLI.print('WARNING: Hard stop, no previous snapshot found for $mcVersion.', Verbose);
+      return null;
+    }
+
+    var versionIndex:Int = Mojang.indexOfVersion(mcVersion);
+
+    var previousVersion:MinecraftVersion = Mojang.getByIndex(versionIndex + 1);
+
+    if (previousVersion == null) {
+      CLI.print('WARNING: No previous version found for $mcVersion.');
+      return null;
+    }
+
+    return previousVersion.id;
+  }
+
+  /**
+   * Get the next Minecraft version.
+   * Result will always be a release version.
+   * 
+   * @param mcVersion The version to get the next version of.
+   * @return The next version, may be null if the version is the latest.
+   */
+  public static function getNextVersion(mcVersion:String):String {
+    if (!isVersionValid(mcVersion)) {
+      throw 'Not a valid Minecraft version: ' + mcVersion;
+    }
+
+    var versionIndex:Int = Mojang.indexOfVersion(mcVersion);
+
+    var nextVersion:MinecraftVersion = Mojang.getByIndex(versionIndex - 1);
+
+    if (nextVersion == null) {
+      CLI.print('WARNING: No next version found for $mcVersion.', Verbose);
+      return null;
+    }
+
+    if (nextVersion.type == Snapshot) {
+      CLI.print('Next version (${nextVersion.id}) is a snapshot, getting next version recursively.', Verbose);
+      return getNextVersion(nextVersion.id);
+    }
+
+    return nextVersion.id;
+  }
+
+  /**
+   * Get the next snapshot version.
+   * Result may be a release version, if the snapshot is the first snapshot after a release.
+   * @param mcVersion The version to get the next version of.
+   * @return The next version, may be null if the version is the latest.
+   */
+  public static function getNextSnapshotVersion(mcVersion:String):String {
+    if (!isVersionValid(mcVersion)) {
+      throw 'Not a valid Minecraft version: ' + mcVersion;
+    }
+
+    var versionIndex:Int = Mojang.indexOfVersion(mcVersion);
+
+    var nextVersion:MinecraftVersion = Mojang.getByIndex(versionIndex - 1);
+
+    if (nextVersion == null) {
+      CLI.print('WARNING: No next version found for $mcVersion.');
+      return null;
+    }
+
+    return nextVersion.id;
   }
 }

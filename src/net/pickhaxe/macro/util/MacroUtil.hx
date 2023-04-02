@@ -2,6 +2,7 @@ package net.pickhaxe.macro.util;
 
 #if macro
 import haxe.macro.Compiler;
+import net.pickhaxe.tools.util.CLI;
 
 /**
  * Additional utilities for working with the Haxe macro API.
@@ -17,6 +18,7 @@ class MacroUtil
    */
   public static function setDefine(define:String, value:String):Void
   {
+    CLI.print('-D ${define}=${value}', Verbose);
     Compiler.define(define, value);
   }
 
