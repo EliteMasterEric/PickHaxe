@@ -71,7 +71,7 @@ extern class LootTable
 @:realPath("net.minecraft.world.level.storage.loot.LootTable_Builder")
 @:mapping("net.minecraft.class_52$class_53")
 extern class LootTable_Builder implements net.minecraft.world.level.storage.loot.functions.FunctionUserBuilder<net.minecraft.world.level.storage.loot.LootTable.Builder>
-    implements net.fabricmc.fabric.api.loot.v2.FabricLootTableBuilder
+  #if fabric implements net.fabricmc.fabric.api.loot.v2.FabricLootTableBuilder #end
 {
   public function new();
 

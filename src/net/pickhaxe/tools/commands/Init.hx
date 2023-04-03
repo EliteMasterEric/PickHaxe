@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.commands;
 
+import net.pickhaxe.tools.util.Template;
 import net.pickhaxe.tools.commands.Help.CommandInfo;
 
 /**
@@ -108,7 +109,7 @@ class Init implements ICommand
   {
     var xmlData:String = IO.readFile(IO.libraryDir().joinPaths('templates/project/project.xml'));
 
-    var xmlDataResult:String = applyModParams(xmlData, modParams);
+    var xmlDataResult:String = Template.applyModInitParams(xmlData, modParams);
 
     CLI.print('Writing project.xml...', Verbose);
     CLI.print(xmlDataResult, Verbose);
@@ -129,24 +130,13 @@ class Init implements ICommand
 
     CLI.print('Writing to classpath...', Verbose);
     IO.makeDir(IO.workingDir().joinPaths('src', classPath));
-    var classResult:String = applyModParams(classTemplate, modParams);
+    var classResult:String = Template.applyModInitParams(classTemplate, modParams);
     CLI.print(classResult, Verbose);
     IO.writeFile(IO.workingDir().joinPaths('src', classPath, '${modParams.entryClass}.hx'), classResult);
 
     CLI.print('Writing to resourcepath...', Verbose);
     IO.makeDir(IO.workingDir().joinPaths('resources', 'assets', modParams.modId));
     IO.makeDir(IO.workingDir().joinPaths('resources', 'data', modParams.modId));
-  }
-
-  function applyModParams(input:String, modParams:ModInitParameters):String
-  {
-    return input.replace('#{pickhaxe.mod.id}', modParams.modId)
-      .replace('#{pickhaxe.mod.version}', modParams.modVersion)
-      .replace('#{pickhaxe.mod.parentPackage}', modParams.parentPackage)
-      .replace('#{pickhaxe.mod.environment}', modParams.modEnvironment)
-      .replace('#{pickhaxe.mod.name}', modParams.modName)
-      .replace('#{pickhaxe.mod.description}', modParams.modDescription)
-      .replace('#{pickhaxe.mod.entryPoint}', modParams.entryClass);
   }
 
   /**

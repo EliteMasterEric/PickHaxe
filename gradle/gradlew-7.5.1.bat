@@ -26,7 +26,6 @@ if "%OS%"=="Windows_NT" setlocal
 
 set DIRNAME=%~dp0
 if "%DIRNAME%"=="" set DIRNAME=.
-@rem This is normally unused
 set APP_BASE_NAME=%~n0
 set APP_HOME=%DIRNAME%
 
@@ -68,7 +67,7 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\wrapper-7.6\gradle-wrapper.jar
+set CLASSPATH=%APP_HOME%\wrapper-7.5.1\gradle-wrapper.jar
 
 
 @rem Execute Gradle

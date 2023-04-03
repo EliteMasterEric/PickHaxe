@@ -6,7 +6,7 @@ package net.minecraft.world.item;
 @:native("net.minecraft.world.item.Item")
 @:mapping("net.minecraft.class_1792")
 extern class Item implements net.minecraft.world.flag.FeatureElement implements net.minecraft.world.level.ItemLike
-    implements net.fabricmc.fabric.api.item.v1.FabricItem
+    #if fabric implements net.fabricmc.fabric.api.item.v1.FabricItem #end
 {
   public static final BY_BLOCK:java.util.Map<net.minecraft.world.level.block.Block, net.minecraft.world.item.Item>;
   public static final MAX_STACK_SIZE:Int;

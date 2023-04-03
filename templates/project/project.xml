@@ -8,10 +8,11 @@
     resourcePath="./resources/"
   />
 
-  <!-- CLIENT, SERVER, or * -->
-  <mod-environment value="#{pickhaxe.mod.environment}" />
-
-  <mod-entry-point value="#{pickhaxe.mod.entryPoint}" />
+  <!-- An entry point can be CLIENT, SERVER, or *, defaulting to * (both) -->
+  <mod-entry-point
+    environment="#{pickhaxe.mod.entryPoint.init.environment}"
+    value="#{pickhaxe.mod.entryPoint.init.value}"
+  />
 
   <mod-metadata 
     name="#{pickhaxe.mod.name}"
@@ -19,5 +20,5 @@
   />
 
   <!-- https://spdx.org/licenses/ -->
-  <mod-license value="MIT" />
+  <mod-license value="All Rights Reserved" />
 </pickhaxe>

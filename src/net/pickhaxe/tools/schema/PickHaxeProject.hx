@@ -22,12 +22,17 @@ typedef ValueTag =
 typedef PickHaxe =
 {
   @:tag('mod') var mod:Mod;
-  @:tag('mod-environment') var environment:ModEnvironment;
-  @:tag('mod-entry-point') var entryPoint:ModEntryPoint;
   @:tag('mod-metadata') var metadata:ModMetadata;
   @:tag('mod-license') var license:ModLicense;
 
+  /**
+   * Add new Haxelibs as dependencies to the project.
+   */
   @:list('haxelib') var haxelibs:Array<HaxelibEntry>;
+  /**
+   * Mods can have multiple entry points.
+   */
+  @:list('mod-entry-point') var entryPoints:Array<ModEntryPoint>;
 }
 
 /**
@@ -62,19 +67,12 @@ typedef Mod =
 };
 
 /**
- * `<mod-environment>` tag.
- */
-typedef ModEnvironment =
-{
-  > ValueTag,
-}
-
-/**
  * `<mod-entry-point>` tag.
  */
 typedef ModEntryPoint =
 {
   > ValueTag,
+  @:attr var environment:String;
 };
 
 /**

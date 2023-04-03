@@ -51,6 +51,9 @@ typedef PickHaxeDefinesPickHaxe =
     current:String, fabric:
     {
       apiVersion:String, loaderVersion:String,
+    }, forge:
+    {
+      apiVersion:String,
     }
   },
   mappings:
@@ -73,13 +76,15 @@ typedef PickHaxeDefinesPickHaxe =
 typedef PickHaxeDefinesMod =
 {
   classPath:String,
-  entryPoint:String,
-  environment:String,
   id:String,
   name:String,
   parentPackage:String,
   version:String,
   description:String,
+
+  entryPoints:Array<PickHaxeProject.ModEntryPoint>,
+
+  license: String,
 }
 
 typedef BuildParams =
@@ -140,6 +145,9 @@ class Builder
 
   static function buildFabric(projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
   {
+    var versionMetadata:PickHaxeVersionMetadata = PickHaxeVersionMetadataReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
+    var versionMappings:PickHaxeVersionMappings = PickHaxeVersionMappingsReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
+
     var mojangVersionData:VersionData = Mojang.fetchVersionData(params.mcVersion);
     if (mojangVersionData == null) {
       throw 'Could not load Mojang version data from API for version ${params.mcVersion}';
@@ -232,7 +240,7 @@ class Builder
           // If Forge doesn't work with Gradle 8, we'll need to add to the metadata.json.
           gradle:
             {
-              version: "8.0.1"
+              version: versionMetadata.fabricGradleVersion
             },
 
           minecraft:
@@ -249,7 +257,11 @@ class Builder
                 {
                   apiVersion: fabricAPIVersion, // TODO: Determine this value from the Fabric API version.
                   loaderVersion: fabricLoaderData.loader.version
-                }
+                },
+              forge:
+                {
+                  apiVersion: null
+                },
             },
 
           mappings:
@@ -263,7 +275,7 @@ class Builder
               parchment:
                 {
                   maven: parchmentMaven,
-                  version: parchmentVersion, // TODO: Does Parchment have an API?
+                  version: parchmentVersion,
                 },
               intermediary:
                 {
@@ -278,11 +290,12 @@ class Builder
               version: projectFile.mod.version,
               name: projectFile.metadata.name,
               description: projectFile.metadata.description,
-              environment: projectFile.environment.value,
               classPath: projectFile.mod.classPath,
               parentPackage: projectFile.mod.parentPackage,
 
-              entryPoint: projectFile.entryPoint.value
+              entryPoints: projectFile.entryPoints,
+
+              license: projectFile.license.value,
             },
         }
     };
@@ -347,7 +360,7 @@ class Builder
 
           gradle:
             {
-              version: versionMetadata.gradleVersion
+              version: versionMetadata.forgeGradleVersion
             },
 
           minecraft:
@@ -360,11 +373,14 @@ class Builder
           loader:
             {
               current: 'forge',
-              fabric:
+              forge:
                 {
-                  apiVersion: null,
-                  loaderVersion: null
-                }
+                  apiVersion: versionMetadata.forgeVersion,
+                },
+              fabric: {
+                apiVersion: null,
+                loaderVersion: null
+              }
             },
 
           mappings:
@@ -393,11 +409,12 @@ class Builder
               version: projectFile.mod.version,
               name: projectFile.metadata.name,
               description: projectFile.metadata.description,
-              environment: projectFile.environment.value,
               classPath: projectFile.mod.classPath,
               parentPackage: projectFile.mod.parentPackage,
 
-              entryPoint: projectFile.entryPoint.value
+              entryPoints: projectFile.entryPoints,
+
+              license: projectFile.license.value,
             },
         }
     };
@@ -412,20 +429,19 @@ class Builder
     result.append(DEFINE, 'pickhaxe.gradle.version=${defines.pickhaxe.gradle.version}');
     result.append(DEFINE, 'pickhaxe.java.version=${defines.pickhaxe.java.version}');
     result.append(DEFINE, 'pickhaxe.loader.current=${defines.pickhaxe.loader.current}');
-    result.append(DEFINE, 'pickhaxe.loader.fabric.apiVersion=${defines.pickhaxe.loader.fabric.apiVersion}');
-    result.append(DEFINE, 'pickhaxe.loader.fabric.loaderVersion=${defines.pickhaxe.loader.fabric.loaderVersion}');
+    if (defines.pickhaxe.loader.fabric.apiVersion != null) result.append(DEFINE, 'pickhaxe.loader.fabric.apiVersion=${defines.pickhaxe.loader.fabric.apiVersion}');
+    if (defines.pickhaxe.loader.fabric.loaderVersion != null) result.append(DEFINE, 'pickhaxe.loader.fabric.loaderVersion=${defines.pickhaxe.loader.fabric.loaderVersion}');
+    if (defines.pickhaxe.loader.forge.apiVersion != null) result.append(DEFINE, 'pickhaxe.loader.forge.apiVersion=${defines.pickhaxe.loader.forge.apiVersion}');
     result.append(DEFINE, 'pickhaxe.mappings.enabled=${defines.pickhaxe.mappings.enabled}');
     result.append(DEFINE, 'pickhaxe.mappings.current=${defines.pickhaxe.mappings.current}');
-    result.append(DEFINE, 'pickhaxe.mappings.intermediary.maven=${defines.pickhaxe.mappings.intermediary.maven}');
-    result.append(DEFINE, 'pickhaxe.mappings.intermediary.version=${defines.pickhaxe.mappings.intermediary.version}');
-    result.append(DEFINE, 'pickhaxe.mappings.parchment.maven=${defines.pickhaxe.mappings.parchment.maven}');
-    result.append(DEFINE, 'pickhaxe.mappings.parchment.version=${defines.pickhaxe.mappings.parchment.version}');
-    result.append(DEFINE, 'pickhaxe.mappings.yarn.version=${defines.pickhaxe.mappings.yarn.version}');
+    if (defines.pickhaxe.mappings.intermediary.maven != null) result.append(DEFINE, 'pickhaxe.mappings.intermediary.maven=${defines.pickhaxe.mappings.intermediary.maven}');
+    if (defines.pickhaxe.mappings.intermediary.version != null) result.append(DEFINE, 'pickhaxe.mappings.intermediary.version=${defines.pickhaxe.mappings.intermediary.version}');
+    if (defines.pickhaxe.mappings.parchment.maven != null) result.append(DEFINE, 'pickhaxe.mappings.parchment.maven=${defines.pickhaxe.mappings.parchment.maven}');
+    if (defines.pickhaxe.mappings.parchment.version != null) result.append(DEFINE, 'pickhaxe.mappings.parchment.version=${defines.pickhaxe.mappings.parchment.version}');
+    if (defines.pickhaxe.mappings.yarn.version != null) result.append(DEFINE, 'pickhaxe.mappings.yarn.version=${defines.pickhaxe.mappings.yarn.version}');
     result.append(DEFINE, 'pickhaxe.minecraft.version=${defines.pickhaxe.minecraft.version}');
     result.append(DEFINE, 'pickhaxe.mod.classPath=${defines.pickhaxe.mod.classPath}');
     result.append(DEFINE, 'pickhaxe.mod.description=${defines.pickhaxe.mod.description}');
-    result.append(DEFINE, 'pickhaxe.mod.entryPoint=${defines.pickhaxe.mod.entryPoint}');
-    result.append(DEFINE, 'pickhaxe.mod.environment=${defines.pickhaxe.mod.environment}');
     result.append(DEFINE, 'pickhaxe.mod.id=${defines.pickhaxe.mod.id}');
     result.append(DEFINE, 'pickhaxe.mod.name=${defines.pickhaxe.mod.name}');
     result.append(DEFINE, 'pickhaxe.mod.parentPackage=${defines.pickhaxe.mod.parentPackage}');

@@ -5,6 +5,7 @@ import net.pickhaxe.core.Mod;
 import net.pickhaxe.core.Environment;
 
 @:mod
+@:strict(net.minecraftforge.fml.common.Mod("madeinhaxe"))
 class MadeInHaxeMod implements Mod {
   public function onInitialize():Void {
     #if fabric

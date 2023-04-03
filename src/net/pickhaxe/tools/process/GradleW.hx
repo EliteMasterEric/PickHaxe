@@ -65,21 +65,20 @@ class GradleW extends CLIProcess
       '-Dpickhaxe.java.version=${defines.pickhaxe.java.version}',
       '-Dpickhaxe.minecraft.version=${defines.pickhaxe.minecraft.version}',
       '-Dpickhaxe.loader.current=${defines.pickhaxe.loader.current}',
-      '-Dpickhaxe.loader.fabric.apiVersion=${defines.pickhaxe.loader.fabric.apiVersion}',
-      '-Dpickhaxe.loader.fabric.loaderVersion=${defines.pickhaxe.loader.fabric.loaderVersion}',
+      if (defines.pickhaxe.loader.fabric.apiVersion != null) '-Dpickhaxe.loader.fabric.apiVersion=${defines.pickhaxe.loader.fabric.apiVersion}' else null,
+      if (defines.pickhaxe.loader.fabric.loaderVersion != null) '-Dpickhaxe.loader.fabric.loaderVersion=${defines.pickhaxe.loader.fabric.loaderVersion}' else null,
+      if (defines.pickhaxe.loader.forge.apiVersion != null) '-Dpickhaxe.loader.forge.apiVersion=${defines.pickhaxe.loader.forge.apiVersion}' else null,
       '-Dpickhaxe.mappings.current=${defines.pickhaxe.mappings.current}',
       '-Dpickhaxe.mappings.yarn.version=${defines.pickhaxe.mappings.yarn.version}',
       '-Dpickhaxe.mappings.parchment.maven=${defines.pickhaxe.mappings.parchment.maven}',
       '-Dpickhaxe.mappings.parchment.version=${defines.pickhaxe.mappings.parchment.version}',
-      '-Dpickhaxe.mappings.intermediary.maven=${defines.pickhaxe.mappings.intermediary.maven}',
-      '-Dpickhaxe.mappings.intermediary.version=${defines.pickhaxe.mappings.intermediary.version}',
+      if (defines.pickhaxe.mappings.intermediary.maven != null) '-Dpickhaxe.mappings.intermediary.maven=${defines.pickhaxe.mappings.intermediary.maven}' else null,
+      if (defines.pickhaxe.mappings.intermediary.version != null) '-Dpickhaxe.mappings.intermediary.version=${defines.pickhaxe.mappings.intermediary.version}' else null,
       '-Dpickhaxe.mod.id=${defines.pickhaxe.mod.id}',
       '-Dpickhaxe.mod.name=${defines.pickhaxe.mod.name}',
       '-Dpickhaxe.mod.description=${defines.pickhaxe.mod.description}',
       '-Dpickhaxe.mod.version=${defines.pickhaxe.mod.version}',
-      '-Dpickhaxe.mod.environment=${defines.pickhaxe.mod.environment}',
       '-Dpickhaxe.mod.parentPackage=${defines.pickhaxe.mod.parentPackage}',
-      '-Dpickhaxe.mod.entryPoint=${defines.pickhaxe.mod.entryPoint}',
-    ];
+    ].filter(function (v:String):Bool { return v != null; });
   }
 }
