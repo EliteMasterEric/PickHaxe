@@ -1,14 +1,27 @@
-# CONTRIBUTING
+# Contributing
 
-Some quick notes on contributing:
-- Enable (and adhere to) Haxe Formatting and Haxe Checkstyle.
-- `net.minecraft_draft` contains unverified classes generated from JavaDocs.
-- `net.minecraft` contains verified/manually fixed classes based on the draft classes.
-- `net.pickhaxe` contains internal library stuff (such as classes for the build tool) as well as Fabric/Forge interop.
-- Interop between different Minecraft versions goes into the relevant class in the `net.minecraft` package.
-- Interop resolving differences between different versions of Fabric goes in `net.fabricmc`.
-- Interop resolving differences between different versions of Forge goes in `net.minecraftforge`.
-- Interop resolving differences between Forge and Fabric (for example, mod registration is different) goes in `net.pickhaxe`.
-- Anything else (Mixin support, interop with commonly used mods) should go in their OWN library.
-  - This library's codebase pertains to Fabric and Forge ONLY
-  - Integration with commonly used mods, such as JEI and WAILA, are great contributions but should be maintained in separate haxelibs (like `pickhaxe-waila`)
+When your contribution is complete, submit it to this repository via a [pull request](https://github.com/EliteMasterEric/PickHaxe/pulls).
+
+Enable Haxe Formatting and Haxe Checkstyle to maintain code quality in your contributions.
+
+When developing code for accessing Minecraft, or interoperating between different Minecraft versions:
+- Place the code within the `net.minecraft` package.
+- Try to maintain module and class names wherever possible, to keep the interface familiar.
+  - If you need to rename a class, consider making an API in `net.pickhaxe` instead.
+- You may wish to copy and modify an auto-generated extern, from the `net.minecraft_drafts` package.
+- You may also copy code from Haxe's generated externs; when running `pickhaxe build`, add `--dump` to generate these.
+- Note that you may need to modify classes to interoperate between Minecraft versions. If you do, make functions extern or inline where possible, to simplify the generated codebase.
+- When using compile defines to distinguish Minecraft versions, use the auto-generated defines (`#if minecraft_gteq_1_19_3`) where possible. This will ensure compatibility across snapshots, which do not match well with string comparisons of versions.
+
+When developing code for accessing Fabric:
+- Place the code within the `net.fabricmc` package.
+
+When developing code for accessing Forge:
+- Place the code within the `net.minecraftforge` package.
+
+When developing code to interoperate between Forge and Fabric:
+- Place the code within the `net.pickhaxe` package, then call 
+
+If you are developing code for other purposes, such as interacting with common mod APIs, these should be placed in OTHER repos!
+- For example, Mixin support is planned to be included via a `pickaxe-mixin` library.
+- Integration with commonly used mods, such as JEI and WAILA, are great contributions but should be maintained in separate haxelibs (like `pickhaxe-waila`)
