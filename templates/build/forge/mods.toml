@@ -33,4 +33,4 @@ modId="minecraft"
 mandatory=true
 versionRange="[#{pickhaxe.minecraft.version},)"
 ordering="NONE"
-side="BOTH"ic
+side="BOTH"

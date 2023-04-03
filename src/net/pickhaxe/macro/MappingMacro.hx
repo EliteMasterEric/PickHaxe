@@ -29,7 +29,7 @@ class MappingMacro
 
     if (mappingsEnabled == null || mappingsEnabled != 'true')
     {
-      Context.info('[PICKHAXE] Skipping retrieval of Intermediary mappings (mappings disabled)', Context.currentPos());
+      // Context.info('[PICKHAXE] Skipping retrieval of Intermediary mappings (mappings disabled)', Context.currentPos());
       return;
     }
 

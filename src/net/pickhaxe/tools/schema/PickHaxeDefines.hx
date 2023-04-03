@@ -45,6 +45,8 @@ typedef PickHaxeDefinesPickHaxe =
     release:Bool,
     snapshot:Bool,
     version:String,
+    resourcePackFormat:Int,
+    dataPackFormat:Int,
   },
   loader:
   {
@@ -245,6 +247,8 @@ class Builder
 
           minecraft:
             {
+              dataPackFormat: MCVersion.getDataPackFormat(params.mcVersion),
+              resourcePackFormat: MCVersion.getResourcePackFormat(params.mcVersion),
               snapshot: MCVersion.isVersionSnapshot(params.mcVersion),
               release: MCVersion.isVersionStable(params.mcVersion),
               version: params.mcVersion
@@ -309,7 +313,7 @@ class Builder
     var currentMappings:String = params.mappings;
 
     var parchmentVersion:String = Parchment.fetchParchmentVersion(params.mcVersion);
-    var parchmentMaven:String = null;
+    var parchmentMaven:String = 'parchment-${params.mcVersion}:${parchmentVersion}';
     if (currentMappings == 'parchment')
     {
       // Make behavior intuitive:
@@ -365,6 +369,8 @@ class Builder
 
           minecraft:
             {
+              dataPackFormat: MCVersion.getDataPackFormat(params.mcVersion),
+              resourcePackFormat: MCVersion.getResourcePackFormat(params.mcVersion),
               release: MCVersion.isVersionStable(params.mcVersion),
               snapshot: MCVersion.isVersionSnapshot(params.mcVersion),
               version: params.mcVersion
@@ -440,6 +446,8 @@ class Builder
     if (defines.pickhaxe.mappings.parchment.version != null) result.append(DEFINE, 'pickhaxe.mappings.parchment.version=${defines.pickhaxe.mappings.parchment.version}');
     if (defines.pickhaxe.mappings.yarn.version != null) result.append(DEFINE, 'pickhaxe.mappings.yarn.version=${defines.pickhaxe.mappings.yarn.version}');
     result.append(DEFINE, 'pickhaxe.minecraft.version=${defines.pickhaxe.minecraft.version}');
+    result.append(DEFINE, 'pickhaxe.minecraft.resourcePackFormat=${defines.pickhaxe.minecraft.resourcePackFormat}');
+    result.append(DEFINE, 'pickhaxe.minecraft.dataPackFormat=${defines.pickhaxe.minecraft.dataPackFormat}');
     result.append(DEFINE, 'pickhaxe.mod.classPath=${defines.pickhaxe.mod.classPath}');
     result.append(DEFINE, 'pickhaxe.mod.description=${defines.pickhaxe.mod.description}');
     result.append(DEFINE, 'pickhaxe.mod.id=${defines.pickhaxe.mod.id}');

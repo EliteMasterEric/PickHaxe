@@ -16,7 +16,7 @@ class MacroUtil
    * @param define The name of the define to set.
    * @param value The value to set the define to.
    */
-  public static function setDefine(define:String, value:String):Void
+  public static function setDefine(define:String, ?value:Null<String>):Void
   {
     CLI.print('-D ${define}=${value}', Verbose);
     Compiler.define(define, value);

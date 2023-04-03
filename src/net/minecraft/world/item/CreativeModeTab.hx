@@ -194,37 +194,13 @@ final extern class CreativeModeTab_ItemDisplayParameters extends java.lang.Recor
   public final function toString():String;
   public final function hashCode():Int;
   public final function equals(o:Dynamic):Bool;
-  @:mapping("comp_1251")
+
   public function enabledFeatures():net.minecraft.world.flag.FeatureFlagSet;
-  @:mapping("comp_1252")
   public function hasPermissions():Bool;
-  @:mapping("comp_1253")
   public function holders():net.minecraft.core.HolderLookup.HolderLookup_Provider;
 }
 #else
-class CreativeModeTab_ItemDisplayParameters {
-  private final _enabledFeatures:net.minecraft.world.flag.FeatureFlagSet;
-  private final _hasPermissions:Bool;
-  private final _holders:net.minecraft.core.HolderLookup.HolderLookup_Provider;
-
-  public function new(enabledFeatures:net.minecraft.world.flag.FeatureFlagSet, hasPermissions:Bool, holders:net.minecraft.core.HolderLookup.HolderLookup_Provider) {
-    this._enabledFeatures = enabledFeatures;
-    this._hasPermissions = hasPermissions;
-    this._holders = holders;
-  }
-
-  public inline function enabledFeatures():net.minecraft.world.flag.FeatureFlagSet {
-    return this._enabledFeatures;
-  }
-
-  public inline function hasPermissions():Bool {
-    return this._hasPermissions;
-  }
-
-  public inline function holders():net.minecraft.core.HolderLookup.HolderLookup_Provider {
-    return this._holders;
-  }
-}
+typedef CreativeModeTab_ItemDisplayParameters = net.pickhaxe.compat.world.item.CreativeModTab.CreativeModeTab_ItemDisplayParameters;
 #end
 
 typedef ItemDisplayParameters = CreativeModeTab_ItemDisplayParameters;
@@ -243,47 +219,4 @@ extern interface CreativeModeTab_DisplayItemsGenerator {
 
 typedef DisplayItemsGenerator = CreativeModeTab_DisplayItemsGenerator;
 
-// 1.19.4+
-typedef DisplayItemsGeneratorFunction_A = (ItemDisplayParameters, net.minecraft.world.item.CreativeModeTab.Output) -> Void;
-// 1.19.3-
-typedef DisplayItemsGeneratorFunction_B = (net.minecraft.world.flag.FeatureFlagSet, net.minecraft.world.item.CreativeModeTab.Output, Bool) -> Void;
-
-class DisplayItemsGeneratorHaxe implements DisplayItemsGenerator
-{
-  var callbackA:DisplayItemsGeneratorFunction_A;
-  var callbackB:DisplayItemsGeneratorFunction_B;
-
-  public function new(callback:haxe.ds.Either<DisplayItemsGeneratorFunction_A, DisplayItemsGeneratorFunction_B>)
-  {
-    switch(callback) {
-      case Left(callbackA):
-        this.callbackA = callbackA;
-        this.callbackB = (featureFlagSet, output, hasPermissions) -> callbackA(new CreativeModeTab_ItemDisplayParameters(featureFlagSet, hasPermissions, null), output);
-      case Right(callbackB):
-        this.callbackA = (context, output) -> callbackB(context.enabledFeatures(), output, context.hasPermissions());
-        this.callbackB = callbackB;
-      default:
-        throw new java.lang.IllegalArgumentException("callback must be a valid DisplayItemsGenerator callback");
-    }
-  }
-
-  public static extern inline function buildA(callback:DisplayItemsGeneratorFunction_A):DisplayItemsGeneratorHaxe
-  {
-    return new DisplayItemsGeneratorHaxe(Left(callback));
-  }
-
-  public static extern inline function buildB(callback:DisplayItemsGeneratorFunction_B):DisplayItemsGeneratorHaxe
-  {
-    return new DisplayItemsGeneratorHaxe(Right(callback));
-  }
-      
-  public overload function accept(context:ItemDisplayParameters, output:net.minecraft.world.item.CreativeModeTab.Output):Void
-  {
-    callbackA(context, output);
-  }
-
-  public overload function accept(featureFlagSet:net.minecraft.world.flag.FeatureFlagSet, output:net.minecraft.world.item.CreativeModeTab.Output, hasPermissions:Bool):Void
-  {
-    callbackB(featureFlagSet, output, hasPermissions);
-  }
-}
+typedef DisplayItemsGeneratorHaxe = net.pickhaxe.compat.world.item.CreativeModTab.DisplayItemsGeneratorHaxe;

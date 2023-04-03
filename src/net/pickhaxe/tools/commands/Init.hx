@@ -149,13 +149,19 @@ class Init implements ICommand
   {
     if (input.length < 2) return false;
 
-    // if (input.contains('-'))
-    // {
-    //  CLI.print('WARNING: Due to a Haxe bug, PickHaxe does not allow hyphens in mod IDs.');
-    //  return false;
-    // }
+    if (input.contains('-'))
+    {
+      CLI.print('WARNING: Dashes are not allowed in mod IDs.');
+      return false;
+    }
 
-    return ~/^[a-z0-9_-]+$/.match(input);
+    if (~/[A-Z]+/.match(input))
+    {
+      CLI.print('WARNING: Mod IDs must be all lowercase.');
+      return false;
+    }
+
+    return ~/^[a-z0-9]+$/.match(input);
   }
 
   /**

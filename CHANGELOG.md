@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.2.0] - 2023-04-??
 ## Added
 - Implemented basic support for Forge 1.19.4
+- Added incomplete implementations of `ClientMod` and `ServerMod`, for eventual use for side-only mod events.
+## Changed
+- `Mod` has been moved to `CommonMod`, and is now a class rather than an interface.
+  - `onInitialize` has been renamed to `onModInitialize`.
 
 ## [0.1.1] - 2023-04-02
 A day 1 patch to resolve a couple of issues people were having.

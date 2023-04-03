@@ -24,7 +24,7 @@ class ModCoreMacro
     MacroUtil.addClassMetadata('keep'); // Ensure the class is not removed by the compiler.
     MacroUtil.addClassMetadata('nativeGen'); // Tell Haxe to generate cleaner native code.
 
-    // Metadata of Mods is populated by compiler defines but can be overridden by @:mod metadata.
+    // Metadata of Mods is populated by compiler defines/project.xml but can be overridden by @:mod metadata.
 
     // Populate with compiler defines.
     var modParams:ModCoreParams = populateModCoreParams();
@@ -148,9 +148,9 @@ class ModCoreMacro
   {
     // @:strict(net.minecraftforge.fml.common.Mod({ author:"author", currentRevision: 2 }))
 
-    //MacroUtil.addClassMetadata('strict', [
-    //  macro net.minecraftforge.fml.common.Mod({value: 'TEST'})
-    //]);
+    MacroUtil.addClassMetadata('meta', [
+      macro net.minecraftforge.fml.common.Mod($v{params.modId})
+    ]);
   }
   #end
 

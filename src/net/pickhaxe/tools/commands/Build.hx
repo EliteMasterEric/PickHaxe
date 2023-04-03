@@ -155,6 +155,10 @@ class Build implements ICommand
         IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
         var outputPath:Path = IO.workingDir().joinPaths('generated/resources/META-INF/mods.toml');
         Template.writeForgeManifest(defines, outputPath);
+
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
+        var outputPath:Path = IO.workingDir().joinPaths('generated/resources/pack.mcmeta');
+        Template.writeForgePackFile(defines, outputPath);
     }
 
     performHaxeBuild(defines, !genSources);
@@ -329,11 +333,23 @@ class Build implements ICommand
       var gradleWProcess:GradleW = new GradleW(defines);
 
       CLI.print('Fetching dependency JARs...');
-      gradleWProcess.copyDependencies(); // Copies all of Minecraft's dependencies to the `generated/build/minecraft` folder.
+      var copyDependenciesSuccess:Bool = gradleWProcess.copyDependencies(); // Copies all of Minecraft's dependencies to the `generated/build/minecraft` folder.
+
+      if (!copyDependenciesSuccess)
+      {
+        CLI.print('Error: Failed to copy dependencies.');
+        return;
+      }
 
       if (loader == "fabric") {
         CLI.print('Generating sources...');
-        gradleWProcess.genSources(); // Generates mapped sources for Minecraft.
+        var genSourceSuccess:Bool = gradleWProcess.genSources(); // Generates mapped sources for Minecraft.
+
+        if (!genSourceSuccess)
+        {
+          CLI.print('Error: Failed to generate sources.');
+          return;
+        }
 
         CLI.print('Moving sources...');
         var loomCache:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven'), false, true);
@@ -486,6 +502,7 @@ class Build implements ICommand
       }
       else
       {
+        CLI.print('Copying resources...');
         // We actually need to copy these files to the `generated/resources` folder.
         var resourceDirs:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'), false, true);
         for (resourceDir in resourceDirs)

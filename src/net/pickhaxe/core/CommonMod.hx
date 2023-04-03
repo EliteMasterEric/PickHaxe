@@ -23,7 +23,7 @@ import net.minecraftforge.registries.RegisterEvent;
  */
 @:tink
 @:autoBuild(net.pickhaxe.macro.ModCoreMacro.build())
-interface CommonMod #if fabric extends ModInitializer #end
+class CommonMod #if fabric implements ModInitializer #end
 {
   /**
    * The mod ID for this mod.
@@ -36,38 +36,27 @@ interface CommonMod #if fabric extends ModInitializer #end
    * Populated automatically by macros.
    */
   // public static final LOGGER:org.slf4j.Logger;
+  #if forge
+  final modEventBus:IEventBus;
+  #end
 
   /**
    * The constructor must be public and have no parameters.
    */
-  public function new() {
+  public function new()
+  {
     #if forge
-    // TODO: Only add listeners when they are implemented by child classes.
-    var modEventBus:IEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-    modEventBus.addListener(function (event:NewRegistryEvent):Void {
-      onModAddRegistries();
-    });
-    modEventBus.addListener(function (event:RegisterEvent):Void {
-      onModRegister();
-    });
-    modEventBus.addListener(function (event:FMLCommonSetupEvent):Void {
-      onModInitialize();
-    });
+    forge_registerListeners();
     #end
-  };
-
-  #if fabric
-  /**
-   * Don't override this please.
-   */
-  public function onInitialize():Void {
-    onAddRegistries();
-    onRegister();
-
-    onModInitialize();
   }
-  #end
+
+  /**
+   * Main initialization method for the mod.
+   * Equivalent to `FMLCommonSetupEvent` in Forge, and the `onInitialize` method in Fabric.
+   */
+  public function onModInitialize():Void {}
 
   /**
    * Used for initializing new registries.
@@ -81,11 +70,43 @@ interface CommonMod #if fabric extends ModInitializer #end
    */
   public function onModRegister():Void {}
 
-  /**
-   * Main initialization method for the mod.
-   * Equivalent to `FMLCommonSetupEvent` in Forge, and 
-   */
-  public function onModInitialize():Void {
+  //
+  // Don't overrride these functions, please.
+  //
+  #if forge
+  public function forge_registerListeners()
+  {
+    // Add each lifecycle function to the event bus.
+    // TODO: Only add listeners when they are implemented by child classes.
 
+    // The below code isn't pretty, but we can't make a generic function that takes a Consumer<T> as a parameter,
+    // because type constraints don't properly carry over from Haxe.
+
+    modEventBus.addListener(function(event:NewRegistryEvent):Void {
+      onModAddRegistries();
+    });
+    // new net.pickhaxe.java.util.function.Consumer.BaseConsumer<NewRegistryEvent>(
+
+    modEventBus.addListener(function(event:RegisterEvent):Void {
+      onModRegister();
+    });
+    // new net.pickhaxe.java.util.function.Consumer.BaseConsumer<RegisterEvent>(
+
+    modEventBus.addListener(function(event:FMLCommonSetupEvent):Void {
+      onModInitialize();
+    });
+    // new net.pickhaxe.java.util.function.Consumer.BaseConsumer<FMLCommonSetupEvent>(
   }
+  #end
+
+  #if fabric
+  public function onInitialize():Void
+  {
+    // There is no event bus, just call each of the functions in order.
+    onAddRegistries();
+    onRegister();
+
+    onModInitialize();
+  }
+  #end
 }

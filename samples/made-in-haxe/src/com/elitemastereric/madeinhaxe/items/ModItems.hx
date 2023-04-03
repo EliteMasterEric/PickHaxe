@@ -18,6 +18,7 @@ class ModItems {
   // Tools
   public static final HAXE_GLYPH:Item = new Item(new Item_Properties());
 
+  #if fabric
   // Item Groups
   public static final ITEM_GROUP:CreativeModeTab = FabricItemGroup.builder(new ResourceLocation(MadeInHaxeMod.MOD_ID, "made_in_haxe"))
       .icon(getCreativeTabIcon)
@@ -25,6 +26,7 @@ class ModItems {
         entries.accept(cast (HAXE_GLYPH, ItemLike));
       }))
       .build();
+  #end
 
   public static function onInitialize():Void {
     // Add each of our items to the item registry.

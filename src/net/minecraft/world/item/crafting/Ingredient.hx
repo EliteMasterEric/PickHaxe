@@ -39,7 +39,7 @@ final extern class Ingredient implements java.util.function.Predicate<net.minecr
    */
   public static inline function ofItems(items:Array<net.minecraft.world.level.ItemLike>):net.minecraft.world.item.crafting.Ingredient
   {
-    return ofItemsNative(java.NativeArrayUtil.fromArray(items));
+    return ofItemsNative(net.pickhaxe.java.NativeArrayUtil.fromArray(items));
   }
 
   public static function ofStackStream(stacks:java.util.stream.Stream<net.minecraft.world.item.ItemStack>):net.minecraft.world.item.crafting.Ingredient;

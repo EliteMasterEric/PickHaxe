@@ -1,4 +1,4 @@
-package java;
+package net.pickhaxe.java;
 
 class NativeArrayUtil
 {

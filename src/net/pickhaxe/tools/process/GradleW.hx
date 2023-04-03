@@ -20,22 +20,24 @@ class GradleW extends CLIProcess
   /**
    * Perform a Gradle task.
    * @param args The task to perform, and other arguments.
-   * @return The output of the task.
+   * @return Success or failure.
    */
-  public function performTask(args:Array<String>):String
+  public function performTask(args:Array<String>):Bool
   {
     var finalArgs:Array<String> = buildArguments().concat(args);
 
-    var output:String = getProcessOutput(finalArgs, true);
+    var output = getProcessOutput(finalArgs, true);
+    
+    var exitCode = output.exitCode;
 
-    return output;
+    return exitCode == 0;
   }
 
   /**
    * Copy the dependencies to generated folder.
    * @return The output of the task.
    */
-  public function copyDependencies():String
+  public function copyDependencies():Bool
   {
     return performTask(['copyDependencies']);
   }
@@ -44,7 +46,7 @@ class GradleW extends CLIProcess
    * Generate Minecraft sources from mappings.
    * @return The output of the task.
    */
-  public function genSources():String
+  public function genSources():Bool
   {
     return performTask(['genSources']);
   }
@@ -64,6 +66,8 @@ class GradleW extends CLIProcess
       '-Dpickhaxe.haxe.version=${defines.pickhaxe.haxe.version}',
       '-Dpickhaxe.java.version=${defines.pickhaxe.java.version}',
       '-Dpickhaxe.minecraft.version=${defines.pickhaxe.minecraft.version}',
+      '-Dpickhaxe.minecraft.resourcePackFormat=${defines.pickhaxe.minecraft.resourcePackFormat}',
+      '-Dpickhaxe.minecraft.dataPackFormat=${defines.pickhaxe.minecraft.dataPackFormat}',
       '-Dpickhaxe.loader.current=${defines.pickhaxe.loader.current}',
       if (defines.pickhaxe.loader.fabric.apiVersion != null) '-Dpickhaxe.loader.fabric.apiVersion=${defines.pickhaxe.loader.fabric.apiVersion}' else null,
       if (defines.pickhaxe.loader.fabric.loaderVersion != null) '-Dpickhaxe.loader.fabric.loaderVersion=${defines.pickhaxe.loader.fabric.loaderVersion}' else null,

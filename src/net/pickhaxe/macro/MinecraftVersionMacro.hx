@@ -28,14 +28,14 @@ class MinecraftVersionMacro
    */
   static function defineCurrentVersion(minecraftVersion:String):Void
   {
-    MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}', 'true');
-    MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}', 'false');
+    MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}');
+    // MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}', 'false');
 
-    MacroUtil.setDefine('minecraft_gteq_${sanitizeVersion(minecraftVersion)}', 'true');
-    MacroUtil.setDefine('minecraft_gt_${sanitizeVersion(minecraftVersion)}', 'false');
+    MacroUtil.setDefine('minecraft_gteq_${sanitizeVersion(minecraftVersion)}');
+    // MacroUtil.setDefine('minecraft_gt_${sanitizeVersion(minecraftVersion)}', 'false');
 
-    MacroUtil.setDefine('minecraft_lteq_${sanitizeVersion(minecraftVersion)}', 'true');
-    MacroUtil.setDefine('minecraft_lt_${sanitizeVersion(minecraftVersion)}', 'false');
+    MacroUtil.setDefine('minecraft_lteq_${sanitizeVersion(minecraftVersion)}');
+    // MacroUtil.setDefine('minecraft_lt_${sanitizeVersion(minecraftVersion)}', 'false');
 
     var previousVersion:String = MCVersion.getPreviousVersion(minecraftVersion);
     if (previousVersion != null) definePreviousVersion(previousVersion);
@@ -50,14 +50,14 @@ class MinecraftVersionMacro
    * @param minecraftVersion The Minecraft version to generate defines for.
    */
   static function definePreviousVersion(minecraftVersion:String):Void {
-    MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}', 'false');
-    MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}', 'true');
+    // MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}', 'false');
+    MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}');
 
-    MacroUtil.setDefine('minecraft_gteq_${sanitizeVersion(minecraftVersion)}', 'true');
-    MacroUtil.setDefine('minecraft_gt_${sanitizeVersion(minecraftVersion)}', 'true');
+    MacroUtil.setDefine('minecraft_gteq_${sanitizeVersion(minecraftVersion)}');
+    MacroUtil.setDefine('minecraft_gt_${sanitizeVersion(minecraftVersion)}');
 
-    MacroUtil.setDefine('minecraft_lteq_${sanitizeVersion(minecraftVersion)}', 'false');
-    MacroUtil.setDefine('minecraft_lt_${sanitizeVersion(minecraftVersion)}', 'false');
+    // MacroUtil.setDefine('minecraft_lteq_${sanitizeVersion(minecraftVersion)}', 'false');
+    // MacroUtil.setDefine('minecraft_lt_${sanitizeVersion(minecraftVersion)}', 'false');
 
     var previousVersion:String = MCVersion.getPreviousVersion(minecraftVersion);
     if (previousVersion != null) definePreviousVersion(previousVersion);
@@ -69,14 +69,14 @@ class MinecraftVersionMacro
    * @param minecraftVersion The Minecraft version to generate defines for.
    */
   static function defineNextVersion(minecraftVersion:String):Void {
-    MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}', 'false');
-    MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}', 'true');
+    // MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}', 'false');
+    MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}');
 
-    MacroUtil.setDefine('minecraft_gteq_${sanitizeVersion(minecraftVersion)}', 'false');
-    MacroUtil.setDefine('minecraft_gt_${sanitizeVersion(minecraftVersion)}', 'false');
+    //MacroUtil.setDefine('minecraft_gteq_${sanitizeVersion(minecraftVersion)}', 'false');
+    // MacroUtil.setDefine('minecraft_gt_${sanitizeVersion(minecraftVersion)}', 'false');
 
-    MacroUtil.setDefine('minecraft_lteq_${sanitizeVersion(minecraftVersion)}', 'true');
-    MacroUtil.setDefine('minecraft_lt_${sanitizeVersion(minecraftVersion)}', 'true');
+    MacroUtil.setDefine('minecraft_lteq_${sanitizeVersion(minecraftVersion)}');
+    MacroUtil.setDefine('minecraft_lt_${sanitizeVersion(minecraftVersion)}');
 
     var nextVersion:String = MCVersion.getNextVersion(minecraftVersion);
     if (nextVersion != null) defineNextVersion(nextVersion);

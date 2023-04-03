@@ -24,11 +24,35 @@ class Template
 
   public static function applyPickHaxeDefines(input:String, defines:PickHaxeDefines):String
   {
-    return input.replace('#{pickhaxe.mod.id}', defines.pickhaxe.mod.id)
-      .replace('#{pickhaxe.mod.version}', defines.pickhaxe.mod.version)
-      .replace('#{pickhaxe.mod.name}', defines.pickhaxe.mod.name)
-      .replace('#{pickhaxe.mod.description}', defines.pickhaxe.mod.description)
-      .replace('#{pickhaxe.mod.license}', defines.pickhaxe.mod.license);
+    var result = input;
+
+    
+    result = result.replace('#{pickhaxe.gradle.version}', defines.pickhaxe.gradle.version);
+    result = result.replace('#{pickhaxe.java.version}', defines.pickhaxe.java.version);
+    result = result.replace('#{pickhaxe.loader.current}', defines.pickhaxe.loader.current);
+
+    result = result.replace('#{pickhaxe.mod.classPath}', defines.pickhaxe.mod.classPath);
+    result = result.replace('#{pickhaxe.mod.description}', defines.pickhaxe.mod.description);
+    result = result.replace('#{pickhaxe.mod.id}', defines.pickhaxe.mod.id);
+    result = result.replace('#{pickhaxe.mod.name}', defines.pickhaxe.mod.name);
+    result = result.replace('#{pickhaxe.mod.parentPackage}', defines.pickhaxe.mod.parentPackage);
+    result = result.replace('#{pickhaxe.mod.version}', defines.pickhaxe.mod.version);
+    result = result.replace('#{pickhaxe.mappings.enabled}', '${defines.pickhaxe.mappings.enabled}');
+    result = result.replace('#{pickhaxe.mappings.current}', defines.pickhaxe.mappings.current);
+    result = result.replace('#{pickhaxe.minecraft.version}', defines.pickhaxe.minecraft.version);
+    result = result.replace('#{pickhaxe.minecraft.resourcePackFormat}', '${defines.pickhaxe.minecraft.resourcePackFormat}');
+    result = result.replace('#{pickhaxe.minecraft.dataPackFormat}', '${defines.pickhaxe.minecraft.dataPackFormat}');
+
+    if (defines.pickhaxe.loader.fabric.apiVersion != null) result.replace('#{pickhaxe.loader.fabric.apiVersion}', defines.pickhaxe.loader.fabric.apiVersion);
+    if (defines.pickhaxe.loader.fabric.loaderVersion != null) result.replace('#{pickhaxe.loader.fabric.loaderVersion}', defines.pickhaxe.loader.fabric.loaderVersion);
+    if (defines.pickhaxe.loader.forge.apiVersion != null) result.replace('#{pickhaxe.loader.forge.apiVersion}', defines.pickhaxe.loader.forge.apiVersion);
+    if (defines.pickhaxe.mappings.intermediary.maven != null) result.replace('#{pickhaxe.mappings.intermediary.maven}', defines.pickhaxe.mappings.intermediary.maven);
+    if (defines.pickhaxe.mappings.intermediary.version != null) result.replace('#{pickhaxe.mappings.intermediary.version}', defines.pickhaxe.mappings.intermediary.version);
+    if (defines.pickhaxe.mappings.parchment.maven != null) result.replace('#{pickhaxe.mappings.parchment.maven}', defines.pickhaxe.mappings.parchment.maven);
+    if (defines.pickhaxe.mappings.parchment.version != null) result.replace('#{pickhaxe.mappings.parchment.version}', defines.pickhaxe.mappings.parchment.version);
+    if (defines.pickhaxe.mappings.yarn.version != null) result.replace('#{pickhaxe.mappings.yarn.version}', defines.pickhaxe.mappings.yarn.version);
+
+    return result;
   }
 
   public static function writeFabricManifest(defines:PickHaxeDefines, outputPath:Path):Void
@@ -78,6 +102,13 @@ class Template
     IO.writeFile(outputPath, forgeModStr);
   }
 
+  public static function writeForgePackFile(defines:PickHaxeDefines, outputPath:Path):Void
+  {
+    var forgePackStr:String = generateForgePackFile(defines);
+
+    IO.writeFile(outputPath, forgePackStr);
+  }
+
   public static function generateForgeManifest(defines:PickHaxeDefines):String
   {
     var output:String = loadForgeManifestTemplate();
@@ -85,8 +116,20 @@ class Template
     return applyPickHaxeDefines(output, defines);
   }
 
+  public static function generateForgePackFile(defines:PickHaxeDefines):String
+  {
+    var output:String = loadForgePackFileTemplate();
+
+    return applyPickHaxeDefines(output, defines);
+  }
+
   static function loadForgeManifestTemplate():String
   {
-    return IO.readFile(IO.libraryDir().joinPaths('templates/project/mods.toml'));
+    return IO.readFile(IO.libraryDir().joinPaths('templates/build/forge/mods.toml'));
+  }
+
+  static function loadForgePackFileTemplate():String
+  {
+    return IO.readFile(IO.libraryDir().joinPaths('templates/build/forge/pack.mcmeta'));
   }
 }

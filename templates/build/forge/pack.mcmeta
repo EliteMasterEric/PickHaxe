@@ -1,0 +1,8 @@
+{
+    "pack": {
+        "description": "#{pickhaxe.mod.name} resources",
+        "pack_format": #{pickhaxe.minecraft.resourcePackFormat},
+        "forge:resource_pack_format": #{pickhaxe.minecraft.resourcePackFormat},
+        "forge:data_pack_format": #{pickhaxe.minecraft.dataPackFormat}
+    }
+}

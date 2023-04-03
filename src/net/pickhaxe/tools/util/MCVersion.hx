@@ -178,4 +178,39 @@ class MCVersion
 
     return nextVersion.id;
   }
+
+  /**
+   * TODO: Unhardcode this, but how?
+   */
+  public static function getResourcePackFormat(mcVersion:String):Int
+  {
+    switch(mcVersion) {
+      case "1.19.4":
+        return 13;
+      case "1.19.3":
+        return 12;
+      case "1.6.1":
+        return 1;
+      default:
+        return -1;
+    }
+  }
+
+  /**
+   * TODO: Unhardcode this, but how?
+   */
+  public static function getDataPackFormat(mcVersion:String):Int
+  {
+    switch(mcVersion) {
+      case "1.19.4":
+        return 12;
+      case "1.19.3":
+        return 11;
+      case "1.13":
+        return 4;
+      default:
+        return -1;
+    }
+  }
+  
 }

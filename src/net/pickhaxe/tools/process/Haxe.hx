@@ -28,9 +28,12 @@ class Haxe extends CLIProcess
 
     IO.writeFile(IO.workingDir().joinPaths('generated/build.hxml'), args.join('\n'));
 
-    var output:String = getProcessOutput(['generated/build.hxml'], true);
+    var output = getProcessOutput(['generated/build.hxml'], true);
 
-    return output;
+    var exitCode = output.exitCode;
+    var outputString = output.output;
+
+    return outputString;
   }
 
   public function validateVersion():Void {
@@ -41,7 +44,11 @@ class Haxe extends CLIProcess
   }
 
   public function getVersion():thx.semver.Version {
-    var output:String = getProcessOutput(['-version'], false);
-    return output;
+    var output = getProcessOutput(['-version'], false);
+
+    var exitCode = output.exitCode;
+    var outputString = output.output;
+
+    return outputString;
   }
 }
