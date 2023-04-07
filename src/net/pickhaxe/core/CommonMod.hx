@@ -4,10 +4,7 @@ package net.pickhaxe.core;
 import net.fabricmc.api.ModInitializer;
 #elseif forge
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.NewRegistryEvent;
-import net.minecraftforge.registries.RegisterEvent;
 #end
 
 /**
@@ -36,9 +33,6 @@ class CommonMod #if fabric implements ModInitializer #end
    * Populated automatically by macros.
    */
   // public static final LOGGER:org.slf4j.Logger;
-  #if forge
-  final modEventBus:IEventBus;
-  #end
 
   /**
    * The constructor must be public and have no parameters.
@@ -46,66 +40,119 @@ class CommonMod #if fabric implements ModInitializer #end
   public function new()
   {
     #if forge
-    modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
     forge_registerListeners();
     #end
   }
 
+  //
+  // LIFECYCLE FUNCTIONS
+  // On Forge, these are executed when the appropriate event is fired.
+  // On Fabric, these are executed in the proper order by the `onInitialize` method.
+  //
+
   /**
    * Main initialization method for the mod.
-   * Equivalent to `FMLCommonSetupEvent` in Forge, and the `onInitialize` method in Fabric.
+   * Equivalent to `net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent` in Forge.
    */
-  public function onModInitialize():Void {}
+  public function onModInitialize():Void {
+    // Do nothing. Override me!
+  }
 
   /**
-   * Used for initializing new registries.
-   * Equivalent to `NewRegistryEvent` in Forge.
+   * Called when the first registry is being populated by Forge.
+   * Equivalent to `net.minecraftforge.registries.RegisterEvent` in Forge.
+   * NOTE: Only called once.
    */
-  public function onModAddRegistries():Void {}
+  public function onRegister():Void {
+    // Do nothing. Override me!
+  }
 
   /**
-   * Used for registering objects to registries.
-   * Equivalent to `RegisterEvent` in Forge.
+   * Called when creative mode tabs are ready to be registered.
+   * Equivalent to `net.minecraftforge.event.CreativeModeTabEvent` in Forge.
    */
-  public function onModRegister():Void {}
+  public function onCreativeModeTabRegister():Void {
+    // Do nothing. Override me!
+  }
 
   //
   // Don't overrride these functions, please.
   //
+
   #if forge
-  public function forge_registerListeners()
+  public function forge_getEventBus():IEventBus {
+    return FMLJavaModLoadingContext.get().getModEventBus();
+  }
+
+  function forge_registerListeners()
   {
     // Add each lifecycle function to the event bus.
-    // TODO: Only add listeners when they are implemented by child classes.
+    // We can rely on this class's events to be called before the Registrar events.
+    forge_getEventBus().register(this);
 
-    // The below code isn't pretty, but we can't make a generic function that takes a Consumer<T> as a parameter,
-    // because type constraints don't properly carry over from Haxe.
+    net.pickhaxe.compat.world.item.CreativeModeTab.CreativeModeTab_ForgeRegistrar.register(forge_getEventBus());
+    net.pickhaxe.compat.world.item.Item.Item_ForgeRegistrar.register(forge_getEventBus());
+  }
 
-    modEventBus.addListener(function(event:NewRegistryEvent):Void {
-      onModAddRegistries();
-    });
-    // new net.pickhaxe.java.util.function.Consumer.BaseConsumer<NewRegistryEvent>(
+  /**
+   * This event allows for initializing new custom registries, using the RegistryBuilder class.
+   * This function is called once.
+   * @param event The event object.
+   */
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  public function forge_onNewRegistry(event:net.minecraftforge.registries.NewRegistryEvent):Void
+  {
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod received NewRegistryEvent.');
+  }
 
-    modEventBus.addListener(function(event:RegisterEvent):Void {
-      onModRegister();
-    });
-    // new net.pickhaxe.java.util.function.Consumer.BaseConsumer<RegisterEvent>(
+  /**
+   * This event is called when new creative mode tabs may be registered.
+   * PickHaxe's CreativeModeTab.register() function MUST be called from this event, it will not work if it is called statically.
+   * This function is called once.
+   * @param event 
+   */
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  public function forge_onCreativeModeTabRegister(event:net.minecraftforge.event.CreativeModeTabEvent.CreativeModeTabEvent_Register):Void {
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod received CreativeModeTabEvent.Register.');
+    onCreativeModeTabRegister();
+  }
 
-    modEventBus.addListener(function(event:FMLCommonSetupEvent):Void {
-      onModInitialize();
-    });
-    // new net.pickhaxe.java.util.function.Consumer.BaseConsumer<FMLCommonSetupEvent>(
+  /**
+   * This event allows for registering objects into the registries.
+   * This function is called MULTIPLE times, once for each registry. Be sure to filter the event by registry using `handle()`.
+   * @param event The event object.
+   */
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  public function forge_onRegister(event:net.minecraftforge.registries.RegisterEvent):Void
+  {
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod received RegisterEvent.');
+
+    if (!hasRegistered) {
+      hasRegistered = true;
+      onRegister();
+    }
+  }
+  var hasRegistered:Bool = false;
+
+  /**
+   * This event is used to perform actions common to initialization of both the physical client and physical server.
+   * This function is called once.
+   * @param event The event object.
+   */
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  public function forge_onInitialize(event:net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent):Void
+  {
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod received FMLCommonSetupEvent.');
+    onModInitialize();
   }
   #end
 
   #if fabric
   public function onInitialize():Void
   {
-    // There is no event bus, just call each of the functions in order.
-    onAddRegistries();
+    // There is no event bus. Just call each of the functions in approximately the order that Forge would.
     onRegister();
-
+    onCreativeModeTabRegister();
     onModInitialize();
   }
   #end

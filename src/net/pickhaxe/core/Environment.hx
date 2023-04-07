@@ -30,7 +30,7 @@ class Environment
     // TODO: Implement this.
     return false;
     #else
-    throw "Could not determine environment (unknown loader)";
+    net.pickhaxe.core.PickHaxe.logError("Could not determine environment (unknown loader)");
     #end
   }
 
@@ -48,7 +48,7 @@ class Environment
     // TODO: Implement this.
     return false;
     #else
-    throw "Could not determine environment (unknown loader)";
+    net.pickhaxe.core.PickHaxe.logError("Could not determine environment (unknown loader)");
     #end
   }
 

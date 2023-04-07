@@ -139,8 +139,9 @@ class Builder
   {
     if (params.loader == null) throw 'Loader must be specified.';
     if (params.mcVersion == null) throw 'Minecraft version must be specified.';
-    if (params.noMapping == null) params.noMapping = false;
-    if (params.mappings == null) params.mappings = 'parchment';
+
+    params.noMapping = params.noMapping ?? false;
+    params.mappings = params.mappings ?? 'parchment';
 
     return params;
   }

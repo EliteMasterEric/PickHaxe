@@ -143,23 +143,27 @@ class Build implements ICommand
         mappings: mappings,
       });
 
-    performGradleSetup(defines);
-
     switch (loader)
     {
       case 'fabric':
-        IO.makeDir(IO.workingDir().joinPaths('generated/resources'));
-        var outputPath:Path = IO.workingDir().joinPaths('generated/resources/fabric.mod.json');
-        Template.writeFabricManifest(defines, outputPath);
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
+
+        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('generated/resources/fabric.mod.json'));
+        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('generated/resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
       case 'forge':
         IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
-        var outputPath:Path = IO.workingDir().joinPaths('generated/resources/META-INF/mods.toml');
-        Template.writeForgeManifest(defines, outputPath);
 
-        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
-        var outputPath:Path = IO.workingDir().joinPaths('generated/resources/pack.mcmeta');
-        Template.writeForgePackFile(defines, outputPath);
+        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('generated/resources/pack.mcmeta'));
+        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('generated/resources/META-INF/mods.toml'));
+        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('generated/resources/META-INF/accesstransformer.cfg'));
     }
+
+    var result:Bool = performGradleSetup(defines);
+
+    if (!result) return;
+
+    // Move back to the parent of the working dir.
+    Sys.setCwd(IO.workingDir().dir);
 
     performHaxeBuild(defines, !genSources);
   }
@@ -284,7 +288,7 @@ class Build implements ICommand
     return true;
   }
 
-  function performGradleSetup(defines:PickHaxeDefines):Void
+  function performGradleSetup(defines:PickHaxeDefines):Bool
   {
     // If we are doing a clean build, delete the `generated` folder.
     if (clean && IO.exists(IO.workingDir().joinPaths('generated')))
@@ -314,16 +318,18 @@ class Build implements ICommand
       }
     }
 
-    // Move into `generated` folder.
-    Sys.setCwd(IO.workingDir().joinPaths('./generated/').toString());
-
     var shouldPerformGradle:Bool = !skipGradle;
 
-    if (shouldPerformGradle && !forceGradle && IO.fileStartingWithExists(IO.workingDir().joinPaths('build/minecraft/minecraft-merged')))
+    if (shouldPerformGradle
+      && !forceGradle
+      && IO.fileStartingWithExists(IO.workingDir().joinPaths('generated/build/minecraft/minecraft-merged')))
     {
       // We already have minecraft with mappings, so assume we don't need to run gradle.
       shouldPerformGradle = false;
     }
+
+    // Move into `generated` folder.
+    Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
 
     // Perform actual gradle steps.
     if (shouldPerformGradle)
@@ -338,17 +344,18 @@ class Build implements ICommand
       if (!copyDependenciesSuccess)
       {
         CLI.print('Error: Failed to copy dependencies.');
-        return;
+        return false;
       }
 
-      if (loader == "fabric") {
+      if (loader == "fabric")
+      {
         CLI.print('Generating sources...');
         var genSourceSuccess:Bool = gradleWProcess.genSources(); // Generates mapped sources for Minecraft.
 
         if (!genSourceSuccess)
         {
           CLI.print('Error: Failed to generate sources.');
-          return;
+          return false;
         }
 
         CLI.print('Moving sources...');
@@ -366,15 +373,17 @@ class Build implements ICommand
               IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
           }
         }
-      } else {
+      }
+      else
+      {
         // The copyDependencies task already generates and moves the sources in Forge.
         // Note that the sources are in `forge-<version>.jar` rather than `minecraft.jar`
+        return true;
       }
     }
-    // Cleanup after Gradle.
 
-    // Move back to the project root.
-    Sys.setCwd(IO.workingDir().joinPaths('../').toString());
+    // Cleanup after Gradle.
+    return true;
   }
 
   /**
@@ -396,11 +405,16 @@ class Build implements ICommand
     // Include user-provided libraries.
     for (library in defines.pickhaxe.haxe.libraries)
     {
-      if (library.git != null) {
+      if (library.git != null)
+      {
         args = args.concat(['--library', '${library.name}:git:${library.git}']);
-      } else if (library.version != null) {
+      }
+      else if (library.version != null)
+      {
         args = args.concat(['--library', '${library.name}:${library.version}']);
-      } else {
+      }
+      else
+      {
         args = args.concat(['--library', '${library.name}']);
       }
     }
@@ -430,7 +444,7 @@ class Build implements ICommand
     ]);
 
     // Include necessary Java libraries as externs.
-    var jarExterns:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('./generated/build/minecraft/'), true, false);
+    var jarExterns:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/build/minecraft'), true, false);
     for (jarExtern in jarExterns)
     {
       if (jarExtern.endsWith('.jar'))
@@ -462,7 +476,6 @@ class Build implements ICommand
 
     if (!debug)
     {
-      // args.push('--no-traces');
       args = args.concat(['-D', 'no-traces']);
     }
     else

@@ -1,42 +1,49 @@
 package net.minecraft.world.item;
 
+typedef CreativeModeTab = CreativeModeTab_Minecraft;
+
 /**
  * Interface `IdentifiableItemGroup` injected by mod fabric-item-group-api-v1
  */
-@:native("net.minecraft.world.item.CreativeModeTab")
-@:mapping("net.minecraft.class_1761")
-extern class CreativeModeTab #if fabric implements net.fabricmc.fabric.api.itemgroup.v1.IdentifiableItemGroup #end
-{
-  public function new(row:net.minecraft.world.item.CreativeModeTab.Row, i:Int, type:net.minecraft.world.item.CreativeModeTab.Type,
-    component:net.minecraft.network.chat.Component, supplier:java.util.function.Supplier<net.minecraft.world.item.ItemStack>,
-    displayItemsGenerator:net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator);
-  public static function builder(row:net.minecraft.world.item.CreativeModeTab.Row,
-    column:Int):net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
-  public function getDisplayName():net.minecraft.network.chat.Component;
-  public function getIconItem():net.minecraft.world.item.ItemStack;
-  public function getBackgroundSuffix():String;
-  public function showTitle():Bool;
-  public function canScroll():Bool;
-  public function column():Int;
-  public function row():net.minecraft.world.item.CreativeModeTab.Row;
-  public function hasAnyItems():Bool;
-  public function shouldDisplay():Bool;
-  public function isAlignedRight():Bool;
-  public function getType():net.minecraft.world.item.CreativeModeTab.Type;
-  public function buildContents(enabledFeatures:net.minecraft.world.flag.FeatureFlagSet, displayOperatorCreativeTab:Bool):Void;
-  public function getDisplayItems():java.util.Collection<net.minecraft.world.item.ItemStack>;
-  public function getSearchTabDisplayItems():java.util.Collection<net.minecraft.world.item.ItemStack>;
-  public function contains(stack:net.minecraft.world.item.ItemStack):Bool;
-  public function setSearchTreeBuilder(searchTreeBuilder:java.util.function.Consumer<java.util.List<net.minecraft.world.item.ItemStack>>):Void;
-  public function rebuildSearchTree():Void;
+ @:native("net.minecraft.world.item.CreativeModeTab")
+ @:mapping("net.minecraft.class_1761")
+ extern class CreativeModeTab_Minecraft #if fabric implements net.fabricmc.fabric.api.itemgroup.v1.IdentifiableItemGroup #end
+ {
+  @:mapping({srg: "f_40764_"})
+  public var displayName:net.minecraft.network.chat.Component; // Exposed via access transformer.
 
-  // Provided via Fabric API Mixins.
-  public function getId():net.minecraft.resources.ResourceLocation;
-  public function setId(identifier:net.minecraft.resources.ResourceLocation):Void;
-  public function getPage():Int;
-  public function setPage(page:Int):Void;
-  // Includes default implementation on parent interface.
-}
+   public function new(row:net.minecraft.world.item.CreativeModeTab.Row, i:Int, type:net.minecraft.world.item.CreativeModeTab.Type,
+     component:net.minecraft.network.chat.Component, supplier:java.util.function.Supplier<net.minecraft.world.item.ItemStack>,
+     displayItemsGenerator:net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator);
+   public static function builder(row:net.minecraft.world.item.CreativeModeTab.Row,
+     column:Int):net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
+   public function getDisplayName():net.minecraft.network.chat.Component;
+   public function getIconItem():net.minecraft.world.item.ItemStack;
+   public function getBackgroundSuffix():String;
+   public function showTitle():Bool;
+   public function canScroll():Bool;
+   public function column():Int;
+   public function row():net.minecraft.world.item.CreativeModeTab.Row;
+   public function hasAnyItems():Bool;
+   public function shouldDisplay():Bool;
+   public function isAlignedRight():Bool;
+   public function getType():net.minecraft.world.item.CreativeModeTab.Type;
+   public function buildContents(enabledFeatures:net.minecraft.world.flag.FeatureFlagSet, displayOperatorCreativeTab:Bool):Void;
+   public function getDisplayItems():java.util.Collection<net.minecraft.world.item.ItemStack>;
+   public function getSearchTabDisplayItems():java.util.Collection<net.minecraft.world.item.ItemStack>;
+   public function contains(stack:net.minecraft.world.item.ItemStack):Bool;
+   public function setSearchTreeBuilder(searchTreeBuilder:java.util.function.Consumer<java.util.List<net.minecraft.world.item.ItemStack>>):Void;
+   public function rebuildSearchTree():Void;
+ 
+   // Provided via Fabric API Mixins.
+   #if fabric
+   public function getId():net.minecraft.resources.ResourceLocation;
+   public function setId(identifier:net.minecraft.resources.ResourceLocation):Void;
+   public function getPage():Int;
+   public function setPage(page:Int):Void;
+   #end
+   // Includes default implementation on parent interface.
+ }
 
 @:native("net.minecraft.world.item.CreativeModeTab$Row")
 @:mapping("net.minecraft.class_1761$class_7915")
@@ -64,28 +71,44 @@ final extern class CreativeModeTab_Type extends java.lang.Enum<net.minecraft.wor
 
 typedef Type = CreativeModeTab_Type;
 
+typedef CreativeModeTab_Builder = CreativeModeTab_Builder_Minecraft;
+
 @:native("net.minecraft.world.item.CreativeModeTab$Builder")
 @:realPath("net.minecraft.world.item.CreativeModeTab_Builder")
 @:mapping("net.minecraft.class_1761$class_7913")
-extern class CreativeModeTab_Builder
+extern class CreativeModeTab_Builder_Minecraft
 {
-  public function new(row:net.minecraft.world.item.CreativeModeTab.Row, i:Int);
-  public function title(title:net.minecraft.network.chat.Component):net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
-  public overload function icon(icon:java.util.function.Supplier<net.minecraft.world.item.ItemStack>):net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
+  public function new(row:CreativeModeTab_Row, i:Int);
+  public function title(title:net.minecraft.network.chat.Component):CreativeModeTab_Builder;
+  public overload function icon(icon:java.util.function.Supplier<net.minecraft.world.item.ItemStack>):CreativeModeTab_Builder;
 
-  public overload extern inline function icon(iconSupplier:net.pickhaxe.java.util.function.Supplier<net.minecraft.world.item.ItemStack>):net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder
+  public overload extern inline function icon(iconSupplier:net.pickhaxe.java.util.function.Supplier<net.minecraft.world.item.ItemStack>):CreativeModeTab_Builder
   {
     var iconSupplier:java.util.function.Supplier<net.minecraft.world.item.ItemStack> = cast iconSupplier;
     return icon(iconSupplier);
   }
-  public function displayItems(displayItemsGenerator:net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator):net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
-  public function alignedRight():net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
-  public function hideTitle():net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
-  public function noScrollBar():net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
+  public overload function displayItems(displayItemsGenerator:CreativeModeTab_DisplayItemsGenerator):CreativeModeTab_Builder;
+  public function alignedRight():CreativeModeTab_Builder;
+  public function hideTitle():CreativeModeTab_Builder;
+  public function noScrollBar():CreativeModeTab_Builder;
 
   @:badMapping("unknownMethodMapping")
-  public function backgroundSuffix(backgroundSuffix:String):net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
-  public function build():net.minecraft.world.item.CreativeModeTab;
+  public function backgroundSuffix(backgroundSuffix:String):CreativeModeTab_Builder;
+  
+  public function build():CreativeModeTab;
+
+  /**
+   * An additional convenience function for Haxe.
+   */
+  public overload extern inline function displayItems(displayItemsGenerator:net.pickhaxe.compat.world.item.CreativeModeTab.DisplayItemsGeneratorFunction_A):CreativeModeTab_Builder {
+    return displayItems(DisplayItemsGeneratorHaxe.buildA(displayItemsGenerator));
+  }
+
+  /*
+  public overload extern inline function displayItems(displayItemsGenerator:net.pickhaxe.compat.world.item.CreativeModeTab.DisplayItemsGeneratorFunction_B):CreativeModeTab_Builder {
+    return displayItems(DisplayItemsGeneratorHaxe.buildB(displayItemsGenerator));
+  }
+  */
 }
 
 // typedef Builder = CreativeModeTab_Builder;
@@ -93,13 +116,13 @@ extern class CreativeModeTab_Builder
 @:native("net.minecraft.world.item.CreativeModeTab$ItemDisplayBuilder")
 @:realPath("net.minecraft.world.item.CreativeModeTab_ItemDisplayBuilder")
 @:mapping("net.minecraft.class_1761$class_7703")
-extern class CreativeModeTab_ItemDisplayBuilder implements net.minecraft.world.item.CreativeModeTab.Output
+extern class CreativeModeTab_ItemDisplayBuilder implements CreativeModeTab_Output
 {
   public final tabContents:java.util.Collection<net.minecraft.world.item.ItemStack>;
   public final searchTabContents:java.util.Set<net.minecraft.world.item.ItemStack>;
 
   public function new(creativeModeTab:net.minecraft.world.item.CreativeModeTab, featureFlagSet:net.minecraft.world.flag.FeatureFlagSet);
-  public overload function accept(var1:net.minecraft.world.item.ItemStack, var2:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
+  public overload function accept(var1:net.minecraft.world.item.ItemStack, tabVisibility:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
   public overload function accept(stack:net.minecraft.world.item.ItemStack):Void;
   public overload function accept(item:net.minecraft.world.level.ItemLike, tabVisibility:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
   public overload function accept(item:net.minecraft.world.level.ItemLike):Void;
@@ -152,15 +175,15 @@ extern interface CreativeModeTab_Output
   public overload function acceptAll(stacks:java.util.Collection<net.minecraft.world.item.ItemStack>,
     tabVisibility:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
 
-  // Convenience aliases to Yarn names.
-  public overload extern function add(stack:net.minecraft.world.item.ItemStack):Void;
-  public overload extern function add(item:net.minecraft.world.level.ItemLike):Void;
-  public overload extern function add(stack:net.minecraft.world.item.ItemStack, tabVisibility:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
-  public overload extern function add(item:net.minecraft.world.level.ItemLike, tabVisibility:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
-
-  public overload extern function addAll(stacks:java.util.Collection<net.minecraft.world.item.ItemStack>):Void;
-  public overload extern function addAll(stacks:java.util.Collection<net.minecraft.world.item.ItemStack>,
-    tabVisibility:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
+  // Yarn names.
+  //public overload extern function add(stack:net.minecraft.world.item.ItemStack):Void;
+  //public overload extern function add(item:net.minecraft.world.level.ItemLike):Void;
+  //public overload extern function add(stack:net.minecraft.world.item.ItemStack, tabVisibility:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
+  //public overload extern function add(item:net.minecraft.world.level.ItemLike, tabVisibility:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
+  //
+  //public overload extern function addAll(stacks:java.util.Collection<net.minecraft.world.item.ItemStack>):Void;
+  //public overload extern function addAll(stacks:java.util.Collection<net.minecraft.world.item.ItemStack>,
+  //  tabVisibility:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
 }
 
 typedef Output = CreativeModeTab_Output;
@@ -200,7 +223,7 @@ final extern class CreativeModeTab_ItemDisplayParameters extends java.lang.Recor
   public function holders():net.minecraft.core.HolderLookup.HolderLookup_Provider;
 }
 #else
-typedef CreativeModeTab_ItemDisplayParameters = net.pickhaxe.compat.world.item.CreativeModTab.CreativeModeTab_ItemDisplayParameters;
+typedef CreativeModeTab_ItemDisplayParameters = net.pickhaxe.compat.world.item.CreativeModeTab.CreativeModeTab_ItemDisplayParameters;
 #end
 
 typedef ItemDisplayParameters = CreativeModeTab_ItemDisplayParameters;
@@ -219,4 +242,4 @@ extern interface CreativeModeTab_DisplayItemsGenerator {
 
 typedef DisplayItemsGenerator = CreativeModeTab_DisplayItemsGenerator;
 
-typedef DisplayItemsGeneratorHaxe = net.pickhaxe.compat.world.item.CreativeModTab.DisplayItemsGeneratorHaxe;
+typedef DisplayItemsGeneratorHaxe = net.pickhaxe.compat.world.item.CreativeModeTab.DisplayItemsGeneratorHaxe;

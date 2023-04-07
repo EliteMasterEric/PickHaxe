@@ -36,6 +36,11 @@ typedef FabricMod =
   var ?entrypoints:EntrypointContainer;
 
   /**
+   * Define the path for an access widener.
+   */
+  var accessWidener:String;
+
+  /**
    * A string value pointing to a path from the root of the mod's JAR file.
    * Defaults to an empty array.
    */

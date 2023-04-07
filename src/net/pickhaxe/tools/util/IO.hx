@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.util;
 
+import haxe.PosInfos;
 import haxe.io.Path;
 import sys.io.File;
 import sys.io.FileOutput;
@@ -234,7 +235,7 @@ class IO
    * @param input The path to clean up.
    * @return The cleaned up path.
    */
-  static inline function cleanPath(input:String):Path
+  public static inline function cleanPath(input:String):Path
   {
     if (input == null) return null;
     return new Path(Path.normalize(input));

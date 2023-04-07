@@ -55,13 +55,8 @@ class Setup implements ICommand
 
   function setupWindows():Void
   {
-    var haxePathEnv:String = Sys.getEnv('HAXEPATH');
-    var haxePath:Path = haxePathEnv == null ? null : new Path(haxePathEnv);
-
-    if (haxePath == null)
-    {
-      haxePath = new Path('C:/HaxeToolkit/haxe/');
-    }
+    var haxePathEnv:String = Sys.getEnv('HAXEPATH') ?? 'C:/HaxeToolkit/haxe/';
+    var haxePath:Path = new Path(haxePathEnv);
 
     try
     {

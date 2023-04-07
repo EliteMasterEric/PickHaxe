@@ -61,7 +61,16 @@ class GradleW implements ICommand
         mcVersion: mcVersion,
       });
 
-    performGradleTask(defines);
+    var result:Bool = performGradleTask(defines);
+
+    if (result)
+    {
+      CLI.print('Gradle task completed successfully.', Default);
+    }
+    else
+    {
+      CLI.print('Gradle task completed with FAILURE.', Force);
+    }
   }
 
   function parseArgs(args:Array<String>):Bool
@@ -124,27 +133,28 @@ class GradleW implements ICommand
       return false;
     }
 
-    if (mcVersion == null)
-    {
-      mcVersion = Constants.DEFAULT_MINECRAFT_VERSION;
-    }
-
-    if (task == null)
-    {
-      task = Constants.DEFAULT_GRADLE_TASK;
-      // CLI.print('Error: No task specified.');
-      // return false;
-    }
+    mcVersion = mcVersion ?? Constants.DEFAULT_MINECRAFT_VERSION;
+    task = task ?? Constants.DEFAULT_GRADLE_TASK;
 
     return true;
   }
 
-  function performGradleTask(defines:PickHaxeDefines):Void
+  /**
+   * Perform the provided gradle task, with the provided defines.
+   * @param defines The defines to use.
+   * @return Success or failure.
+   */
+  function performGradleTask(defines:PickHaxeDefines):Bool
   {
     // Move into `generated` folder.
-    Sys.setCwd(IO.workingDir().joinPaths('./generated/').toString());
+    Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
 
     var gradleW:GradleWProcess = new GradleWProcess(defines);
-    gradleW.performTask([task].concat(additionalArgs));
+    var result:Bool = gradleW.performTask([task].concat(additionalArgs));
+
+    // Move back to the parent of the workding dir.
+    Sys.setCwd(IO.workingDir().dir);
+    
+    return result;
   }
 }

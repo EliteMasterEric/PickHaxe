@@ -18,6 +18,7 @@ class Make implements ICommand
 
   var loader:String;
   var mcVersion:String;
+  var mappings:String;
 
   var additionalArgs:Array<String>;
 
@@ -39,7 +40,15 @@ class Make implements ICommand
           long: 'help',
           blurb: 'Output usage information',
           value: null,
-        }
+        },
+        {
+          short: null,
+          long: 'mappings',
+          blurb: 'Force the mapping to use for the gradle build.
+                  Valid values include: "mojang", "parchment", "yarn", "mcp"
+                  Defaults to Parchment.',
+          value: '[mappings]',
+        },
       ]
     };
   }
@@ -58,9 +67,19 @@ class Make implements ICommand
       {
         loader: loader,
         mcVersion: mcVersion,
+        mappings: mappings,
       });
 
-    performGradleTask(defines);
+    var result:Bool = performGradleTask(defines);
+
+    if (result)
+    {
+      CLI.print('Project make successful.');
+    }
+    else
+    {
+      CLI.print('Project make resulted in FAILURE.');
+    }
   }
 
   function parseArgs(args:Array<String>):Bool
@@ -80,6 +99,18 @@ class Make implements ICommand
             return false;
           case '--help': // Gets processed elsewhere.
             return false;
+          case '--mappings':
+            var nextArg:String = args[i + 1];
+            if (nextArg != null && !nextArg.startsWith('-'))
+            {
+              mappings = nextArg;
+              i++;
+            }
+            else
+            {
+              CLI.print('Error: No mappings specified.');
+              return false;
+            }
           default:
             additionalArgs.push(arg);
         }
@@ -119,20 +150,22 @@ class Make implements ICommand
       return false;
     }
 
-    if (mcVersion == null)
-    {
-      mcVersion = Constants.DEFAULT_MINECRAFT_VERSION;
-    }
+    mcVersion = mcVersion ?? Constants.DEFAULT_MINECRAFT_VERSION;
 
     return true;
   }
 
-  function performGradleTask(defines:PickHaxeDefines):Void
+  function performGradleTask(defines:PickHaxeDefines):Bool
   {
     // Move into `generated` folder.
-    Sys.setCwd(IO.workingDir().joinPaths('./generated/').toString());
+    Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
 
     var gradleW:GradleWProcess = new GradleWProcess(defines);
-    gradleW.performTask(["build"].concat(additionalArgs));
+    var result:Bool = gradleW.performTask(["build"].concat(additionalArgs));
+
+    // Move back to the parent of the workding dir.
+    Sys.setCwd(IO.workingDir().dir);
+
+    return result;
   }
 }

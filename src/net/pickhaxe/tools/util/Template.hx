@@ -83,13 +83,15 @@ class Template
         name: defines.pickhaxe.mod.name,
         description: defines.pickhaxe.mod.description,
 
+        accessWidener: 'META-INF/${defines.pickhaxe.mod.id}.accesswidener',
+
         // TODO: Add support for client-only and server-only mods.
         environment: '*',
         entrypoints:
           {
             main: mainEntrypoints,
-            client: clientEntrypoints,
-            server: serverEntrypoints
+            client: clientEntrypoints ?? [],
+            server: serverEntrypoints ?? []
           }
       };
     return JSON.toJSON(fabricModData);
@@ -109,6 +111,27 @@ class Template
     IO.writeFile(outputPath, forgePackStr);
   }
 
+  public static function writeForgeAccessTransformer(defines:PickHaxeDefines, outputPath:Path):Void
+  {
+    var accessTransformerStr:String = generateForgeAccessTransformer(defines);
+
+    IO.writeFile(outputPath, accessTransformerStr);
+  }
+
+  public static function writeFabricAccessWidener(defines:PickHaxeDefines, outputPath:Path):Void
+  {
+    var accessWidenerStr:String = generateFabricAccessWidener(defines);
+
+    IO.writeFile(outputPath, accessWidenerStr);
+  }
+
+  public static function generateFabricAccessWidener(defines:PickHaxeDefines):String
+  {
+    var output:String = loadFabricAccessWidenerTemplate();
+
+    return applyPickHaxeDefines(output, defines);
+  }
+
   public static function generateForgeManifest(defines:PickHaxeDefines):String
   {
     var output:String = loadForgeManifestTemplate();
@@ -123,6 +146,13 @@ class Template
     return applyPickHaxeDefines(output, defines);
   }
 
+  public static function generateForgeAccessTransformer(defines:PickHaxeDefines):String
+  {
+    var output:String = loadForgeAccessTransformerTemplate();
+
+    return applyPickHaxeDefines(output, defines);
+  }
+
   static function loadForgeManifestTemplate():String
   {
     return IO.readFile(IO.libraryDir().joinPaths('templates/build/forge/mods.toml'));
@@ -131,5 +161,15 @@ class Template
   static function loadForgePackFileTemplate():String
   {
     return IO.readFile(IO.libraryDir().joinPaths('templates/build/forge/pack.mcmeta'));
+  }
+
+  static function loadForgeAccessTransformerTemplate():String
+  {
+    return IO.readFile(IO.libraryDir().joinPaths('templates/build/forge/accesstransformer.cfg'));
+  }
+
+  static function loadFabricAccessWidenerTemplate():String
+  {
+    return IO.readFile(IO.libraryDir().joinPaths('templates/build/fabric/pickhaxe.accesswidener'));
   }
 }

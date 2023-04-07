@@ -47,4 +47,15 @@ abstract Consumer<T>(BaseConsumer<T>)
   {
     return new Consumer<T>(fun);
   }
+
+  @:to
+  public function toConsumer():JavaConsumer<T>
+  {
+    return cast this;
+  }
+
+  public static function buildConsumer<U>(fun:(U) -> Void):JavaConsumer<U>
+  {
+    return cast new Consumer<U>(fun);
+  }
 }

@@ -2,9 +2,11 @@ package net.minecraft.world.item;
 
 import net.minecraft.world.entity.EquipmentSlot;
 
+typedef ArmorItem = net.minecraft.world.item.ArmorItem_Minecraft;
+
 @:native("net.minecraft.world.item.ArmorItem")
 @:mapping("net.minecraft.class_1738")
-extern class ArmorItem_Inner extends net.minecraft.world.item.Item implements net.minecraft.world.item.Equipable
+extern class ArmorItem_Minecraft extends net.minecraft.world.item.Item implements net.minecraft.world.item.Equipable
 {
   @:mapping("field_7879")
   public static final DISPENSE_ITEM_BEHAVIOR:net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -53,27 +55,6 @@ extern class ArmorItem_Inner extends net.minecraft.world.item.Item implements ne
     interactionHand:net.minecraft.world.InteractionHand):net.minecraft.world.InteractionResultHolder<net.minecraft.world.item.ItemStack>;
 }
 
-@:forward
-abstract ArmorItem(ArmorItem_Inner) from ArmorItem_Inner to ArmorItem_Inner {
-  public overload extern inline function new(armorMaterial:net.minecraft.world.item.ArmorMaterial, slot:EquipmentSlot,
-    properties:net.minecraft.world.item.Item.Properties) {
-    #if (minecraft >= "1.19.4")
-    this = new ArmorItem_Inner(armorMaterial, ArmorItem_Type.bySlot(slot), properties);
-    #else
-    this = new ArmorItem_Inner(armorMaterial, slot, properties);
-    #end
-  }
-
-  public overload extern inline function new(armorMaterial:net.minecraft.world.item.ArmorMaterial, type:ArmorItem_Type,
-    properties:net.minecraft.world.item.Item.Properties) {
-    #if (minecraft >= "1.19.4")
-    this = new ArmorItem_Inner(armorMaterial, type, properties);
-    #else
-    this = new ArmorItem_Inner(armorMaterial, type.getSlot(), properties);
-    #end
-  };
-}
-
 #if (minecraft >= "1.19.4")
 // Use the native ArmorItem_Type enum
 @:native("net.minecraft.world.item.ArmorItem$Type")
@@ -112,7 +93,8 @@ final extern class ArmorItem_Type extends java.lang.Enum<net.minecraft.world.ite
       case EquipmentSlot.FEET:
         return BOOTS;
       default:
-        throw "Invalid EquipmentSlot for ArmorItem_Type: " + slot;
+        net.pickhaxe.core.PickHaxe.logError("Invalid EquipmentSlot for ArmorItem_Type: " + slot);
+        return null;
     }
   }
 }
@@ -170,7 +152,7 @@ abstract ArmorItem_Type(ArmorItem_Type_Inner)
       case "boots":
         return BOOTS;
       default:
-        throw "Invalid name for ArmorItem_Type: " + name;
+        net.pickhaxe.core.PickHaxe.logError("Invalid name for ArmorItem_Type: " + name);
     }
   }
 
@@ -187,7 +169,7 @@ abstract ArmorItem_Type(ArmorItem_Type_Inner)
       case EquipmentSlot.FEET:
         return BOOTS;
       default:
-        throw "Invalid EquipmentSlot for ArmorItem_Type: " + slot;
+        net.pickhaxe.core.PickHaxe.logError("Invalid EquipmentSlot for ArmorItem_Type: " + slot);
     }
   }
 

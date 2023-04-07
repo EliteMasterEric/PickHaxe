@@ -49,8 +49,6 @@ class MacroUtil
    */
   public static function addClassMetadata(input:String, ?exprs:Array<Expr>):Void
   {
-    if (exprs == null) exprs = [];
-
     var target:haxe.macro.Type.ClassType = Context.getLocalClass().get();
 
     if (hasMetadata(target.meta, input))
@@ -59,7 +57,7 @@ class MacroUtil
     }
     else
     {
-      target.meta.add(':$input', exprs, MacroApi.pos());
+      target.meta.add(':$input', exprs ?? [], MacroApi.pos());
     }
   }
 

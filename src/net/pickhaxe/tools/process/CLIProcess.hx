@@ -26,19 +26,6 @@ class CLIProcess
       {
         var result:Int = Sys.command(baseCmd, args);
 
-        // while (isProcessRunning(process)) {
-        // trace('Waiting for process to finish...');
-        // try {
-        // var out:String = process.stdout.readAll().toString();
-        // var err:String = process.stderr.readAll().toString();
-        // if (out.length > 0) {
-        // CLI.print(out, Verbose);
-        // }
-        // if (err.length > 0) {
-        // CLI.print(err, Verbose);
-        // }
-        // } catch (error) { }
-        // }
         return {
           exitCode: result,
           output: ''
