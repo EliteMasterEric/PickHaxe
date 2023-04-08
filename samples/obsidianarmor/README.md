@@ -1,6 +1,6 @@
-# Made in Haxe
+# Obsidian Armor
 
-Made in Haxe is a barebones sample mod, which adds a functionless new item and a new Creative Mode tab to hold it.
+Obsidian Armor is a sample mod which adds a new armor and tool set, crafted using Obsidian.
 
 
 ## Compatibility

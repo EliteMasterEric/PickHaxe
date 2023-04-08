@@ -2,7 +2,8 @@ package net.minecraft.world.item;
 
 import net.minecraft.world.entity.EquipmentSlot;
 
-typedef ArmorItem = net.minecraft.world.item.ArmorItem_Minecraft;
+// typedef ArmorItem = net.minecraft.world.item.ArmorItem_Minecraft;
+typedef ArmorItem = net.pickhaxe.compat.world.item.ArmorItem;
 
 @:native("net.minecraft.world.item.ArmorItem")
 @:mapping("net.minecraft.class_1738")
@@ -11,7 +12,7 @@ extern class ArmorItem_Minecraft extends net.minecraft.world.item.Item implement
   @:mapping("field_7879")
   public static final DISPENSE_ITEM_BEHAVIOR:net.minecraft.core.dispenser.DispenseItemBehavior;
 
-  #if (minecraft >= "1.19.4")
+  #if minecraft_gteq_1_19_4
   /**
    * @since 1.19.4
    */
@@ -55,7 +56,7 @@ extern class ArmorItem_Minecraft extends net.minecraft.world.item.Item implement
     interactionHand:net.minecraft.world.InteractionHand):net.minecraft.world.InteractionResultHolder<net.minecraft.world.item.ItemStack>;
 }
 
-#if (minecraft >= "1.19.4")
+#if minecraft_gteq_1_19_4
 // Use the native ArmorItem_Type enum
 @:native("net.minecraft.world.item.ArmorItem$Type")
 @:mapping("net.minecraft.class_1738$class_8051")
@@ -153,6 +154,7 @@ abstract ArmorItem_Type(ArmorItem_Type_Inner)
         return BOOTS;
       default:
         net.pickhaxe.core.PickHaxe.logError("Invalid name for ArmorItem_Type: " + name);
+        return null;
     }
   }
 
@@ -170,6 +172,7 @@ abstract ArmorItem_Type(ArmorItem_Type_Inner)
         return BOOTS;
       default:
         net.pickhaxe.core.PickHaxe.logError("Invalid EquipmentSlot for ArmorItem_Type: " + slot);
+        return null;
     }
   }
 
