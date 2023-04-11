@@ -1,0 +1,7 @@
+--class-path ./src/
+--java-lib ./libs/minecraft-mapped.jar
+--define no-compilation
+--define no-root
+--java ./build/java/
+
+com.test.Main
