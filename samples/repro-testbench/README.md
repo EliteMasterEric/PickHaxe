@@ -1,3 +1,1 @@
-# repro-testbench
-
-# Build steps
+Just run `./build.hxml`.
