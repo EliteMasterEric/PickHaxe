@@ -1,13 +1,15 @@
 package net.pickhaxe.compat.core;
 
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
-#if forge
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
+#if (forge)
 import net.minecraftforge.registries.IForgeRegistry;
 #end
+#if (fabric)
+#end
+import net.pickhaxe.compat.core.Registry;
 
 /**
  * Contains automatic redirects to writeable registries.
