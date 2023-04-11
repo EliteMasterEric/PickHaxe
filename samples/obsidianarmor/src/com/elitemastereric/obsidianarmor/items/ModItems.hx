@@ -2,14 +2,19 @@ package com.elitemastereric.obsidianarmor.items;
 
 import com.elitemastereric.obsidianarmor.materials.ObsidianArmorMaterial;
 import com.elitemastereric.obsidianarmor.materials.ObsidianToolMaterial;
+<<<<<<< Updated upstream
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+=======
+
+>>>>>>> Stashed changes
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorItem.ArmorItem_Type;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -25,6 +30,14 @@ import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 
+<<<<<<< Updated upstream
+=======
+import net.pickhaxe.compat.core.Registry;
+import net.pickhaxe.compat.core.Registries;
+import net.pickhaxe.compat.world.item.CreativeModeTab;
+import net.pickhaxe.compat.world.item.Item;
+
+>>>>>>> Stashed changes
 class ModItems {
   // References to our items.
   // Item.Settings is used to store properties such as stack size and durability.

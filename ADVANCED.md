@@ -14,6 +14,12 @@ For as long as Minecraft modding has existed, people have been developing mappin
 
 With the release of 1.14.4, Minecraft now saves a mappings file alongside their obfuscated jar and distributes it with each client version, available for modders to download and reference under a 
 
+## Haxe Notes
+
+- Getting errors regarding floats? There is a commmon source of confusion here: Doubles in Java (the 8-byte ones) are known as Floats in Haxe, and referencing Floats in Java (the 4-byte ones) require the rarely-used `Singles` type.
+
+Getting errors about floats and doubles? The 32-bit 
+
 ## List of Mappings
 
 Mojmaps: The official mappings from Mojang. Only available for 1.14.4+.

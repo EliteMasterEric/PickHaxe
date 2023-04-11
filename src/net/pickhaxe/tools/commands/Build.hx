@@ -335,10 +335,32 @@ class Build implements ICommand
           IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
             IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
         }
+<<<<<<< Updated upstream
         else if (loomCacheFile.endsWith('.jar'))
         {
           IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
             IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
+=======
+
+        CLI.print('Moving sources...');
+        var loomCache:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven'), true, false);
+        for (loomCacheFile in loomCache)
+        {
+          var loomCacheFileDir:String = new Path(Path.normalize(loomCacheFile)).dir;
+
+          trace('loomCacheFileDir: $loomCacheFileDir');
+
+          if (loomCacheFile.endsWith('-sources.jar'))
+          {
+            IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
+              IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
+          }
+          else if (loomCacheFile.endsWith('.jar'))
+          {
+            IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
+              IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
+          }
+>>>>>>> Stashed changes
         }
       }
     }
@@ -485,13 +507,13 @@ class Build implements ICommand
       if (jvm)
       {
         // Tell Haxe to include these files in the JAR.
-        args = args.concat(['--resource', 'generated/fabric.mod.json@fabric.mod.json']);
+        // args = args.concat(['--resource', 'generated/resources/fabric.mod.json@fabric.mod.json']);
 
-        var resources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'));
+        var resources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/resources'));
 
         for (resource in resources)
         {
-          args = args.concat(['--resource', 'resources/${resource}@${resource}']);
+          args = args.concat(['--resource', 'generated/resources/${resource}@${resource}']);
         }
       }
       else

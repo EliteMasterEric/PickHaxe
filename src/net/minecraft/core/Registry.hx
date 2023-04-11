@@ -1,5 +1,6 @@
 package net.minecraft.core;
 
+<<<<<<< Updated upstream
 @:native("net.minecraft.core.Registry")
 @:mapping("net.minecraft.class_2378")
 extern interface Registry<T>
@@ -10,6 +11,21 @@ extern interface Registry<T>
   @:badMapping("unknownMethodMapping")
   public function keys<U>(dynamicOps:com.mojang.serialization.DynamicOps<U>):java.util.stream.Stream<U>;
 
+=======
+// typedef Registry<T> = net.pickhaxe.compat.core.Registry<T>;
+typedef Registry<T> = Registry_Minecraft<T>;
+
+@:native("net.minecraft.core.Registry")
+@:mapping("net.minecraft.class_2378")
+extern interface Registry_Minecraft<T>
+{
+  public function key():net.minecraft.resources.ResourceKey<Registry_Minecraft<T>>;
+  public function byNameCodec():com.mojang.serialization.Codec<T>;
+  public function holderByNameCodec():com.mojang.serialization.Codec<net.minecraft.core.Holder<T>>;
+  @:badMapping("unknownMethodMapping")
+  public function keys<U>(dynamicOps:com.mojang.serialization.DynamicOps<U>):java.util.stream.Stream<U>;
+
+>>>>>>> Stashed changes
   /**
    * @return the name used to identify the given object within this registry or ,{@code null}, if the object is not within this registry
    */
@@ -33,6 +49,10 @@ extern interface Registry<T>
    * @return all keys in this registry
    */
   public function keySet():java.util.Set<net.minecraft.resources.ResourceLocation>;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   public function entrySet():java.util.Set<java.util.Entry<net.minecraft.resources.ResourceKey<T>, T>>;
   public function registryKeySet():java.util.Set<net.minecraft.resources.ResourceKey<T>>;
   public function getRandom(var1:net.minecraft.util.RandomSource):java.util.Optional<net.minecraft.core.Holder.Holder_Reference<T>>;
@@ -41,6 +61,7 @@ extern interface Registry<T>
   public overload function containsKey(var1:net.minecraft.resources.ResourceKey<T>):Bool;
 
   // Manually corrected mappings
+<<<<<<< Updated upstream
   public static overload function register<V, T:V>(registry:net.minecraft.core.Registry<V>, name:net.minecraft.resources.ResourceLocation, value:T):T;
     
   // Manually corrected mappings
@@ -60,6 +81,27 @@ extern interface Registry<T>
   @:badMapping("unknownMethodMapping")
   public static function registerMapping<V, T:V>(registry:net.minecraft.core.Registry<V>, id:Int, name:String, value:T):T;
   public function freeze():net.minecraft.core.Registry<T>;
+=======
+  public static overload function register<V, T:V>(registry:Registry_Minecraft<V>, name:net.minecraft.resources.ResourceLocation, value:T):T;
+
+  // Manually corrected mappings
+  public static overload function register<V, T:V>(registry:Registry_Minecraft<V>, key:net.minecraft.resources.ResourceKey<V>, value:T):T;
+
+  // Manually corrected mappings
+  public static overload function register<T>(registry:Registry_Minecraft<Dynamic>, name:String, value:T):T;
+
+  // Manually corrected mappings
+  @:badMapping("oops")
+  @:mapping("")
+  public static overload function registerForHolder<T>(registry:Registry_Minecraft<T>, key:net.minecraft.resources.ResourceKey<T>,
+    value:T):net.minecraft.core.Holder.Holder_Reference<T>;
+  @:badMapping("unknownMethodMapping")
+  public static overload function registerForHolder<T>(registry:Registry_Minecraft<T>, name:net.minecraft.resources.ResourceLocation,
+    value:T):net.minecraft.core.Holder.Holder_Reference<T>;
+  @:badMapping("unknownMethodMapping")
+  public static function registerMapping<V, T:V>(registry:Registry_Minecraft<V>, id:Int, name:String, value:T):T;
+  public function freeze():Registry_Minecraft<T>;
+>>>>>>> Stashed changes
   @:badMapping("unknownMethodMapping")
   public function createIntrusiveHolder(var1:T):net.minecraft.core.Holder.Holder_Reference<T>;
   public overload function getHolder(var1:Int):java.util.Optional<net.minecraft.core.Holder.Holder_Reference<T>>;
@@ -76,7 +118,13 @@ extern interface Registry<T>
   public function resetTags():Void;
   public function bindTags(var1:java.util.Map<net.minecraft.tags.TagKey<T>, java.util.List<net.minecraft.core.Holder<T>>>):Void;
   public function asHolderIdMap():net.minecraft.core.IdMap<net.minecraft.core.Holder<T>>;
+<<<<<<< Updated upstream
   public function holderOwner():net.minecraft.core.HolderOwner<T>;
+=======
+  #if minecraft_gteq_1_19_3
+  public function holderOwner():net.minecraft.core.HolderOwner<T>;
+  #end
+>>>>>>> Stashed changes
   public function asLookup():net.minecraft.core.HolderLookup.RegistryLookup<T>;
   public function asTagAddingLookup():net.minecraft.core.HolderLookup.RegistryLookup<T>;
 }
