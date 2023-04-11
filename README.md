@@ -2,7 +2,7 @@
 
 ![](/art/logo2.png)
 
-PickHaxe is a flexible, powerful Haxe framework to supercharge your Minecraft mod development. Build your mods in a high-level strictly-typed language and export to the Minecraft versionn and modding API of your choice.
+PickHaxe is a flexible, powerful Haxe framework to supercharge your Minecraft mod development. Build your mods in a high-level strictly-typed language and export to the Minecraft version and modding API of your choice.
 
 Getting started is simple. Install Haxe and PickHaxe, then create a new mod project and get developing. When you're ready to test, PickHaxe will compile your mod for Fabric or Forge, for the Minecraft version of your choice.
 
