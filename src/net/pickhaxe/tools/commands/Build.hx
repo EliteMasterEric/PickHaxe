@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.commands;
 
+import haxe.io.Path;
 import net.pickhaxe.tools.util.MCVersion;
 import net.pickhaxe.api.FabricMeta;
 import net.pickhaxe.schema.FabricMod;
@@ -335,32 +336,26 @@ class Build implements ICommand
           IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
             IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
         }
-<<<<<<< Updated upstream
-        else if (loomCacheFile.endsWith('.jar'))
-        {
-          IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
-            IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
-=======
 
         CLI.print('Moving sources...');
         var loomCache:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven'), true, false);
         for (loomCacheFile in loomCache)
         {
-          var loomCacheFileDir:String = new Path(Path.normalize(loomCacheFile)).dir;
+          var targetFile:Path = IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven', loomCacheFile);
 
-          trace('loomCacheFileDir: $loomCacheFileDir');
+          if (!IO.isValid(targetFile)) {
+            trace('WARNING: Could not copy minecraft source JAR. Check your path lengths.');
+            continue;
+          }
 
-          if (loomCacheFile.endsWith('-sources.jar'))
+          if (targetFile.toString().endsWith('-sources.jar'))
           {
-            IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
-              IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
+            IO.copyFile(targetFile, IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
           }
-          else if (loomCacheFile.endsWith('.jar'))
+          else if (targetFile.toString().endsWith('.jar'))
           {
-            IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
-              IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
+            IO.copyFile(targetFile, IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
           }
->>>>>>> Stashed changes
         }
       }
     }

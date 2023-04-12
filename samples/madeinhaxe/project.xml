@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pickhaxe>
+  <mod
+    id="madeinhaxe"
+    version="1.0.0"
+    parentPackage="com.elitemastereric.madeinhaxe"
+    classPath="./src/"
+    resourcePath="./resources/"
+  />
+
+  <!-- CLIENT, SERVER, or * -->
+  <mod-environment value="*" />
+
+  <mod-entry-point value="MadeInHaxeMod" />
+
+  <mod-metadata 
+    name="Made in Haxe"
+    description="A mod written in Haxe!"
+  />
+
+  <mod-contact
+    homepage="htts://github.com/elitemastereric/pickhaxe"
+    email="elitemastereric@gmail.com"
+    issues="htts://github.com/elitemastereric/pickhaxe/issues"
+    sources="htts://github.com/elitemastereric/pickhaxe"
+  />
+
+  <mod-author name="EliteMasterEric">
+    <mod-contact email="elitemastereric@gmail.com" />
+  </mod-author>
+
+  <!-- https://spdx.org/licenses/ -->
+  <mod-license value="MIT" />
+</pickhaxe>

@@ -41,6 +41,14 @@ class IO
     return sys.FileSystem.exists(path.toString());
   }
 
+  public static function isValid(path:Path):Bool {
+    #if windows
+    return path.toString().length > 260;
+    #else
+    return true;
+    #end
+  }
+
   public static function fileStartingWithExists(path:Path):Bool
   {
     var dir:Path = new Path(path.dir);

@@ -6,7 +6,7 @@ package net.pickhaxe.tools.util;
 class CLI
 {
   public static var quiet:Bool = false;
-  public static var verbose:Bool = #if macro true #else false #end;
+  public static var verbose:Bool = false; //#if macro true #else false #end;
 
   /**
    * Function for printing to the console, unless quiet is set to true.
