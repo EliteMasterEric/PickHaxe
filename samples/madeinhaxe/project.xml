@@ -2,20 +2,10 @@
 <pickhaxe>
   <mod
     id="madeinhaxe"
-    version="1.0.0"
+    version="0.2.1"
     parentPackage="com.elitemastereric.madeinhaxe"
     classPath="./src/"
     resourcePath="./resources/"
-  />
-
-  <!-- CLIENT, SERVER, or * -->
-  <mod-environment value="*" />
-
-  <mod-entry-point value="MadeInHaxeMod" />
-
-  <mod-metadata 
-    name="Made in Haxe"
-    description="A mod written in Haxe!"
   />
 
   <mod-contact
@@ -29,6 +19,15 @@
     <mod-contact email="elitemastereric@gmail.com" />
   </mod-author>
 
+  <mod-entry-point 
+    environment="*"
+    value="MadeInHaxeMod" />
+
+  <mod-metadata 
+    name="Made In Haxe"
+    description="This mod was written in the Haxe programming language!"
+  />
+
   <!-- https://spdx.org/licenses/ -->
-  <mod-license value="MIT" />
+  <mod-license value="LGPLv3 License" />
 </pickhaxe>

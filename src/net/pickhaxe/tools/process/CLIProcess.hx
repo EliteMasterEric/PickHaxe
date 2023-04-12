@@ -14,7 +14,7 @@ class CLIProcess
     this.baseCmd = baseCmd;
   }
 
-  function getProcessOutput(args:Array<String>, ?detached:Bool = false):String
+  function getProcessOutput(args:Array<String>, ?detached:Bool = false):{exitCode:Int, output:String}
   {
     try
     {
@@ -26,20 +26,10 @@ class CLIProcess
       {
         var result:Int = Sys.command(baseCmd, args);
 
-        // while (isProcessRunning(process)) {
-        // trace('Waiting for process to finish...');
-        // try {
-        // var out:String = process.stdout.readAll().toString();
-        // var err:String = process.stderr.readAll().toString();
-        // if (out.length > 0) {
-        // CLI.print(out, Verbose);
-        // }
-        // if (err.length > 0) {
-        // CLI.print(err, Verbose);
-        // }
-        // } catch (error) { }
-        // }
-        return '${result}';
+        return {
+          exitCode: result,
+          output: ''
+        };
       }
       else
       {
@@ -53,10 +43,14 @@ class CLIProcess
         {
           CLI.print('Error reading output.');
         }
+        var exitCode:Int = process.exitCode(true);
         process.close();
 
         CLI.print('Output: $output', Verbose);
-        return output;
+        return {
+          exitCode: exitCode,
+          output: output
+        };
       }
     }
     catch (error)
@@ -64,7 +58,10 @@ class CLIProcess
       CLI.print('Error performing command.');
       CLI.print('${error}');
     }
-    return '';
+    return {
+      exitCode: -1,
+      output: ''
+    };
   }
 
   static function isProcessRunning(p:Process):Bool

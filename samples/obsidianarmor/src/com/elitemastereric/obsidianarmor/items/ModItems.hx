@@ -1,43 +1,34 @@
 package com.elitemastereric.obsidianarmor.items;
 
+//import net.pickhaxe.compat.world.item.ArmorItem;
 import com.elitemastereric.obsidianarmor.materials.ObsidianArmorMaterial;
 import com.elitemastereric.obsidianarmor.materials.ObsidianToolMaterial;
-<<<<<<< Updated upstream
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-=======
-
->>>>>>> Stashed changes
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorItem.ArmorItem_Type;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.HoeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item.Item_Properties;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
-
-<<<<<<< Updated upstream
-=======
-import net.pickhaxe.compat.core.Registry;
 import net.pickhaxe.compat.core.Registries;
+import net.pickhaxe.compat.core.Registry;
 import net.pickhaxe.compat.world.item.CreativeModeTab;
 import net.pickhaxe.compat.world.item.Item;
 
->>>>>>> Stashed changes
 class ModItems {
   // References to our items.
   // Item.Settings is used to store properties such as stack size and durability.
@@ -57,52 +48,47 @@ class ModItems {
   public static final OBSIDIAN_LEGGINGS:Item = new ArmorItem(OBSIDIAN_ARMOR_MATERIAL, ArmorItem_Type.LEGGINGS, new Item_Properties().rarity(Rarity.RARE).fireResistant());
   public static final OBSIDIAN_BOOTS:Item = new ArmorItem(OBSIDIAN_ARMOR_MATERIAL, ArmorItem_Type.BOOTS, new Item_Properties().rarity(Rarity.RARE).fireResistant());
 
-  // Item Groups
-  public static final ITEM_GROUP:CreativeModeTab = FabricItemGroup.builder(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_armor"))
-      .icon(getCreativeTabIcon)
-      .build();
+  // Creative Mode Tab
+  public static final CREATIVE_TAB:CreativeModeTab = CreativeModeTab.builder()
+    .displayItems(function(params, entries) {
+      entries.accept(OBSIDIAN_AXE);
+      entries.accept(OBSIDIAN_PICKAXE);
+      entries.accept(OBSIDIAN_SHOVEL);
+      entries.accept(OBSIDIAN_SWORD);
+      entries.accept(OBSIDIAN_HOE);
 
-  public static function onInitialize():Void {
-    // Add each of our items to the item registry.
+      entries.accept(OBSIDIAN_HELMET);
+      entries.accept(OBSIDIAN_CHESTPLATE);
+      entries.accept(OBSIDIAN_LEGGINGS);
+      entries.accept(OBSIDIAN_BOOTS);
+    })
+    .icon(getTabIcon)
+    .build();
 
+  public static function register():Void
+  {
     ObsidianArmorMod.LOGGER.info("Registering items...");
 
-    var fieldNames:Array<String> = Type.getClassFields(BuiltInRegistries);
+    OBSIDIAN_PICKAXE.register(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_pickaxe"));
+    OBSIDIAN_AXE.register(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_axe"));
+    OBSIDIAN_SHOVEL.register(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_shovel"));
+    OBSIDIAN_SWORD.register(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_sword"));
+    OBSIDIAN_HOE.register(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_hoe"));
 
-    ObsidianArmorMod.LOGGER.info('Fetched registries.');
-
-    for (fieldName in fieldNames) {
-      ObsidianArmorMod.LOGGER.info('Registry: ' + fieldName);
-    }
-
-    // Tools
-    Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_pickaxe"), OBSIDIAN_PICKAXE);
-    Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_axe"), OBSIDIAN_AXE);
-    Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_shovel"), OBSIDIAN_SHOVEL);
-    Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_sword"), OBSIDIAN_SWORD);
-    Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_hoe"), OBSIDIAN_HOE);
-
-    // Armor
-    Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_helmet"), OBSIDIAN_HELMET);
-    Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_chestplate"), OBSIDIAN_CHESTPLATE);
-    Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_leggings"), OBSIDIAN_LEGGINGS);
-    Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_boots"), OBSIDIAN_BOOTS);
-
-    ItemGroupEvents.modifyEntriesEvent(ITEM_GROUP).register(new ModifyEntriesHaxe(function(content:FabricItemGroupEntries) {
-      content.add(OBSIDIAN_AXE);
-      content.add(OBSIDIAN_PICKAXE);
-      content.add(OBSIDIAN_SHOVEL);
-      content.add(OBSIDIAN_SWORD);
-      content.add(OBSIDIAN_HOE);
-
-      content.add(OBSIDIAN_HELMET);
-      content.add(OBSIDIAN_CHESTPLATE);
-      content.add(OBSIDIAN_LEGGINGS);
-      content.add(OBSIDIAN_BOOTS);
-    }));
+    OBSIDIAN_HELMET.register(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_helmet"));
+    OBSIDIAN_CHESTPLATE.register(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_chestplate"));
+    OBSIDIAN_LEGGINGS.register(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_leggings"));
+    OBSIDIAN_BOOTS.register(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_boots"));
   }
 
-  static function getCreativeTabIcon():ItemStack {
+  public static function registerCreativeTab():Void
+  {
+    ObsidianArmorMod.LOGGER.info("Registering Creative Mode tab...");
+
+    CREATIVE_TAB.register(new ResourceLocation(ObsidianArmorMod.MOD_ID, "obsidian_armor"));
+  }
+
+  static function getTabIcon():ItemStack {
     return new ItemStack(OBSIDIAN_CHESTPLATE);
   }
 }

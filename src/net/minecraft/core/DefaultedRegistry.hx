@@ -2,7 +2,7 @@ package net.minecraft.core;
 
 @:native("net.minecraft.core.DefaultedRegistry")
 @:mapping("net.minecraft.class_7922")
-extern interface DefaultedRegistry<T> extends net.minecraft.core.Registry<T>
+extern interface DefaultedRegistry<T> extends net.minecraft.core.Registry.Registry_Minecraft<T>
 {
   @:badMapping("unresolvedMethodOverride")
   public function getKey(var1:T):net.minecraft.resources.ResourceLocation;

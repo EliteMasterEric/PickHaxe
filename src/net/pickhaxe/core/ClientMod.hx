@@ -1,7 +1,11 @@
 package net.pickhaxe.core;
 
 #if fabric
+<<<<<<< HEAD
 import net.fabricmc.api.ClientModInitializer;
+=======
+import net.fabricmc.api.ModInitializer;
+>>>>>>> main
 #elseif forge
 #end
 
@@ -27,7 +31,6 @@ class ClientMod #if fabric implements ClientModInitializer #end
    */
   // public static final LOGGER:org.slf4j.Logger;
 
-  
   /**
    * The constructor must be public and have no parameters.
    */

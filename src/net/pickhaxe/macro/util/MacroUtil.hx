@@ -16,7 +16,7 @@ class MacroUtil
    * @param define The name of the define to set.
    * @param value The value to set the define to.
    */
-  public static function setDefine(define:String, value:String):Void
+  public static function setDefine(define:String, ?value:Null<String>):Void
   {
     CLI.print('-D ${define}=${value}', Verbose);
     Compiler.define(define, value);
@@ -47,7 +47,7 @@ class MacroUtil
    * Add metadata to the current class.
    * @param input The metadata to add. (without `@` or `:`)
    */
-  public static function addClassMetadata(input:String):Void
+  public static function addClassMetadata(input:String, ?exprs:Array<Expr>):Void
   {
     var target:haxe.macro.Type.ClassType = Context.getLocalClass().get();
 
@@ -57,7 +57,7 @@ class MacroUtil
     }
     else
     {
-      target.meta.add(':$input', [], MacroApi.pos());
+      target.meta.add(':$input', exprs ?? [], MacroApi.pos());
     }
   }
 

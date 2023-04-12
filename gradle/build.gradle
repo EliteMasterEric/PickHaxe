@@ -27,6 +27,11 @@ plugins {
   // Common
   //
   id 'maven-publish'
+
+  // For Gradle 7+
+  id 'com.github.johnrengelman.shadow' version '7.1.2'
+  // For Gradle 8+
+  // id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
 // Select the Gradle plugin based on the loader.
@@ -96,17 +101,18 @@ if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
         mappings channel: 'official', version: System.getProperty('pickhaxe.minecraft.version')
         break;
       case 'parchment':
-        mappings channel: 'parchment', version: System.getProperty('pickhaxe.mappings.parchment.version')
+        mappings channel: 'parchment', version: System.getProperty('pickhaxe.mappings.parchment.version') + '-' + System.getProperty('pickhaxe.minecraft.version')
         break;
       case 'yarn':
         if (System.getProperty('pickhaxe.minecraft.snapshot')) {
-          // mappings channel: 'snapshot', version: System.getProperty('pickhaxe.minecraft.version')
           mappings "net.fabricmc:yarn:23w13a_or_b+build.2:v2"
         } else {
           mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
         }
         break;
     }
+
+    accessTransformer = file('resources/META-INF/accesstransformer.cfg')
   }
 }
 
@@ -119,6 +125,11 @@ repositories {
   maven { url = 'https://maven.minecraftforge.net' }
   // ParchmentMC Mappings
   maven { url = 'https://maven.parchmentmc.org' }
+}
+
+configurations {
+  shade
+  implementation.extendsFrom shade
 }
 
 dependencies {
@@ -190,6 +201,7 @@ copyBuildArtifacts.description = 'Copies the built Minecraft mod JAR to a place 
 
 // Modify the `build` task to include additional metadata in the MANIFEST.
 tasks.jar {
+  archiveClassifier = 'slim'
   manifest {
     attributes(
       'PickHaxe-Library-Version': System.getProperty('pickhaxe.version'),
@@ -210,7 +222,37 @@ tasks.jar {
   }
 }
 
+shadowJar {
+  archiveClassifier = ''
+  configurations = [project.configurations.shade]
+
+  // Shadow the listed packages.
+  relocate ('net.pickhaxe', "${project.group}.shadow.net.pickhaxe") {
+    exclude "${project.group}"
+  }
+  relocate ('haxe', "${project.group}.shadow.haxe") {
+    exclude "${project.group}"
+  }
+
+  if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
+    finalizedBy 'reobfShadowJar'
+  }
+}
+
+if (System.getProperty('pickhaxe.loader.current').equals('fabric')) {
+  loom {
+    accessWidenerPath = file("resources/META-INF/${System.getProperty('pickhaxe.mod.id')}.accesswidener")
+  }
+}
+
+
 if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
+  assemble.dependsOn shadowJar
+
+  reobf {
+      shadowJar {}
+  }
+
   jar.finalizedBy('reobfJar')
 }
 

@@ -51,4 +51,10 @@ abstract Supplier<T>(BaseSupplier<T>)
   {
     return new Supplier<T>(fun);
   }
+
+  @:to
+  public function toSupplier():JavaSupplier<T>
+  {
+    return cast this;
+  }
 }

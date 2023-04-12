@@ -54,3 +54,9 @@ https://fabricmc.net/wiki/tutorial:vscode_setup#generating_minecraft_source
 Minecraft JavaDocs:
 - Fabric: https://maven.fabricmc.net/docs/yarn-1.19.3+build.5/
 - Forge: https://nekoyue.github.io/ForgeJavaDocs-NG/
+
+Mappings Lookups:
+- https://wagyourtail.xyz/Projects/MinecraftMappingViewer/App?version=1.19.4
+
+Common Bugs:
+- https://github.com/orgs/FabricMC/discussions/2394#discussioncomment-3148700

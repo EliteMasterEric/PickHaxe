@@ -29,7 +29,7 @@ class MappingMacro
 
     if (mappingsEnabled == null || mappingsEnabled != 'true')
     {
-      Context.info('[PICKHAXE] Skipping retrieval of Intermediary mappings (mappings disabled)', Context.currentPos());
+      // Context.info('[PICKHAXE] Skipping retrieval of Intermediary mappings (mappings disabled)', Context.currentPos());
       return;
     }
 
@@ -37,7 +37,7 @@ class MappingMacro
 
     if (intermediaryVersion == null)
     {
-      Context.error('pickhaxe.mappings.intermediary.version is not defined', Context.currentPos());
+      Context.info('pickhaxe.mappings.intermediary.version is not defined', Context.currentPos());
       return;
     }
 

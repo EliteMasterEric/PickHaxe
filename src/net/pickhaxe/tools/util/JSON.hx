@@ -58,7 +58,8 @@ class JSON
       case Std.isOfType(_, Array) => true:
         if (value.length == 0)
         {
-          return null;
+          return [];
+          // return null; This doesn't actually work.
         }
         return value.map(function(item:Dynamic):Dynamic {
           return replacer(key, item);

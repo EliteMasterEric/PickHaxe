@@ -2,7 +2,7 @@ package net.minecraft.world.item;
 
 @:native("net.minecraft.world.item.BucketItem")
 @:mapping("net.minecraft.class_1755")
-extern class BucketItem extends net.minecraft.world.item.Item implements net.minecraft.world.item.DispensibleContainerItem
+extern class BucketItem extends net.minecraft.world.item.Item.Item_Minecraft implements net.minecraft.world.item.DispensibleContainerItem
 {
   public function new(fluid:net.minecraft.world.level.material.Fluid, properties:net.minecraft.world.item.Item.Properties);
   @:mapping("method_7836")

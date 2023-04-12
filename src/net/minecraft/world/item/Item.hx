@@ -5,18 +5,18 @@ package net.minecraft.world.item;
  */
 @:native("net.minecraft.world.item.Item")
 @:mapping("net.minecraft.class_1792")
-extern class Item implements net.minecraft.world.flag.FeatureElement implements net.minecraft.world.level.ItemLike
-    implements net.fabricmc.fabric.api.item.v1.FabricItem
+extern class Item implements net.minecraft.world.flag.FeatureElement implements net.minecraft.world.level.ItemLike #if fabric
+    implements net.fabricmc.fabric.api.item.v1.FabricItem #end
 {
-  public static final BY_BLOCK:java.util.Map<net.minecraft.world.level.block.Block, net.minecraft.world.item.Item>;
+  public static final BY_BLOCK:java.util.Map<net.minecraft.world.level.block.Block, Item>;
   public static final MAX_STACK_SIZE:Int;
   public static final EAT_DURATION:Int;
   public static final MAX_BAR_WIDTH:Int;
-  public static function getId(item:net.minecraft.world.item.Item):Int;
-  public static function byId(id:Int):net.minecraft.world.item.Item;
-  public static function byBlock(block:net.minecraft.world.level.block.Block):net.minecraft.world.item.Item;
-  public function new(properties:net.minecraft.world.item.Item.Properties);
-  public function builtInRegistryHolder():net.minecraft.core.Holder.Holder_Reference<net.minecraft.world.item.Item>;
+  public static function getId(item:Item):Int;
+  public static function byId(id:Int):Item;
+  public static function byBlock(block:net.minecraft.world.level.block.Block):Item;
+  public function new(properties:net.minecraft.world.item.Item.Item_Properties);
+  public function builtInRegistryHolder():net.minecraft.core.Holder.Holder_Reference<Item>;
 
   /**
    * Called as the item is being used by an entity.
@@ -28,7 +28,7 @@ extern class Item implements net.minecraft.world.flag.FeatureElement implements 
   public function verifyTagAfterLoad(compoundTag:net.minecraft.nbt.CompoundTag):Void;
   public function canAttackBlock(state:net.minecraft.world.level.block.state.BlockState, level:net.minecraft.world.level.Level,
     pos:net.minecraft.core.BlockPos, player:net.minecraft.world.entity.player.Player):Bool;
-  public function asItem():net.minecraft.world.item.Item;
+  public function asItem():Item;
 
   /**
    * Called when this item is used when targeting a Block
@@ -110,7 +110,7 @@ extern class Item implements net.minecraft.world.flag.FeatureElement implements 
    */
   public function shouldOverrideMultiplayerNbt():Bool;
 
-  public final function getCraftingRemainingItem():Null<net.minecraft.world.item.Item>;
+  public final function getCraftingRemainingItem():Null<Item>;
 
   /**
    * True if this Item has a container item (a.k.a. crafting result)

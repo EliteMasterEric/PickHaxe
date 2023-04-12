@@ -5,7 +5,7 @@ package net.minecraft.world.item;
  */
 @:native("net.minecraft.world.item.ItemStack")
 @:mapping("net.minecraft.class_1799")
-final extern class ItemStack // implements net.fabricmc.fabric.api.item.v1.FabricItemStack
+final extern class ItemStack #if fabric implements net.fabricmc.fabric.api.item.v1.FabricItemStack #end
 {
   public static final CODEC:com.mojang.serialization.Codec<net.minecraft.world.item.ItemStack>;
   public static final EMPTY:net.minecraft.world.item.ItemStack;

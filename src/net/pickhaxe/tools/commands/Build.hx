@@ -1,7 +1,6 @@
 package net.pickhaxe.tools.commands;
 
 import haxe.io.Path;
-import net.pickhaxe.tools.util.MCVersion;
 import net.pickhaxe.api.FabricMeta;
 import net.pickhaxe.schema.FabricMod;
 import net.pickhaxe.tools.commands.Help.CommandInfo;
@@ -10,6 +9,8 @@ import net.pickhaxe.tools.process.Haxe;
 import net.pickhaxe.tools.schema.PickHaxeDefines;
 import net.pickhaxe.tools.schema.PickHaxeDefines.Builder as PickHaxeDefinesBuilder;
 import net.pickhaxe.tools.util.JSON;
+import net.pickhaxe.tools.util.MCVersion;
+import net.pickhaxe.tools.util.Template;
 
 /**
  * Command for building a new project for a specific Minecraft version and mod loader.
@@ -142,13 +143,27 @@ class Build implements ICommand
         mappings: mappings,
       });
 
-    performGradleSetup(defines);
-
     switch (loader)
     {
       case 'fabric':
-        writeFabricModJson(defines);
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
+
+        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('generated/resources/fabric.mod.json'));
+        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('generated/resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
+      case 'forge':
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
+
+        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('generated/resources/pack.mcmeta'));
+        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('generated/resources/META-INF/mods.toml'));
+        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('generated/resources/META-INF/accesstransformer.cfg'));
     }
+
+    var result:Bool = performGradleSetup(defines);
+
+    if (!result) return;
+
+    // Move back to the parent of the working dir.
+    Sys.setCwd(IO.workingDir().dir);
 
     performHaxeBuild(defines, !genSources);
   }
@@ -273,7 +288,7 @@ class Build implements ICommand
     return true;
   }
 
-  function performGradleSetup(defines:PickHaxeDefines):Void
+  function performGradleSetup(defines:PickHaxeDefines):Bool
   {
     // If we are doing a clean build, delete the `generated` folder.
     if (clean && IO.exists(IO.workingDir().joinPaths('generated')))
@@ -303,16 +318,18 @@ class Build implements ICommand
       }
     }
 
-    // Move into `generated` folder.
-    Sys.setCwd(IO.workingDir().joinPaths('./generated/').toString());
-
     var shouldPerformGradle:Bool = !skipGradle;
 
-    if (shouldPerformGradle && !forceGradle && IO.fileStartingWithExists(IO.workingDir().joinPaths('build/minecraft/minecraft-merged')))
+    if (shouldPerformGradle
+      && !forceGradle
+      && IO.fileStartingWithExists(IO.workingDir().joinPaths('generated/build/minecraft/minecraft-merged')))
     {
       // We already have minecraft with mappings, so assume we don't need to run gradle.
       shouldPerformGradle = false;
     }
+
+    // Move into `generated` folder.
+    Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
 
     // Perform actual gradle steps.
     if (shouldPerformGradle)
@@ -322,22 +339,27 @@ class Build implements ICommand
       var gradleWProcess:GradleW = new GradleW(defines);
 
       CLI.print('Fetching dependency JARs...');
-      gradleWProcess.copyDependencies(); // Copies all of Minecraft's dependencies to the `generated/build/minecraft` folder.
+      var copyDependenciesSuccess:Bool = gradleWProcess.copyDependencies(); // Copies all of Minecraft's dependencies to the `generated/build/minecraft` folder.
 
-      CLI.print('Generating sources...');
-      gradleWProcess.genSources(); // Generates mapped sources for Minecraft.
-
-      CLI.print('Moving sources...');
-      var loomCache:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven'), false, true);
-      for (loomCacheFile in loomCache)
+      if (!copyDependenciesSuccess)
       {
-        if (loomCacheFile.endsWith('-sources.jar'))
+        CLI.print('Error: Failed to copy dependencies.');
+        return false;
+      }
+
+      if (loader == "fabric")
+      {
+        CLI.print('Generating sources...');
+        var genSourceSuccess:Bool = gradleWProcess.genSources(); // Generates mapped sources for Minecraft.
+
+        if (!genSourceSuccess)
         {
-          IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
-            IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
+          CLI.print('Error: Failed to generate sources.');
+          return false;
         }
 
         CLI.print('Moving sources...');
+
         var loomCache:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven'), true, false);
         for (loomCacheFile in loomCache)
         {
@@ -358,39 +380,16 @@ class Build implements ICommand
           }
         }
       }
-    }
-    // Cleanup after Gradle.
-
-    // Move back to the project root.
-    Sys.setCwd(IO.workingDir().joinPaths('../').toString());
-  }
-
-  function writeFabricModJson(defines:PickHaxeDefines):Void
-  {
-    // Copy the `fabric.mod.json` file to the `generated/resources` folder.
-    var entrypoint:EntrypointItem = EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${defines.pickhaxe.mod.entryPoint}');
-
-    var fabricModData:FabricMod =
+      else
       {
-        schemaVersion: 1,
-        id: defines.pickhaxe.mod.id,
-        version: defines.pickhaxe.mod.version,
+        // The copyDependencies task already generates and moves the sources in Forge.
+        // Note that the sources are in `forge-<version>.jar` rather than `minecraft.jar`
+        return true;
+      }
+    }
 
-        name: defines.pickhaxe.mod.name,
-        description: defines.pickhaxe.mod.description,
-
-        // TODO: Add support for client-only and server-only mods.
-        environment: '*',
-        entrypoints:
-          {
-            main: [entrypoint]
-          }
-      };
-
-    var fabricModStr:String = JSON.toJSON(fabricModData);
-
-    IO.makeDir(IO.workingDir().joinPaths('generated/resources'));
-    IO.writeFile(IO.workingDir().joinPaths('generated/resources/fabric.mod.json'), fabricModStr);
+    // Cleanup after Gradle.
+    return true;
   }
 
   /**
@@ -412,11 +411,16 @@ class Build implements ICommand
     // Include user-provided libraries.
     for (library in defines.pickhaxe.haxe.libraries)
     {
-      if (library.git != null) {
+      if (library.git != null)
+      {
         args = args.concat(['--library', '${library.name}:git:${library.git}']);
-      } else if (library.version != null) {
+      }
+      else if (library.version != null)
+      {
         args = args.concat(['--library', '${library.name}:${library.version}']);
-      } else {
+      }
+      else
+      {
         args = args.concat(['--library', '${library.name}']);
       }
     }
@@ -439,9 +443,14 @@ class Build implements ICommand
       '--macro',
       "addGlobalMetadata('net.fabricmc', '@:build(net.pickhaxe.macro.MappingMacro.build())', true, true, false)"
     ]);
+    // Map the `net.minecraftforge` package.
+    args = args.concat([
+      '--macro',
+      "addGlobalMetadata('net.minecraftforge', '@:build(net.pickhaxe.macro.MappingMacro.build())', true, true, false)"
+    ]);
 
     // Include necessary Java libraries as externs.
-    var jarExterns:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('./generated/build/minecraft/'), true, false);
+    var jarExterns:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/build/minecraft'), true, false);
     for (jarExtern in jarExterns)
     {
       if (jarExtern.endsWith('.jar'))
@@ -473,7 +482,6 @@ class Build implements ICommand
 
     if (!debug)
     {
-      // args.push('--no-traces');
       args = args.concat(['-D', 'no-traces']);
     }
     else
@@ -513,6 +521,7 @@ class Build implements ICommand
       }
       else
       {
+        CLI.print('Copying resources...');
         // We actually need to copy these files to the `generated/resources` folder.
         var resourceDirs:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'), false, true);
         for (resourceDir in resourceDirs)
@@ -535,8 +544,11 @@ class Build implements ICommand
     // Add compile definitions.
     args = args.concat(PickHaxeDefinesBuilder.toHaxeDefines(defines));
 
-    // Include the mod's main class in the build.
-    args.push('${defines.pickhaxe.mod.parentPackage}.${defines.pickhaxe.mod.entryPoint}');
+    // Include the mod's entry points in the build.
+    for (entryPoint in defines.pickhaxe.mod.entryPoints)
+    {
+      args.push('${defines.pickhaxe.mod.parentPackage}.${entryPoint.value}');
+    }
 
     var exitCode:String = Haxe.instance.performBuild(args);
 

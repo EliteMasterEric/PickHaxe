@@ -1,12 +1,13 @@
 package com.elitemastereric.madeinhaxe.items;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-
-import net.pickhaxe.compat.core.Registry;
+import net.minecraft.world.item.ItemStack;
 import net.pickhaxe.compat.core.Registries;
-import net.pickhaxe.compat.world.item.Item;
+import net.pickhaxe.compat.core.Registry;
 import net.pickhaxe.compat.world.item.CreativeModeTab;
+import net.pickhaxe.compat.world.item.Item;
 
 /**
  * Holds references to all of our items,

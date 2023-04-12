@@ -1,0 +1,36 @@
+# This mod was generated using the PickHaxe framework.
+# It is not recommended to edit this file manually.
+# If you want to change something, edit your `project.xml` file instead,
+# or create an issue on the PickHaxe GitHub repository if your desired option is not available.
+
+# Mandatory, for regular Forge mods this should be javafml
+modLoader="javafml"
+# The version range for the mod loader, for regular Forge mods this should be the Forge version
+loaderVersion="[44,)"
+
+# The license for your mod.
+license="#{pickhaxe.mod.license}"
+
+# A list of mods.
+[[mods]]
+modId="#{pickhaxe.mod.id}"
+version="#{pickhaxe.mod.version}"
+displayName="#{pickhaxe.mod.name}"
+logoFile="#{pickhaxe.mod.id}/icon.png"
+authors="#{pickhaxe.mod.authors}"
+description='''#{pickhaxe.mod.description}'''
+#displayTest="MATCH_VERSION" # MATCH_VERSION is the default if nothing is specified (#optional)
+
+[[dependencies.#{pickhaxe.mod.id}]]
+modId="forge"
+mandatory=true
+versionRange="[44,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.#{pickhaxe.mod.id}]]
+modId="minecraft"
+mandatory=true
+versionRange="[#{pickhaxe.minecraft.version},)"
+ordering="NONE"
+side="BOTH"

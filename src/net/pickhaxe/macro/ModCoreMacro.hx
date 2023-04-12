@@ -24,7 +24,7 @@ class ModCoreMacro
     MacroUtil.addClassMetadata('keep'); // Ensure the class is not removed by the compiler.
     MacroUtil.addClassMetadata('nativeGen'); // Tell Haxe to generate cleaner native code.
 
-    // Metadata of Mods is populated by compiler defines but can be overridden by @:mod metadata.
+    // Metadata of Mods is populated by compiler defines/project.xml but can be overridden by @:mod metadata.
 
     // Populate with compiler defines.
     var modParams:ModCoreParams = populateModCoreParams();
@@ -45,6 +45,10 @@ class ModCoreMacro
     // Build the mod initializer class by adding members.
     return ClassBuilder.run([
       buildConstructor.bind(modParams),
+
+      #if forge
+      buildModAnnotation.bind(modParams),
+      #end
 
       buildModIdField.bind(modParams),
       buildLoggerField.bind(modParams),
@@ -132,6 +136,23 @@ class ModCoreMacro
 
     cb.addMember(logger);
   }
+
+  #if macro
+  /**
+   * Apply an `@Mod` annotation to the class.
+   * Only applies to Forge mods.
+   * @param params 
+   * @param cb 
+   */
+  static function buildModAnnotation(params:ModCoreParams, cb:ClassBuilder):Void
+  {
+    // @:strict(net.minecraftforge.fml.common.Mod({ author:"author", currentRevision: 2 }))
+
+    MacroUtil.addClassMetadata('meta', [
+      macro net.minecraftforge.fml.common.Mod($v{params.modId})
+    ]);
+  }
+  #end
 
   static function parseModCoreParams(paramExpr:Expr, params:ModCoreParams):ModCoreParams
   {
