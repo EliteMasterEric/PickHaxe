@@ -57,7 +57,7 @@ class GradleW extends CLIProcess
       // Part of GradleW
       '-Dorg.gradle.appname=gradlew',
       '-classpath',
-      '.\\wrapper-$version\\gradle-wrapper.jar',
+      './wrapper-$version/gradle-wrapper.jar',
       'org.gradle.wrapper.GradleWrapperMain',
       '--stacktrace',
       '--no-daemon',
