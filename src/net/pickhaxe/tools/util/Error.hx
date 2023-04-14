@@ -5,6 +5,7 @@ enum abstract Error(Int) from Int to Int {
   var UNKNOWN = 1;
 
   var NO_PROJECT_XML = 100;
+  var UNKNOWN_LOADER = 101;
 
   var GRADLE_ERROR = 200;
 
@@ -51,5 +52,24 @@ class NoProjectXMLException extends PickHaxeException {
 
   public override function getErrorMessage():String {
     return "No project.xml file found in the current directory.";
+  }
+}
+
+class UnknownLoaderException extends PickHaxeException {
+  var loader:String;
+  public function new(loader:String) {
+    super();
+    this.loader = loader;
+  }
+
+  public override function getErrorCode():Error {
+    return Error.UNKNOWN_LOADER;
+  }
+
+  public override function getErrorMessage():String {
+    if (loader == null) {
+      return 'No Minecraft mod loader specified, expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].';
+    }
+    return 'Unknown Minecraft mod loader "${loader}", expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].';
   }
 }

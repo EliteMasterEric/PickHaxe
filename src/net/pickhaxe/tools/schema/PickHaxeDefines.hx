@@ -1,5 +1,7 @@
 package net.pickhaxe.tools.schema;
 
+import net.pickhaxe.tools.util.Error.NoProjectXMLException;
+import net.pickhaxe.tools.util.Error.UnknownLoaderException;
 import net.pickhaxe.tools.schema.PickHaxeProject.HaxelibEntry;
 import net.pickhaxe.tools.schema.FabricMeta.FabricMetaLoaderVersionData;
 import net.pickhaxe.api.Parchment;
@@ -121,7 +123,7 @@ class Builder
 
     if (projectFile == null)
     {
-      throw 'Could not find project.xml file.';
+      throw new NoProjectXMLException();
     }
 
     return switch (params.loader)

@@ -9,6 +9,7 @@ import net.pickhaxe.tools.process.Haxe;
 import net.pickhaxe.tools.schema.PickHaxeDefines;
 import net.pickhaxe.tools.schema.PickHaxeDefines.Builder as PickHaxeDefinesBuilder;
 import net.pickhaxe.tools.util.JSON;
+import net.pickhaxe.tools.util.Error.UnknownLoaderException;
 import net.pickhaxe.tools.util.MCVersion;
 import net.pickhaxe.tools.util.Template;
 
@@ -257,16 +258,14 @@ class Build implements ICommand
     if (loader == null)
     {
       printUsage();
-      CLI.print('');
-      CLI.print('Error: No loader specified, expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].');
-      return false;
+
+      throw new UnknownLoaderException(null);
     }
     else if (!MCVersion.isLoaderValid(loader))
     {
       printUsage();
-      CLI.print('');
-      CLI.print('Error: Invalid loader specified, expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].');
-      return false;
+
+      throw new UnknownLoaderException(loader);
     }
 
     if (mcVersion == null)
