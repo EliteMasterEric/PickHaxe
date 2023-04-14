@@ -10,6 +10,7 @@ import net.pickhaxe.tools.schema.PickHaxeDefines;
 import net.pickhaxe.tools.schema.PickHaxeDefines.Builder as PickHaxeDefinesBuilder;
 import net.pickhaxe.tools.util.JSON;
 import net.pickhaxe.tools.util.Error.UnknownLoaderException;
+import net.pickhaxe.tools.util.Error.GradleException;
 import net.pickhaxe.tools.util.MCVersion;
 import net.pickhaxe.tools.util.Template;
 
