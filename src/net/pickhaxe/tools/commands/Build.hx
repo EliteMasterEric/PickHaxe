@@ -317,6 +317,7 @@ class Build implements ICommand
 
     // Copy Gradle files to the `generated` folder.
     var gradleFiles:Array<String> = IO.readDirectoryRecursive(IO.libraryDir().joinPaths('gradle'), true, false);
+    CLI.print('Copying ${gradleFiles.length} Gradle files...');
     for (gradleFile in gradleFiles)
     {
       if (gradleFile.startsWith('.gradle')) continue;
