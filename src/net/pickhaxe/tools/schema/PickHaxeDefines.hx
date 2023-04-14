@@ -119,7 +119,11 @@ class Builder
   {
     params = validateBuildParams(params);
 
+    CLI.print("Reading project file...");
+
     var projectFile:PickHaxeProject = net.pickhaxe.tools.util.XML.readProjectFile(IO.workingDir().joinPaths('project.xml'));
+
+    CLI.print("Read project file.");
 
     if (projectFile == null)
     {
