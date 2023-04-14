@@ -9,6 +9,7 @@
   "releasenote": "Bug fixes and 1.19.2 support.",
   "version": "0.2.1",
   "dependencies": {
+    "hxjava": "",
     "thx.semver": "",
     "tink_lang": "",
     "tink_macro": "",
