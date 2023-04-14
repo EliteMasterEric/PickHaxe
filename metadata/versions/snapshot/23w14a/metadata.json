@@ -1,0 +1,11 @@
+{
+  "type": "snapshot",
+  "version": "23w14a",
+
+  "javaVersion": "17",
+
+  "forgeGradleVersion": null,
+  "fabricGradleVersion": "8.0.1",
+
+  "forgeVersion": null
+}

@@ -2,10 +2,10 @@
   "type": "stable",
   "version": "1.19.0",
 
-  "javaVersion": "17",
+  "javaVersion": "8",
 
   "forgeGradleVersion": "7.5.1",
   "fabricGradleVersion": "8.0.1",
 
-  "forgeVersion": "41.1.0"
+  "forgeVersion": "36.2.39"
 }
