@@ -2,12 +2,9 @@ package net.minecraft.world.item;
 
 import net.minecraft.world.entity.EquipmentSlot;
 
-// typedef ArmorItem = net.minecraft.world.item.ArmorItem_Minecraft;
-typedef ArmorItem = net.pickhaxe.compat.world.item.ArmorItem;
-
 @:native("net.minecraft.world.item.ArmorItem")
 @:mapping("net.minecraft.class_1738")
-extern class ArmorItem_Minecraft extends net.minecraft.world.item.Item implements net.minecraft.world.item.Equipable
+extern class ArmorItem extends net.minecraft.world.item.Item implements net.minecraft.world.item.Equipable
 {
   @:mapping("field_7879")
   public static final DISPENSE_ITEM_BEHAVIOR:net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -16,7 +13,8 @@ extern class ArmorItem_Minecraft extends net.minecraft.world.item.Item implement
   /**
    * @since 1.19.4
    */
-  public function new(armorMaterial:net.minecraft.world.item.ArmorMaterial, type:ArmorItem_Type,
+  public overload function new(armorMaterial:net.minecraft.world.item.ArmorMaterial,
+    type:ArmorItem_Type,
     properties:net.minecraft.world.item.Item.Properties);
   #else
   /**
@@ -100,87 +98,7 @@ final extern class ArmorItem_Type extends java.lang.Enum<net.minecraft.world.ite
   }
 }
 #else
-// Create a typedef for the ArmorItem_Type enum ourselves.
-typedef ArmorItem_Type_Inner = {
-  name:String,
-  slot:EquipmentSlot,
-};
-// TODO: Make this an enum abstract.
-abstract ArmorItem_Type(ArmorItem_Type_Inner)
-{
-  public static final HELMET:ArmorItem_Type = new ArmorItem_Type("helmet", EquipmentSlot.HEAD);
-  public static final CHESTPLATE:ArmorItem_Type = new ArmorItem_Type("chestplate", EquipmentSlot.CHEST);
-  public static final LEGGINGS:ArmorItem_Type = new ArmorItem_Type("leggings", EquipmentSlot.LEGS);
-  public static final BOOTS:ArmorItem_Type = new ArmorItem_Type("boots", EquipmentSlot.FEET);
-
-  public function new(name:String, slot:EquipmentSlot) {
-    this = {
-      name: name,
-      slot: slot,
-    };
-  }
-
-  public inline function getSlot():EquipmentSlot
-  {
-    return this.slot;
-  }
-
-  public inline function getName():String
-  {
-    return this.name;
-  }
-
-  public static function values():Array<ArmorItem_Type>
-  {
-    return [HELMET, CHESTPLATE, LEGGINGS, BOOTS];
-  }
-
-  public static inline function valueOf(name:String):ArmorItem_Type
-  {
-    return ArmorItem_Type.byName(name);
-  }
-
-  public static inline function byName(name:String):ArmorItem_Type
-  {
-    switch (name)
-    {
-      case "helmet":
-        return HELMET;
-      case "chestplate":
-        return CHESTPLATE;
-      case "leggings":
-        return LEGGINGS;
-      case "boots":
-        return BOOTS;
-      default:
-        net.pickhaxe.core.PickHaxe.logError("Invalid name for ArmorItem_Type: " + name);
-        return null;
-    }
-  }
-
-  public static inline function bySlot(slot:EquipmentSlot):ArmorItem_Type
-  {
-    switch (slot)
-    {
-      case EquipmentSlot.HEAD:
-        return HELMET;
-      case EquipmentSlot.CHEST:
-        return CHESTPLATE;
-      case EquipmentSlot.LEGS:
-        return LEGGINGS;
-      case EquipmentSlot.FEET:
-        return BOOTS;
-      default:
-        net.pickhaxe.core.PickHaxe.logError("Invalid EquipmentSlot for ArmorItem_Type: " + slot);
-        return null;
-    }
-  }
-
-  public inline function toString():String
-  {
-    return "ArmorItem_Type." + this.name;
-  }
-}
+typedef ArmorItem_Type = net.pickhaxe.compat.world.item.ArmorItem_Type;
 #end
 
 // typedef Type = ArmorItem_Type;

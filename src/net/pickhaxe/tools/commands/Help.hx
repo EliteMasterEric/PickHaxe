@@ -77,6 +77,7 @@ class Help implements ICommand
       'build' => new Build(),
       'clean' => new Clean(),
       'gradlew' => new GradleW(),
+      'make' => new Make(),
     ];
   }
 

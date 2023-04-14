@@ -236,7 +236,9 @@ extern class Item_Properties
   public function craftRemainder(craftingRemainingItem:net.minecraft.world.item.Item):net.minecraft.world.item.Item.Properties;
   public function rarity(rarity:net.minecraft.world.item.Rarity):net.minecraft.world.item.Item.Properties;
   public function fireResistant():net.minecraft.world.item.Item.Properties;
+  #if minecraft_gteq_1_19_3
   public function requiredFeatures(requiredFeatures:java.NativeArray<net.minecraft.world.flag.FeatureFlag>):net.minecraft.world.item.Item.Properties;
+  #end
 }
 
 typedef Properties = Item_Properties;

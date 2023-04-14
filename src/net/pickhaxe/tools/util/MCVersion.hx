@@ -178,6 +178,71 @@ class MCVersion
 
     return nextVersion.id;
   }
+  
+  /**
+   * Get a list of the previous Minecraft versions.
+   */
+   public static function getPreviousVersions(mcVersion:String):Array<String> {
+    var results:Array<String> = [];
+
+    var result:String = getPreviousVersion(mcVersion);
+    while (result != null) {
+      results.push(result);
+      result = getPreviousVersion(result);
+    }
+
+    return results;
+  }
+
+  /**
+   * Get a list of the next Minecraft versions.
+   */
+  public static function getNextVersions(mcVersion:String):Array<String> {
+    var results:Array<String> = [];
+
+    var result:String = getNextVersion(mcVersion);
+    while (result != null) {
+      results.push(result);
+      result = getNextVersion(result);
+    }
+
+    return results;
+  }
+
+  /**
+   * Return true if the target version is in the ruleVersion's previous versions.
+   */
+  public static function isLessThanVersion(targetVersion:String, ruleVersion:String):Bool {
+    var result:String = getPreviousVersion(ruleVersion);
+    while (result != null) {
+      if (result == targetVersion) return true;
+      result = getPreviousVersion(result);
+    }
+    return false;
+  }
+  
+  /**
+   * Return true if the target version is in the ruleVersion's next versions.
+   */
+  public static function isGreaterThanVersion(targetVersion:String, ruleVersion:String):Bool {
+    var result:String = getNextVersion(ruleVersion);
+    while (result != null) {
+      if (result == targetVersion) return true;
+      result = getNextVersion(result);
+    }
+    return false;
+  }
+
+  public static function isLessThanOrEqualToVersion(targetVersion:String, ruleVersion:String):Bool {
+    if (targetVersion == ruleVersion) return true;
+    return isLessThanVersion(targetVersion, ruleVersion);
+  }
+
+  public static function isGreaterThanOrEqualToVersion(targetVersion:String, ruleVersion:String):Bool {
+    if (targetVersion == ruleVersion) return true;
+    return isGreaterThanVersion(targetVersion, ruleVersion);
+  }
+
 
   /**
    * TODO: Unhardcode this, but how?

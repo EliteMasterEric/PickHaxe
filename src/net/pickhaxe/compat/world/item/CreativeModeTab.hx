@@ -3,8 +3,7 @@ package net.pickhaxe.compat.world.item;
 import net.pickhaxe.core.Environment;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Minecraft;
-import net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder_Minecraft;
+import net.minecraft.world.item.CreativeModeTab as CreativeModeTab_Minecraft;
 
 /**
  * A wrapper around the Creative Mode tab class,
@@ -21,14 +20,15 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
    */
   public function register(resourceLocation:ResourceLocation, ?before:Array<CreativeModeTab>, ?after:Array<CreativeModeTab>):CreativeModeTab
   {
-    #if fabric
-    // This one is a little hacky lel.
+    #if (fabric && minecraft_gteq_1_19_3)
     abstract.setId(resourceLocation); // Fabric sets the displayName for us based on the ID.
     this.displayName = buildDisplayName(resourceLocation);
     net.fabricmc.fabric.impl.itemgroup.ItemGroupHelper.appendItemGroup(this);
+    #elseif fabric
+    abstract.setId(resourceLocation);
+    // Creative Mode tabs do not need to be explicitly registered after they are built.
     #elseif forge
     this.displayName = buildDisplayName(resourceLocation);
-    // This one is somehow even hackier though.
     CreativeModeTab_ForgeRegistrar.queue(resourceLocation,
       {
         tab: this,
@@ -47,8 +47,15 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
    * @see https://github.com/FabricMC/fabric/blob/36f990282f52d8aa7150a5b6771b022d5cf3227e/fabric-item-group-api-v1/src/main/java/net/fabricmc/fabric/impl/itemgroup/FabricItemGroupBuilderImpl.java
    */
   function setId(resourceLocation:ResourceLocation):Void {
+    #if minecraft_gteq_1_19_3
     var fabricItemGroup:net.fabricmc.fabric.impl.itemgroup.FabricItemGroup = cast this;
     fabricItemGroup.setId(resourceLocation);
+    #else
+    var langIdString = '${resourceLocation.getNamespace()}.${resourceLocation.getPath()}';
+
+    this.langId = langIdString;
+    this.displayName = buildDisplayName(resourceLocation);
+    #end
   }
   #end
 
@@ -62,21 +69,16 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
    * Constructs a new CreativeModeTab.Builder to construct a new Creative Mode tab with.
    * @return A new builder.
    */
-  public static function builder():net.pickhaxe.compat.world.item.CreativeModeTab.CreativeModeTab_Builder
+  public static function builder():net.pickhaxe.compat.world.item.CreativeModeTabBuilder
   {
     // The initial values for the builder do not matter
-    return cast net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Minecraft.builder(null, -1);
+    #if minecraft_gteq_1_19_3
+    return CreativeModeTab_Minecraft.builder(null, -1);
+    #else
+    return net.pickhaxe.compat.world.item.CreativeModeTabBuilder.CreativeModeTabBuilder_Compat.create();
+    #end
   }
 }
-
-
-/**
- * A wrapper around the Creative Mode tab Builder class,
- * providing a convenient cross-loader API for specifying information about a tab.
- */
-@:forward
-abstract CreativeModeTab_Builder(CreativeModeTab_Builder_Minecraft) from CreativeModeTab_Builder_Minecraft to CreativeModeTab_Builder_Minecraft
-{}
 
 #if forge
 typedef CreativeModeTab_ForgeRegistrarEntry =
@@ -171,90 +173,6 @@ class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeR
     // Getting up to some tomfoolery here.
     // This function is only accessible due to an access transformer.
     net.minecraftforge.common.CreativeModeTabRegistry.processCreativeModeTab(creativeModeTab, resourceLocation, beforeList, afterList);
-  }
-}
-#end
-
-class CreativeModeTab_ItemDisplayParameters
-{
-  private final _enabledFeatures:net.minecraft.world.flag.FeatureFlagSet;
-  private final _hasPermissions:Bool;
-  private final _holders:net.minecraft.core.HolderLookup.HolderLookup_Provider;
-
-  public function new(enabledFeatures:net.minecraft.world.flag.FeatureFlagSet, hasPermissions:Bool,
-      holders:net.minecraft.core.HolderLookup.HolderLookup_Provider)
-  {
-    this._enabledFeatures = enabledFeatures;
-    this._hasPermissions = hasPermissions;
-    this._holders = holders;
-  }
-
-  public inline function enabledFeatures():net.minecraft.world.flag.FeatureFlagSet
-  {
-    return this._enabledFeatures;
-  }
-
-  public inline function hasPermissions():Bool
-  {
-    return this._hasPermissions;
-  }
-
-  public inline function holders():net.minecraft.core.HolderLookup.HolderLookup_Provider
-  {
-    return this._holders;
-  }
-}
-
-#if minecraft_gteq_1_19_3
-// 1.19.4
-typedef DisplayItemsGeneratorFunction_A = (net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters,
-  net.minecraft.world.item.CreativeModeTab.Output) -> Void;
-
-// 1.19.3
-typedef DisplayItemsGeneratorFunction_B = (net.minecraft.world.flag.FeatureFlagSet,
-  net.minecraft.world.item.CreativeModeTab.Output, Bool) -> Void;
-
-class DisplayItemsGeneratorHaxe implements net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator
-{
-  var callbackA:DisplayItemsGeneratorFunction_A;
-  var callbackB:DisplayItemsGeneratorFunction_B;
-
-  public function new(callback:haxe.ds.Either<DisplayItemsGeneratorFunction_A, DisplayItemsGeneratorFunction_B>)
-  {
-    switch (callback)
-    {
-      case Left(callbackA):
-        this.callbackA = callbackA;
-        this.callbackB = (featureFlagSet, output,
-          hasPermissions) -> callbackA(new net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters(featureFlagSet, hasPermissions, null), output);
-      case Right(callbackB):
-        this.callbackA = (context, output) -> callbackB(context.enabledFeatures(), output, context.hasPermissions());
-        this.callbackB = callbackB;
-      default:
-        throw new java.lang.IllegalArgumentException("callback must be a valid DisplayItemsGenerator callback");
-    }
-  }
-
-  public static extern inline function buildA(callback:DisplayItemsGeneratorFunction_A):DisplayItemsGeneratorHaxe
-  {
-    return new DisplayItemsGeneratorHaxe(Left(callback));
-  }
-
-  public static extern inline function buildB(callback:DisplayItemsGeneratorFunction_B):DisplayItemsGeneratorHaxe
-  {
-    return new DisplayItemsGeneratorHaxe(Right(callback));
-  }
-
-  public overload function accept(context:net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters,
-      output:net.minecraft.world.item.CreativeModeTab.Output):Void
-  {
-    callbackA(context, output);
-  }
-
-  public overload function accept(featureFlagSet:net.minecraft.world.flag.FeatureFlagSet, output:net.minecraft.world.item.CreativeModeTab.Output,
-      hasPermissions:Bool):Void
-  {
-    callbackB(featureFlagSet, output, hasPermissions);
   }
 }
 #end

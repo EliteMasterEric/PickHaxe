@@ -11,8 +11,10 @@ extern class RegistryOps<T> extends net.minecraft.resources.DelegatingOps<T>
   public static overload function create<T>(delegate:com.mojang.serialization.DynamicOps<T>,
     lookupProvider:net.minecraft.resources.RegistryOps.RegistryInfoLookup):net.minecraft.resources.RegistryOps<T>;
 
+  #if minecraft_gteq_1_19_3
   @:mapping("method_46628")
   public function owner<E>(registryKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<E>>):java.util.Optional<net.minecraft.core.HolderOwner<E>>;
+  #end
   @:mapping("method_46634")
   public function getter<E>(registryKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<E>>):java.util.Optional<net.minecraft.core.HolderGetter<E>>;
   @:mapping("method_46636")
@@ -39,13 +41,17 @@ typedef RegistryInfoLookup = RegistryOps_RegistryInfoLookup;
 @:mapping("net.minecraft.class_6903$class_7862")
 final extern class RegistryOps_RegistryInfo<T> extends java.lang.Record
 {
+  #if minecraft_gteq_1_19_3
   public function new(owner:net.minecraft.core.HolderOwner<T>, getter:net.minecraft.core.HolderGetter<T>,
     elementsLifecycle:com.mojang.serialization.Lifecycle);
+  #end
   public final function toString():String;
   public final function hashCode():Int;
   public final function equals(o:Dynamic):Bool;
+  #if minecraft_gteq_1_19_3
   @:mapping("comp_1130")
   public function owner():net.minecraft.core.HolderOwner<T>;
+  #end
   @:mapping("comp_1131")
   public function getter():net.minecraft.core.HolderGetter<T>;
   @:mapping("comp_1132")

@@ -12,7 +12,12 @@ Mojang does this for several reasons; it makes the binary smaller, it makes it f
 
 For as long as Minecraft modding has existed, people have been developing mappings (literally just a file that says "`cdp == net.minecraft.world.item.Item`" for every class), as well as tools to help create mappings, and tools to apply them to compile mods. Due to differences in philosophy and naming conventions, different mappings often have different package names, class names, method names, or public field names, even when the underlying obfuscated source is the same.
 
-With the release of 1.14.4, Minecraft now saves a mappings file alongside their obfuscated jar and distributes it with each client version, available for modders to download and reference under a 
+## Minecraft Version Notes
+
+- As of 1.14.4, Minecraft now saves a mappings file alongside their obfuscated jar and distributes it with each client version, available for modders to download and reference under a restrictive license.
+  - Minecraft 1.14.3 and earlier do not include MojMaps.
+- As of 1.19.3, minor versions can include major refactors, and not just bug fixes.
+  - https://help.minecraft.net/hc/en-us/articles/9971900758413
 
 ## Haxe Notes
 

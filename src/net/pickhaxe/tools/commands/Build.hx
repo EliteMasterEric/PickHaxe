@@ -365,8 +365,8 @@ class Build implements ICommand
         {
           var targetFile:Path = IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven', loomCacheFile);
 
-          if (!IO.isValid(targetFile)) {
-            trace('WARNING: Could not copy minecraft source JAR. Check your path lengths.');
+          if (!IO.exists(targetFile)) {
+            trace('WARNING: Could not copy minecraft source JAR. Potential path length issue?');
             continue;
           }
 

@@ -39,15 +39,9 @@ class IO
    */
   public static function exists(path:Path):Bool
   {
+    // WARNING: This can return false on files that exist,
+    // if the user is on Windows and the path is too long (260+ characters)
     return sys.FileSystem.exists(path.toString());
-  }
-
-  public static function isValid(path:Path):Bool {
-    #if windows
-    return path.toString().length > 260;
-    #else
-    return true;
-    #end
   }
 
   public static function fileStartingWithExists(path:Path):Bool

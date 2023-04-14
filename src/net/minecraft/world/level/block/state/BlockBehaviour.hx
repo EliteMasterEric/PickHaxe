@@ -165,32 +165,6 @@ abstract extern class BlockBehaviour implements net.minecraft.world.flag.Feature
 @:mapping("net.minecraft.class_4970$class_2251")
 extern class BlockBehaviour_Properties
 {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   @:mapping("method_9637")
   public static overload function of(material:net.minecraft.world.level.material.Material):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   @:mapping("method_9617")
@@ -255,8 +229,10 @@ extern class BlockBehaviour_Properties
   public function offsetType(offsetType:net.minecraft.world.level.block.state.BlockBehaviour.OffsetType):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   @:mapping("method_45477")
   public function noParticlesOnBreak():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #if minecraft_gteq_1_19_3
   @:mapping("method_45476")
   public function requiredFeatures(requiredFeatures:Array<net.minecraft.world.flag.FeatureFlag>):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #end
 }
 typedef Properties = BlockBehaviour_Properties;
 

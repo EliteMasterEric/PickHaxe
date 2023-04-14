@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2023-04-??
+## Added
+- Implemented basic support for 1.19.2.
+- Added improved error handling to the PickHaxe tool.
+  - In the event of an error, specific non-zero exit codes will be used for each problem.
+## Changed
+- Moved sample projects to their own repository.
+- Modified `pickhaxe setup` to use a script rather than an executable. You should not longer have to rerun it every update.
+## Fixed
+- Fixed an issue where the `init` command said dashes were valid in mod IDs.
+- Fixed various build issues.
+
+
 ## [0.2.0] - 2023-04-08
 ## Added
 - Implemented basic support for Forge 1.19.3.

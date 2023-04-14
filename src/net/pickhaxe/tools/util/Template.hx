@@ -115,12 +115,53 @@ class Template
   {
     var accessTransformerStr:String = generateForgeAccessTransformer(defines);
 
-    IO.writeFile(outputPath, accessTransformerStr);
+  IO.writeFile(outputPath, accessTransformerStr);
   }
 
+  /**
+   * Build an access widener dynamically, based on which fields are available in the current Minecraft version.
+   */
   public static function writeFabricAccessWidener(defines:PickHaxeDefines, outputPath:Path):Void
   {
-    var accessWidenerStr:String = generateFabricAccessWidener(defines);
+    var accessWidenerStr:String = "accessWidener	v1	named\n";
+
+    function add(line:String):Void {
+      accessWidenerStr += '${line}\n';
+    }
+
+    // Allow modifying internal variables of Creative Mode tabs.
+    // Used for late registration.
+    add("accessible field net/minecraft/world/item/CreativeModeTab displayName Lnet/minecraft/network/chat/Component;");
+    add("mutable field net/minecraft/world/item/CreativeModeTab displayName Lnet/minecraft/network/chat/Component;");
+
+    // #if minecraft_lteq_1_19_2
+    if (MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
+      // Allow modifying internal variables of Creative Mode tabs.
+      // Used for late registration.
+      add("accessible field net/minecraft/world/item/CreativeModeTab langId Ljava/lang/String;");
+      add("mutable field net/minecraft/world/item/CreativeModeTab langId Ljava/lang/String;");
+
+      // Allow modifying internal variables of Items.
+      // Used for late registration.
+      add("accessible field net/minecraft/world/item/Item category Lnet/minecraft/world/item/CreativeModeTab;");
+      add("mutable field net/minecraft/world/item/Item category Lnet/minecraft/world/item/CreativeModeTab;");
+
+      // Allow use of constructors for non-abstract item classes.
+      // Added to default Fabric in 1.19.3.
+      add("accessible method net/minecraft/world/item/AxeItem <init> (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V");
+      add("accessible method net/minecraft/world/item/HoeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V");
+      add("accessible method net/minecraft/world/item/DiggerItem <init> (FFLnet/minecraft/world/item/Tier;Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/item/Item$Properties;)V");
+      add("accessible method net/minecraft/world/item/PickaxeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V");
+      
+      if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.1")) {
+        // 1.19.1+ adds a "lengthInTicks" argument.
+        add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;I)V");
+      } else {
+        // 1.19.0 does not have this argument.
+        add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;)V");
+      }
+    }
+
 
     IO.writeFile(outputPath, accessWidenerStr);
   }

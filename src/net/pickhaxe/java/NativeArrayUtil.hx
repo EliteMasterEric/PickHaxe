@@ -11,4 +11,14 @@ class NativeArrayUtil
     }
     return output;
   }
+
+  public static inline function toArray<T>(input:java.NativeArray<T>):Array<T>
+  {
+    var output:Array<T> = [];
+    for (i in 0...input.length)
+    {
+      output.push(input[i]);
+    }
+    return output;
+  }
 }
