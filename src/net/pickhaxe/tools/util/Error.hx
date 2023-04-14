@@ -75,9 +75,9 @@ class UnknownLoaderException extends PickHaxeException {
 }
 
 class GradleException extends PickHaxeException {
-  var message:String;
-  public function new(message:String) {
-    this.message = message;
+  var msg:String;
+  public function new(msg:String) {
+    this.msg = msg;
     super();
   }
 
@@ -86,6 +86,6 @@ class GradleException extends PickHaxeException {
   }
 
   public override function getErrorMessage():String {
-    return 'Gradle error: ${message}';
+    return 'Gradle error: ${msg}';
   }
 }
