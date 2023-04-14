@@ -158,7 +158,6 @@ class Builder
   static function buildFabric(projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
   {
     var versionMetadata:PickHaxeVersionMetadata = PickHaxeVersionMetadataReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
-    var versionMappings:PickHaxeVersionMappings = PickHaxeVersionMappingsReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
 
     var mojangVersionData:VersionData = Mojang.fetchVersionData(params.mcVersion);
     if (mojangVersionData == null) {
