@@ -340,6 +340,7 @@ class Build implements ICommand
 
     // Move into `generated` folder.
     Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
+    CLI.print('Switched working directory: ${IO.workingDir().toString()}', Verbose);
 
     // Perform actual gradle steps.
     if (shouldPerformGradle)

@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added improved error handling to the PickHaxe tool.
   - In the event of an error, specific non-zero exit codes will be used for each problem.
 ## Changed
-- Moved sample projects to their own repository.
+- Moved sample projects to their own repository, with GitHub Actions support.
 - Modified `pickhaxe setup` to use a script rather than an executable. You should not longer have to rerun it every update.
 ## Fixed
 - Fixed an issue where the `init` command said dashes were valid in mod IDs.
