@@ -23,6 +23,7 @@ class Build implements ICommand
   var debug:Bool = false;
   var skipGradle:Bool = false;
   var forceGradle:Bool = false;
+  var attachGradle:Bool = false;
   var noResources:Bool = false;
   var noMapping:Bool = true; // Default to TRUE!
   var genSources:Bool = true; // Default to TRUE!
@@ -67,6 +68,12 @@ class Build implements ICommand
           short: null,
           long: 'force-gradle',
           blurb: 'Force Gradle dependency building steps',
+          value: null,
+        },
+        {
+          short: null,
+          long: 'attach-gradle',
+          blurb: 'Attach Gradle process to capture output',
           value: null,
         },
         {
@@ -195,6 +202,8 @@ class Build implements ICommand
           case '--force-gradle':
             skipGradle = false;
             forceGradle = true;
+          case '--attach-gradle':
+            attachGradle = true;
           case '--dump':
             var nextArg:String = args[i + 1];
             if (nextArg != null && !nextArg.startsWith('-'))
@@ -338,23 +347,21 @@ class Build implements ICommand
       var gradleWProcess:GradleW = new GradleW(defines);
 
       CLI.print('Fetching dependency JARs...');
-      var copyDependenciesSuccess:Bool = gradleWProcess.copyDependencies(); // Copies all of Minecraft's dependencies to the `generated/build/minecraft` folder.
+      var copyDependenciesSuccess:Bool = gradleWProcess.copyDependencies(!attachGradle); // Copies all of Minecraft's dependencies to the `generated/build/minecraft` folder.
 
       if (!copyDependenciesSuccess)
       {
-        CLI.print('Error: Failed to copy dependencies.');
-        return false;
+        throw new GradleException('Failed to copy dependencies.');
       }
 
       if (loader == "fabric")
       {
         CLI.print('Generating sources...');
-        var genSourceSuccess:Bool = gradleWProcess.genSources(); // Generates mapped sources for Minecraft.
+        var genSourceSuccess:Bool = gradleWProcess.genSources(!attachGradle); // Generates mapped sources for Minecraft.
 
         if (!genSourceSuccess)
         {
-          CLI.print('Error: Failed to generate sources.');
-          return false;
+          throw new GradleException('Failed to generate sources.');
         }
 
         CLI.print('Moving sources...');
@@ -365,7 +372,7 @@ class Build implements ICommand
           var targetFile:Path = IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven', loomCacheFile);
 
           if (!IO.exists(targetFile)) {
-            trace('WARNING: Could not copy minecraft source JAR. Potential path length issue?');
+            trace('WARNING: Could not copy minecraft build JAR. Potential path length issue?');
             continue;
           }
 

@@ -58,8 +58,8 @@ class NoProjectXMLException extends PickHaxeException {
 class UnknownLoaderException extends PickHaxeException {
   var loader:String;
   public function new(loader:String) {
-    super();
     this.loader = loader;
+    super();
   }
 
   public override function getErrorCode():Error {
@@ -71,5 +71,21 @@ class UnknownLoaderException extends PickHaxeException {
       return 'No Minecraft mod loader specified, expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].';
     }
     return 'Unknown Minecraft mod loader "${loader}", expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].';
+  }
+}
+
+class GradleException extends PickHaxeException {
+  var message:String;
+  public function new(message:String) {
+    this.message = message;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.GRADLE_ERROR;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Gradle error: ${message}';
   }
 }

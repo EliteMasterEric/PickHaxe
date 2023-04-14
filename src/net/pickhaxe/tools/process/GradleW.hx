@@ -22,7 +22,7 @@ class GradleW extends CLIProcess
    * @param args The task to perform, and other arguments.
    * @return Success or failure.
    */
-  public function performTask(args:Array<String>):Bool
+  public function performTask(args:Array<String>, ?detached:Bool = true):Bool
   {
     var finalArgs:Array<String> = buildArguments().concat(args);
 
@@ -37,18 +37,18 @@ class GradleW extends CLIProcess
    * Copy the dependencies to generated folder.
    * @return The output of the task.
    */
-  public function copyDependencies():Bool
+  public function copyDependencies(?detached:Bool = true):Bool
   {
-    return performTask(['copyDependencies']);
+    return performTask(['copyDependencies'], detached);
   }
 
   /**
    * Generate Minecraft sources from mappings.
    * @return The output of the task.
    */
-  public function genSources():Bool
+  public function genSources(?detached:Bool = true):Bool
   {
-    return performTask(['genSources']);
+    return performTask(['genSources'], detached);
   }
 
   function buildArguments():Array<String>
