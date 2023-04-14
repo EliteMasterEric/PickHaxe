@@ -8,11 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Implemented basic support for 1.19.2.
 - Added improved error handling to the PickHaxe tool.
   - In the event of an error, specific non-zero exit codes will be used for each problem.
+- You can now use `latest` or `latest-snapshot` when defining a target version for `pickhaxe build` and `pickhaxe make`.
 ## Changed
-- Moved sample projects to their own repository, with GitHub Actions support.
+- Moved sample projects to their own repository.
+  - This repo supports Github Actions for automated validation.
 - Modified `pickhaxe setup` to use a script rather than an executable. You should not longer have to rerun it every update.
 ## Fixed
 - Fixed an issue where the `init` command said dashes were valid in mod IDs.
+- `pickhaxe build` now properly ends if one of the Gradle tasks fails.
 - Fixed various build issues.
 
 
@@ -97,11 +100,3 @@ Initial release.
 - Added Made in Haxe sample project.
 - Added Obsidian Armor sample project.
 
-
-## Pending Tasks
-- [ ] The `build` command now automatically calls the `make` command once it completes. This means the build process is now a single step by default. Yay!
-  - [ ] Added the `--no-make` to disable this behavior for testing.
-- [ ] Added a verison check for Java; if the Minecraft version's associated Java version exceeds the JDK's version, builds will fail.
-  - [ ] This means that new versions of Minecraft will fail if JDK 8 is installed, since they require JDK 17.
-  - [ ] Old versions of Minecraft don't fail when building with newer JDKs.
-- [ ] The `build` command now halts if one of the operations fails (such as a Gradle build failing).

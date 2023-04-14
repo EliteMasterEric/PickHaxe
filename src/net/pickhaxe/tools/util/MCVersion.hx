@@ -26,7 +26,7 @@ class MCVersion
   }
 
   /**
-   * Return true if the string is a stable Minecraft version.
+   * Return true if the string is a valid, stable Minecraft version.
    * @param version The version to check.
    * @return True if the version is stable.
    */
@@ -37,7 +37,7 @@ class MCVersion
   }
 
   /**
-   * Return true if the string is a snapshot Minecraft version.
+   * Return true if the string is a valid, snapshot Minecraft version.
    * @param version The version to check.
    * @return True if the version is a snapshot.
    */
@@ -48,7 +48,7 @@ class MCVersion
   }
 
   /**
-   * Return true if the string is a beta Minecraft version.
+   * Return true if the string is a valid, beta Minecraft version.
    * @param version The version to check.
    * @return True if the version is an old beta.
    */
@@ -66,6 +66,32 @@ class MCVersion
   public static function isLoaderValid(loader:String)
   {
     return Constants.MINECRAFT_LOADERS.contains(loader);
+  }
+
+  /**
+   * Returns the latest Minecraft version.
+   * @return A stable OR snapshot version string.
+   */
+   public static function getLatestVersion():String {
+    var latestVersion:MinecraftVersion = Mojang.getByIndex(0);
+
+    return latestVersion.id;
+  }
+
+  /**
+   * Returns the latest stable Minecraft version.
+   * @return A stable version string.
+   */
+  public static function getLatestStableVersion():String {
+    var latestVersion:String = Mojang.getByIndex(0).id;
+    while (isVersionValid(latestVersion)) {
+      if (!isVersionStable(latestVersion)) {
+        latestVersion = getPreviousVersion(latestVersion);
+      } else {
+        return latestVersion;
+      }
+    }
+    return null;
   }
 
   /**

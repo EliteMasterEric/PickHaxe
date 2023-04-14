@@ -146,6 +146,9 @@ class Builder
     if (params.loader == null) throw 'Loader must be specified.';
     if (params.mcVersion == null) throw 'Minecraft version must be specified.';
 
+    if (params.mcVersion == 'latest') params.mcVersion = MCVersion.getLatestStableVersion();
+    if (params.mcVersion == 'latest-snapshot') params.mcVersion = MCVersion.getLatestVersion();
+
     params.noMapping = params.noMapping ?? false;
     params.mappings = params.mappings ?? 'parchment';
 
