@@ -26,7 +26,7 @@ class GradleW extends CLIProcess
   {
     var finalArgs:Array<String> = buildArguments().concat(args);
 
-    var output = getProcessOutput(finalArgs, true);
+    var output = getProcessOutput(finalArgs, detached);
     
     var exitCode = output.exitCode;
 
