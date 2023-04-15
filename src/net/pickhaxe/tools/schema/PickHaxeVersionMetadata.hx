@@ -32,7 +32,7 @@ class PickHaxeVersionMetadataReader
    */
   public static function read(version:String, stable:Bool = true):PickHaxeVersionMetadata
   {
-    var parentDir:Path = IO.libraryDir().joinPaths('metadata/versions', stable ? 'stable' : 'snapshot', 'release-${version}');
+    var parentDir:Path = IO.libraryDir().joinPaths('metadata/versions', stable ? 'stable' : 'snapshot', '${version}');
     var path:Path = parentDir.joinPaths('metadata.json');
 
     try
