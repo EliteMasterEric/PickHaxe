@@ -120,6 +120,8 @@ class Template
 
   /**
    * Build an access widener dynamically, based on which fields are available in the current Minecraft version.
+   * 
+   * This function is a nightmare, sorry not sorry.
    */
   public static function writeFabricAccessWidener(defines:PickHaxeDefines, outputPath:Path):Void
   {
@@ -129,31 +131,42 @@ class Template
       accessWidenerStr += '${line}\n';
     }
 
+    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.1") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
+      // 1.19.1+ adds a "lengthInTicks" argument.
+      add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;I)V");
+    }
+
     if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
+      // Allow modifying internal variables of Items.
+      // Used for late registration.
+      add("accessible field net/minecraft/world/item/Item category Lnet/minecraft/world/item/CreativeModeTab;");
+      add("mutable field net/minecraft/world/item/Item category Lnet/minecraft/world/item/CreativeModeTab;");
+    }
+
+    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18.2") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
+      add("accessible method net/minecraft/world/item/DiggerItem <init> (FFLnet/minecraft/world/item/Tier;Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/item/Item$Properties;)V");
+    }
+
+    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18.2") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19")) {
+      // 1.19.0 does not have this argument.
+      add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;)V");
+    }
+
+    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
       // Allow modifying internal variables of Creative Mode tabs.
       // Used for late registration.
       add("accessible field net/minecraft/world/item/CreativeModeTab langId Ljava/lang/String;");
       add("mutable field net/minecraft/world/item/CreativeModeTab langId Ljava/lang/String;");
 
-      // Allow modifying internal variables of Items.
-      // Used for late registration.
-      add("accessible field net/minecraft/world/item/Item category Lnet/minecraft/world/item/CreativeModeTab;");
-      add("mutable field net/minecraft/world/item/Item category Lnet/minecraft/world/item/CreativeModeTab;");
-
       // Allow use of constructors for non-abstract item classes.
       // Added to default Fabric in 1.19.3.
       add("accessible method net/minecraft/world/item/AxeItem <init> (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V");
       add("accessible method net/minecraft/world/item/HoeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V");
-      add("accessible method net/minecraft/world/item/DiggerItem <init> (FFLnet/minecraft/world/item/Tier;Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/item/Item$Properties;)V");
       add("accessible method net/minecraft/world/item/PickaxeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V");
     }
-    
-    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.1") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
-      // 1.19.1+ adds a "lengthInTicks" argument.
-      add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;I)V");
-    } else if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18.2") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19")) {
-      // 1.19.0 does not have this argument.
-      add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;)V");
+
+    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18.1")) {
+      add("accessible method net/minecraft/world/item/DiggerItem <init> (FFLnet/minecraft/world/item/Tier;Lnet/minecraft/tags/Tag;Lnet/minecraft/world/item/Item$Properties;)V");
     }
 
     // Allow modifying internal variables of Creative Mode tabs.

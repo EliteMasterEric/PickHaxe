@@ -37,12 +37,12 @@ final extern class Ingredient implements java.util.function.Predicate<net.minecr
     return of(net.pickhaxe.java.NativeArrayUtil.fromArray(items));
   }
 
-  public static extern inline overload function of(stacks:Array<net.minecraft.world.level.ItemStack>):net.minecraft.world.item.crafting.Ingredient
+  public static extern inline overload function of(stacks:Array<net.minecraft.world.item.ItemStack>):net.minecraft.world.item.crafting.Ingredient
   {
     return of(net.pickhaxe.java.NativeArrayUtil.fromArray(stacks));
   }
 
-  public static extern inline overload function of(...stacks:net.minecraft.world.level.ItemStack):net.minecraft.world.item.crafting.Ingredient
+  public static extern inline overload function of(...stacks:net.minecraft.world.item.ItemStack):net.minecraft.world.item.crafting.Ingredient
   {
     return of(net.pickhaxe.java.NativeArrayUtil.fromArray(stacks));
   }
