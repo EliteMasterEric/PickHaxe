@@ -4,7 +4,6 @@ package net.minecraft.resources;
 @:mapping("net.minecraft.class_6898")
 extern class HolderSetCodec<E> implements com.mojang.serialization.Codec<net.minecraft.core.HolderSet<E>>
 {
-  @:mapping("method_40388")
   public static function create<E>(registryKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<E>>,
     holderCodec:com.mojang.serialization.Codec<net.minecraft.core.Holder<E>>,
     disallowInline:Bool):com.mojang.serialization.Codec<net.minecraft.core.HolderSet<E>>;

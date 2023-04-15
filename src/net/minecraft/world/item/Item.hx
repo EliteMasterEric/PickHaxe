@@ -4,7 +4,6 @@ package net.minecraft.world.item;
  * Interface `FabricItem` injected by mod fabric-item-api-v1
  */
 @:native("net.minecraft.world.item.Item")
-@:mapping("net.minecraft.class_1792")
 extern class Item implements net.minecraft.world.flag.FeatureElement implements net.minecraft.world.level.ItemLike #if fabric
     implements net.fabricmc.fabric.api.item.v1.FabricItem #end
 {
@@ -16,7 +15,9 @@ extern class Item implements net.minecraft.world.flag.FeatureElement implements 
   public static function byId(id:Int):Item;
   public static function byBlock(block:net.minecraft.world.level.block.Block):Item;
   public function new(properties:net.minecraft.world.item.Item.Item_Properties);
+  #if minecraft_gteq_1_18_2
   public function builtInRegistryHolder():net.minecraft.core.Holder.Holder_Reference<Item>;
+  #end
 
   /**
    * Called as the item is being used by an entity.
@@ -224,8 +225,6 @@ extern class Item implements net.minecraft.world.flag.FeatureElement implements 
 }
 
 @:native("net.minecraft.world.item.Item$Properties")
-@:realPath("net.minecraft.world.item.Item_Properties")
-@:mapping("net.minecraft.class_1792$class_1793")
 extern class Item_Properties
 {
   public function new();

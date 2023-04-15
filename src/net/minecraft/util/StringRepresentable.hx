@@ -6,14 +6,10 @@ extern interface StringRepresentable
 {
   @:mapping("field_38377")
   public static final PRE_BUILT_MAP_THRESHOLD:Int;
-  @:mapping("method_15434")
   public function getSerializedName():String;
-  @:mapping("method_28140")
   public static function fromEnum<E:java.lang.Enum<E>>(elementsSupplier:java.util.function.Supplier<java.NativeArray<E>>):net.minecraft.util.StringRepresentable_EnumCodec<E>;
-  @:mapping("method_49454")
   public static function fromEnumWithMapping<E:java.lang.Enum<E>>(supplier:java.util.function.Supplier<java.NativeArray<E>>,
     input_function:java.util.function.Function<String, String>):net.minecraft.util.StringRepresentable_EnumCodec<E>;
-  @:mapping("method_28142")
   public static function keys(serializables:Array<net.minecraft.util.StringRepresentable>):com.mojang.serialization.Keyable;
 }
 

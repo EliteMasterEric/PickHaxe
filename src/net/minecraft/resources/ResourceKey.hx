@@ -10,20 +10,17 @@ package net.minecraft.resources;
 @:mapping("net.minecraft.class_5321")
 extern class ResourceKey<T>
 {
-  @:mapping("method_39154")
   public static function codec<T>(registryKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<T>>):com.mojang.serialization.Codec<net.minecraft.resources.ResourceKey<T>>;
 
   /**
    * Constructs a new `ResourceKey` for a resource with the specified `location` within the registry specified by the given `registryKey`.@return the created resource key. The registry name is set to the location of the specified ,{@code registryKey}, and with the specified ,{@code location}, as the location of the resource.
    */
-  @:mapping("method_29179")
   public static overload function create<T>(registryKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<T>>,
     location:net.minecraft.resources.ResourceLocation):net.minecraft.resources.ResourceKey<T>;
 
   /**
    * @return the created registry key. The registry name is set to ,{@code minecraft:root}, and the location the specified ,{@code registryName},.
    */
-  @:mapping("method_29180")
   public static function createRegistryKey<T>(location:net.minecraft.resources.ResourceLocation):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<T>>;
 
   public function toString():String;
@@ -31,15 +28,11 @@ extern class ResourceKey<T>
   /**
    * @return {@code true}, if this resource key is a direct child of the specified ,{@code registryKey},.
    */
-  @:mapping("method_31163")
   public function isFor(registryKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<Dynamic>>):Bool;
 
   @:native("cast")
-  @:mapping("method_39752")
   public function docast<E>(registryKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<E>>):java.util.Optional<net.minecraft.resources.ResourceKey<E>>;
-  @:mapping("method_29177")
   public function location():net.minecraft.resources.ResourceLocation;
-  @:mapping("method_41185")
   public function registry():net.minecraft.resources.ResourceLocation;
 }
 

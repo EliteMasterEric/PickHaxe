@@ -31,30 +31,21 @@ final extern class ArmorMaterials extends java.lang.Enum<net.minecraft.world.ite
   @:mapping("field_41941")
   public static final CODEC:net.minecraft.util.StringRepresentable.StringRepresentable_EnumCodec<net.minecraft.world.item.ArmorMaterials>;
 
-  @:mapping("method_48402")
-  public function getDurabilityForType(type:net.minecraft.world.item.ArmorItem.ArmorItem_Type):Int;
+    public function getDurabilityForType(type:net.minecraft.world.item.ArmorItem.ArmorItem_Type):Int;
 
-  @:mapping("method_48403")
-  public function getDefenseForType(type:net.minecraft.world.item.ArmorItem.ArmorItem_Type):Int;
+    public function getDefenseForType(type:net.minecraft.world.item.ArmorItem.ArmorItem_Type):Int;
 
-  @:mapping("method_7699")
-  public function getEnchantmentValue():Int;
+    public function getEnchantmentValue():Int;
 
-  @:mapping("method_7698")
-  public function getEquipSound():net.minecraft.sounds.SoundEvent;
+    public function getEquipSound():net.minecraft.sounds.SoundEvent;
 
-  @:mapping("method_7695")
-  public function getRepairIngredient():net.minecraft.world.item.crafting.Ingredient;
+    public function getRepairIngredient():net.minecraft.world.item.crafting.Ingredient;
 
-  @:mapping("method_7694")
-  public function getName():String;
+    public function getName():String;
 
-  @:mapping("method_7700")
-  public function getToughness():Float;
+    public function getToughness():Float;
 
-  @:mapping("method_24355")
-  public function getKnockbackResistance():Float;
+    public function getKnockbackResistance():Float;
 
-  @:mapping("method_15434")
-  public function getSerializedName():String;
+    public function getSerializedName():String;
 }

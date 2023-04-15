@@ -16,13 +16,16 @@ class APIBase
   {
     CLI.print('Performing HTTP request: ${url}', Verbose);
 
-    try {
+    try
+    {
       var request:Http = new Http(url);
 
       request.request(false);
-  
+
       return request.responseData;
-    } catch (e) {
+    }
+    catch (e)
+    {
       throw 'Failed to perform HTTP request: ${e}';
     }
   }

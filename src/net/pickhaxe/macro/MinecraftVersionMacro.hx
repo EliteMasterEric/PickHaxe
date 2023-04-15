@@ -49,7 +49,8 @@ class MinecraftVersionMacro
    * For example, on 1.19.4, `minecraft_gt_1_19_3` will be true.
    * @param minecraftVersion The Minecraft version to generate defines for.
    */
-  static function definePreviousVersion(minecraftVersion:String):Void {
+  static function definePreviousVersion(minecraftVersion:String):Void
+  {
     // MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}', 'false');
     MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}');
 
@@ -68,11 +69,12 @@ class MinecraftVersionMacro
    * For example, on 1.19.4, `minecraft_lt_23w13a_or_b` will be true.
    * @param minecraftVersion The Minecraft version to generate defines for.
    */
-  static function defineNextVersion(minecraftVersion:String):Void {
+  static function defineNextVersion(minecraftVersion:String):Void
+  {
     // MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}', 'false');
     MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}');
 
-    //MacroUtil.setDefine('minecraft_gteq_${sanitizeVersion(minecraftVersion)}', 'false');
+    // MacroUtil.setDefine('minecraft_gteq_${sanitizeVersion(minecraftVersion)}', 'false');
     // MacroUtil.setDefine('minecraft_gt_${sanitizeVersion(minecraftVersion)}', 'false');
 
     MacroUtil.setDefine('minecraft_lteq_${sanitizeVersion(minecraftVersion)}');

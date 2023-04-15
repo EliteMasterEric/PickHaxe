@@ -22,8 +22,7 @@ extern class CreativeModeTabEvent_Register extends CreativeModeTabEvent
 // typedef Register = CreativeModeTabEvent_Register;
 
 @:native("net.minecraftforge.event.CreativeModeTabEvent$BuildContents")
-extern class CreativeModeTabEvent_BuildContents extends CreativeModeTabEvent
-    implements net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Output
+extern class CreativeModeTabEvent_BuildContents extends CreativeModeTabEvent implements net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Output
 {
   function new(tab:net.minecraft.world.item.CreativeModeTab, flags:net.minecraft.world.flag.FeatureFlagSet, hasPermissions:Bool,
     entries:net.minecraftforge.common.util.MutableHashedLinkedMap<net.minecraft.world.item.ItemStack,

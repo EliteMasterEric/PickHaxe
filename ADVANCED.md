@@ -43,6 +43,12 @@ Yarn: Mappings provided by the Fabric Team.
 MCP: A set of mappings made by the MCP team, one of the oldest mapping teams. 
   - Notably under a restrictive license that prevented use by other coding projects, which was why the Fabric team created Yarn.
 
+## Formatting Notes
+- Static before instance
+- Variables before functions
+- All-version before version-specific
+- PickHaxe convenience functions after the primary function
+
 ## Build process
 
 - Built Fabric JARs use intermediary class and field names, and not obfuscated names?

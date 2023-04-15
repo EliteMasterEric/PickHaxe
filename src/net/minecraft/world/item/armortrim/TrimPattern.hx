@@ -10,8 +10,7 @@ final extern class TrimPattern extends java.lang.Record
   public static final DIRECT_CODEC:com.mojang.serialization.Codec<net.minecraft.world.item.armortrim.TrimPattern>;
   @:mapping("field_42015")
   public static final CODEC:com.mojang.serialization.Codec<net.minecraft.core.Holder<net.minecraft.world.item.armortrim.TrimPattern>>;
-  @:mapping("method_48446")
-  public function copyWithStyle(holder:net.minecraft.core.Holder<net.minecraft.world.item.armortrim.TrimMaterial>):net.minecraft.network.chat.Component;
+    public function copyWithStyle(holder:net.minecraft.core.Holder<net.minecraft.world.item.armortrim.TrimMaterial>):net.minecraft.network.chat.Component;
   public final function toString():String;
   public final function hashCode():Int;
   public final function equals(o:Dynamic):Bool;

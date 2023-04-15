@@ -23,7 +23,8 @@ class Environment
    * 
    * @return Bool
    */
-  public static function isPhysicalClient():Bool {
+  public static function isPhysicalClient():Bool
+  {
     #if forge
     return net.minecraftforge.fml.loading.FMLEnvironment.dist == net.minecraftforge.api.distmarker.Dist.CLIENT;
     #elseif fabric
@@ -41,7 +42,8 @@ class Environment
    * 
    * @return Bool
    */
-  public static function isPhysicalServer():Bool {
+  public static function isPhysicalServer():Bool
+  {
     #if forge
     return net.minecraftforge.fml.loading.FMLEnvironment.dist == net.minecraftforge.api.distmarker.Dist.CLIENT;
     #elseif fabric
@@ -63,7 +65,8 @@ class Environment
    * @param level The current level. Can be retrieved from many objects, such as blocks or entities.
    * @return Bool
    */
-  public static function isLogicalClient(level:net.minecraft.world.level.Level):Bool {
+  public static function isLogicalClient(level:net.minecraft.world.level.Level):Bool
+  {
     return level.isClientSide();
   }
 
@@ -80,7 +83,8 @@ class Environment
    * 
    * @return Bool
    */
-  public static function isLogicalServer(level:net.minecraft.world.level.Level):Bool {
+  public static function isLogicalServer(level:net.minecraft.world.level.Level):Bool
+  {
     return !level.isClientSide();
   }
 }

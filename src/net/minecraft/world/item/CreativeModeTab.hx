@@ -250,8 +250,7 @@ typedef TabVisibility = CreativeModeTab_TabVisibility;
 final extern class CreativeModeTab_ItemDisplayParameters extends java.lang.Record
 {
   public function new(enabledFeatures:net.minecraft.world.flag.FeatureFlagSet, hasPermissions:Bool, holders:net.minecraft.core.HolderLookup.HolderLookup_Provider);
-  @:mapping("method_48932")
-  public function needsUpdate(featureFlagSet:net.minecraft.world.flag.FeatureFlagSet, bl:Bool, provider:net.minecraft.core.HolderLookup.HolderLookup_Provider):Bool;
+    public function needsUpdate(featureFlagSet:net.minecraft.world.flag.FeatureFlagSet, bl:Bool, provider:net.minecraft.core.HolderLookup.HolderLookup_Provider):Bool;
   public final function toString():String;
   public final function hashCode():Int;
   public final function equals(o:Dynamic):Bool;

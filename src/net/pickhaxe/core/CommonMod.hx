@@ -27,7 +27,6 @@ class CommonMod #if fabric implements ModInitializer #end
    * Populated automatically by macros.
    */
   // public static final MOD_ID:String;
-
   /**
    * A logger for this mod. Use this for reporting info, debug, and error messages.
    * Populated automatically by macros.
@@ -54,7 +53,8 @@ class CommonMod #if fabric implements ModInitializer #end
    * Main initialization method for the mod.
    * Equivalent to `net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent` in Forge.
    */
-  public function onModInitialize():Void {
+  public function onModInitialize():Void
+  {
     // Do nothing. Override me!
   }
 
@@ -63,7 +63,8 @@ class CommonMod #if fabric implements ModInitializer #end
    * Equivalent to `net.minecraftforge.registries.RegisterEvent` in Forge.
    * NOTE: Only called once.
    */
-  public function onRegister():Void {
+  public function onRegister():Void
+  {
     // Do nothing. Override me!
   }
 
@@ -71,16 +72,17 @@ class CommonMod #if fabric implements ModInitializer #end
    * Called when creative mode tabs are ready to be registered.
    * Equivalent to `net.minecraftforge.event.CreativeModeTabEvent` in Forge.
    */
-  public function onCreativeModeTabRegister():Void {
+  public function onCreativeModeTabRegister():Void
+  {
     // Do nothing. Override me!
   }
 
   //
   // Don't overrride these functions, please.
   //
-
   #if forge
-  public function forge_getEventBus():IEventBus {
+  public function forge_getEventBus():IEventBus
+  {
     return FMLJavaModLoadingContext.get().getModEventBus();
   }
 
@@ -112,7 +114,8 @@ class CommonMod #if fabric implements ModInitializer #end
    * @param event 
    */
   @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
-  public function forge_onCreativeModeTabRegister(event:net.minecraftforge.event.CreativeModeTabEvent.CreativeModeTabEvent_Register):Void {
+  public function forge_onCreativeModeTabRegister(event:net.minecraftforge.event.CreativeModeTabEvent.CreativeModeTabEvent_Register):Void
+  {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received CreativeModeTabEvent.Register.');
     onCreativeModeTabRegister();
   }
@@ -127,11 +130,13 @@ class CommonMod #if fabric implements ModInitializer #end
   {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received RegisterEvent.');
 
-    if (!hasRegistered) {
+    if (!hasRegistered)
+    {
       hasRegistered = true;
       onRegister();
     }
   }
+
   var hasRegistered:Bool = false;
 
   /**

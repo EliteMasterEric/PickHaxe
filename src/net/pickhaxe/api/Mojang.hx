@@ -79,9 +79,9 @@ class Mojang
   public static function fetchVersionData(version:String):VersionData
   {
     if (version == null) return null;
-    
+
     if (versionDataCache.exists(version) && versionDataCache.get(version) != null) return versionDataCache.get(version);
-    
+
     var manifest:VersionManifest = fetchVersionManifest();
     if (manifest == null) return null;
 

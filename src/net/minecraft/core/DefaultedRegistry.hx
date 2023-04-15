@@ -15,6 +15,5 @@ extern interface DefaultedRegistry<T> extends net.minecraft.core.Registry<T>
 #else
 @:native("net.minecraft.core.DefaultedRegistry")
 @:mapping("net.minecraft.class_7922")
-extern class DefaultedRegistry<T> extends net.minecraft.core.MappedRegistry<T> {
-}
+extern class DefaultedRegistry<T> extends net.minecraft.core.MappedRegistry<T> {}
 #end

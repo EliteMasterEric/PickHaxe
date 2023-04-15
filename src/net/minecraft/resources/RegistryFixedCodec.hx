@@ -4,7 +4,6 @@ package net.minecraft.resources;
 @:mapping("net.minecraft.class_6899")
 final extern class RegistryFixedCodec<E> implements com.mojang.serialization.Codec<net.minecraft.core.Holder<E>>
 {
-  @:mapping("method_40400")
   public static function create<E>(resourceKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<E>>):net.minecraft.resources.RegistryFixedCodec<E>;
 
   @:badMapping("unresolvedMethodOverride")

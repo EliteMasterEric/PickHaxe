@@ -129,13 +129,7 @@ class Template
       accessWidenerStr += '${line}\n';
     }
 
-    // Allow modifying internal variables of Creative Mode tabs.
-    // Used for late registration.
-    add("accessible field net/minecraft/world/item/CreativeModeTab displayName Lnet/minecraft/network/chat/Component;");
-    add("mutable field net/minecraft/world/item/CreativeModeTab displayName Lnet/minecraft/network/chat/Component;");
-
-    // #if minecraft_lteq_1_19_2
-    if (MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
+    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
       // Allow modifying internal variables of Creative Mode tabs.
       // Used for late registration.
       add("accessible field net/minecraft/world/item/CreativeModeTab langId Ljava/lang/String;");
@@ -152,16 +146,20 @@ class Template
       add("accessible method net/minecraft/world/item/HoeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V");
       add("accessible method net/minecraft/world/item/DiggerItem <init> (FFLnet/minecraft/world/item/Tier;Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/item/Item$Properties;)V");
       add("accessible method net/minecraft/world/item/PickaxeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V");
-      
-      if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.1")) {
-        // 1.19.1+ adds a "lengthInTicks" argument.
-        add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;I)V");
-      } else {
-        // 1.19.0 does not have this argument.
-        add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;)V");
-      }
+    }
+    
+    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.1") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
+      // 1.19.1+ adds a "lengthInTicks" argument.
+      add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;I)V");
+    } else if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18.2") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19")) {
+      // 1.19.0 does not have this argument.
+      add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;)V");
     }
 
+    // Allow modifying internal variables of Creative Mode tabs.
+    // Used for late registration.
+    add("accessible field net/minecraft/world/item/CreativeModeTab displayName Lnet/minecraft/network/chat/Component;");
+    add("mutable field net/minecraft/world/item/CreativeModeTab displayName Lnet/minecraft/network/chat/Component;");
 
     IO.writeFile(outputPath, accessWidenerStr);
   }

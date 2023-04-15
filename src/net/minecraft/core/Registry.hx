@@ -2,7 +2,6 @@ package net.minecraft.core;
 
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.core.Registry")
-@:mapping("net.minecraft.class_2378")
 extern interface Registry<T>
 {
   public function key():net.minecraft.resources.ResourceKey<Registry<T>>;
@@ -55,11 +54,17 @@ extern interface Registry<T>
 
   public function createIntrusiveHolder(var1:T):net.minecraft.core.Holder.Holder_Reference<T>;
   public function wrapAsHolder(var1:T):net.minecraft.core.Holder<T>;
-  
+
   public overload function getHolder(var1:Int):java.util.Optional<net.minecraft.core.Holder.Holder_Reference<T>>;
   public overload function getHolder(var1:net.minecraft.resources.ResourceKey<T>):java.util.Optional<net.minecraft.core.Holder.Holder_Reference<T>>;
   public function getHolderOrThrow(key:net.minecraft.resources.ResourceKey<T>):net.minecraft.core.Holder.Holder_Reference<T>;
   public function holders():java.util.stream.Stream<net.minecraft.core.Holder.Holder_Reference<T>>;
+
+  public function asHolderIdMap():net.minecraft.core.IdMap<net.minecraft.core.Holder<T>>;
+  #if minecraft_gteq_1_19_3
+  public function holderOwner():net.minecraft.core.HolderOwner<T>;
+  #end
+  #if minecraft_gteq_1_18_2
   public function getTag(var1:net.minecraft.tags.TagKey<T>):java.util.Optional<net.minecraft.core.HolderSet.Named<T>>;
   public function getTagOrEmpty(key:net.minecraft.tags.TagKey<T>):java.lang.Iterable<net.minecraft.core.Holder<T>>;
   public function getOrCreateTag(var1:net.minecraft.tags.TagKey<T>):net.minecraft.core.HolderSet.Named<T>;
@@ -67,17 +72,14 @@ extern interface Registry<T>
   public function getTagNames():java.util.stream.Stream<net.minecraft.tags.TagKey<T>>;
   public function resetTags():Void;
   public function bindTags(var1:java.util.Map<net.minecraft.tags.TagKey<T>, java.util.List<net.minecraft.core.Holder<T>>>):Void;
-  public function asHolderIdMap():net.minecraft.core.IdMap<net.minecraft.core.Holder<T>>;
-  #if minecraft_gteq_1_19_3
-  public function holderOwner():net.minecraft.core.HolderOwner<T>;
   #end
   public function asLookup():net.minecraft.core.HolderLookup.RegistryLookup<T>;
   public function asTagAddingLookup():net.minecraft.core.HolderLookup.RegistryLookup<T>;
 }
 #else
 @:native("net.minecraft.core.Registry")
-@:mapping("net.minecraft.class_2378")
-extern abstract class Registry<T> {
+extern abstract class Registry<T>
+{
   public static final GAME_EVENT:DefaultedRegistry<net.minecraft.world.level.gameevent.GameEvent>;
   public static final SOUND_EVENT:Registry<net.minecraft.sounds.SoundEvent>;
   public static final FLUID:DefaultedRegistry<net.minecraft.world.level.material.Fluid>;
@@ -118,16 +120,26 @@ extern abstract class Registry<T> {
   public static final BLOCK_PREDICATE_TYPE:Registry<net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType<Dynamic>>;
   public static final CARVER:Registry<net.minecraft.world.level.levelgen.carver.WorldCarver<Dynamic>>;
   public static final FEATURE:Registry<net.minecraft.world.level.levelgen.feature.Feature<Dynamic>>;
-  public static final STRUCTURE_PIECE:Registry<net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType>;
   public static final BIOME_SOURCE:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.biome.BiomeSource>>;
   public static final CHUNK_GENERATOR:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.chunk.ChunkGenerator>>;
-  
+
+  #if minecraft_gteq_1_18_2
+  public static final STRUCTURE_PIECE:Registry<net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType>;
+  public static final STRUCTURE_PLACEMENT_TYPE:Registry<net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType<Dynamic>>;
+  public static final DENSITY_FUNCTION_TYPES:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.DensityFunction>>;
+  public static final STRUCTURE_POOL_ELEMENT:Registry<net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType<Dynamic>>;
+  #else
+  public static final STRUCTURE_PIECE:Registry<net.minecraft.world.level.levelgen.feature.StructurePieceType>;
+  public static final STRUCTURE_POOL_ELEMENT:Registry<net.minecraft.world.level.levelgen.feature.structures.StructurePoolElementType<Dynamic>>;
+  #end
+
   #if minecraft_gteq_1_19
   /**
    * A registry of painting variants.
    * @since 1.19
    */
   public static final PAINTING_VARIANT:DefaultedRegistry<net.minecraft.world.entity.decoration.PaintingVariant>;
+
   public static final COMMAND_ARGUMENT_TYPE:Registry<net.minecraft.commands.synchronization.ArgumentTypeInfo<Dynamic>>;
   public static final STRUCTURE_PLACEMENT:Registry<net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType<Dynamic>>;
   public static final STRUCTURE_TYPE:Registry<net.minecraft.world.level.levelgen.structure.StructureType<Dynamic>>;
@@ -147,7 +159,6 @@ extern abstract class Registry<T> {
   #elseif minecraft_lteq_1_18_2
   public static final MOTIVE:DefaultedRegistry<net.minecraft.world.entity.decoration.Motive>;
   public static final STRUCTURE_FEATURE:Registry<net.minecraft.world.level.levelgen.feature.StructureFeature<Dynamic>>;
-  public static final STRUCTURE_PLACEMENT_TYPE:Registry<net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType<Dynamic>>;
   public static final PLACEMENT_MODIFIERS:Registry<net.minecraft.world.level.levelgen.placement.PlacementModifierType<Dynamic>>;
   public static final BLOCKSTATE_PROVIDER_TYPES:Registry<net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType<Dynamic>>;
   public static final FOLIAGE_PLACER_TYPES:Registry<net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType<Dynamic>>;
@@ -156,9 +167,7 @@ extern abstract class Registry<T> {
   public static final FEATURE_SIZE_TYPES:Registry<net.minecraft.world.level.levelgen.feature.featuresize.FeatureSizeType<Dynamic>>;
   // public static final CONDITION:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.SurfaceRules.ConditionSource>>;
   // public static final RULE:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.SurfaceRules.Rule>>;
-  public static final DENSITY_FUNCTION_TYPES:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.DensityFunction>>;
   public static final STRUCTURE_PROCESSOR:Registry<net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType<Dynamic>>;
-  public static final STRUCTURE_POOL_ELEMENT:Registry<net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType<Dynamic>>;
   #end
 
   public static overload function register<V, T:V>(registry:net.minecraft.core.Registry<V>, name:net.minecraft.resources.ResourceLocation, value:T):T;
