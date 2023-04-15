@@ -74,7 +74,6 @@ abstract extern class HolderSet_ListBacked < T > implements net.minecraft.core.H
 
   public function size():Int;
 
-  @:badMapping("unresolvedMethodOverride")
   public function spliterator():java.util.Spliterator<net.minecraft.core.Holder<T>>;
 
   public function iterator():java.util.Iterator<net.minecraft.core.Holder<T>>;

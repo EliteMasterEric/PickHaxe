@@ -1,8 +1,8 @@
 package net.pickhaxe.compat.world.item;
 
 import net.pickhaxe.core.Environment;
+import net.pickhaxe.compat.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab as CreativeModeTab_Minecraft;
 
 /**

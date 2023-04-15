@@ -5,7 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.2.1] - 2023-04-??
 ## Added
-- Implemented basic support for 1.19.2.
+- Implemented basic support for the following versions:
+  - Minecraft `1.19.2` (`forge` and `fabric`)
+  - Minecraft `1.19.1` (`forge` and `fabric`)
+  - Minecraft `1.19.0` (`forge` and `fabric`)
+  - Minecraft `1.18.2` (`forge` and `fabric`)
+  - Minecraft `1.18.1` (`forge` and `fabric`)
+  - Minecraft `1.18.0` (`forge` and `fabric`)
 - Added improved error handling to the PickHaxe tool.
   - In the event of an error, specific non-zero exit codes will be used for each problem.
 - You can now use `latest` or `latest-snapshot` when defining a target version for `pickhaxe build` and `pickhaxe make`.

@@ -89,7 +89,6 @@ extern abstract class Registry<T> {
   public static final POTION:DefaultedRegistry<net.minecraft.world.item.alchemy.Potion>;
   public static final PARTICLE_TYPE:Registry<net.minecraft.core.particles.ParticleType<Dynamic>>;
   public static final BLOCK_ENTITY_TYPE:Registry<net.minecraft.world.level.block.entity.BlockEntityType<Dynamic>>;
-  public static final PAINTING_VARIANT:DefaultedRegistry<net.minecraft.world.entity.decoration.PaintingVariant>;
   public static final CUSTOM_STAT:Registry<net.minecraft.resources.ResourceLocation>;
   public static final CHUNK_STATUS:DefaultedRegistry<net.minecraft.world.level.chunk.ChunkStatus>;
   public static final RULE_TEST:Registry<net.minecraft.world.level.levelgen.structure.templatesystem.RuleTestType<Dynamic>>;
@@ -99,7 +98,6 @@ extern abstract class Registry<T> {
   public static final RECIPE_SERIALIZER:Registry<net.minecraft.world.item.crafting.RecipeSerializer<Dynamic>>;
   public static final ATTRIBUTE:Registry<net.minecraft.world.entity.ai.attributes.Attribute>;
   public static final POSITION_SOURCE_TYPE:Registry<net.minecraft.world.level.gameevent.PositionSourceType<Dynamic>>;
-  public static final COMMAND_ARGUMENT_TYPE:Registry<net.minecraft.commands.synchronization.ArgumentTypeInfo<Dynamic>>;
   public static final STAT_TYPE:Registry<net.minecraft.stats.StatType<Dynamic>>;
   public static final VILLAGER_TYPE:DefaultedRegistry<net.minecraft.world.entity.npc.VillagerType>;
   public static final VILLAGER_PROFESSION:DefaultedRegistry<net.minecraft.world.entity.npc.VillagerProfession>;
@@ -120,8 +118,18 @@ extern abstract class Registry<T> {
   public static final BLOCK_PREDICATE_TYPE:Registry<net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType<Dynamic>>;
   public static final CARVER:Registry<net.minecraft.world.level.levelgen.carver.WorldCarver<Dynamic>>;
   public static final FEATURE:Registry<net.minecraft.world.level.levelgen.feature.Feature<Dynamic>>;
-  public static final STRUCTURE_PLACEMENT:Registry<net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType<Dynamic>>;
   public static final STRUCTURE_PIECE:Registry<net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType>;
+  public static final BIOME_SOURCE:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.biome.BiomeSource>>;
+  public static final CHUNK_GENERATOR:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.chunk.ChunkGenerator>>;
+  
+  #if minecraft_gteq_1_19
+  /**
+   * A registry of painting variants.
+   * @since 1.19
+   */
+  public static final PAINTING_VARIANT:DefaultedRegistry<net.minecraft.world.entity.decoration.PaintingVariant>;
+  public static final COMMAND_ARGUMENT_TYPE:Registry<net.minecraft.commands.synchronization.ArgumentTypeInfo<Dynamic>>;
+  public static final STRUCTURE_PLACEMENT:Registry<net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType<Dynamic>>;
   public static final STRUCTURE_TYPE:Registry<net.minecraft.world.level.levelgen.structure.StructureType<Dynamic>>;
   public static final PLACEMENT_MODIFIER_TYPE:Registry<net.minecraft.world.level.levelgen.placement.PlacementModifierType<Dynamic>>;
   public static final BLOCKSTATE_PROVIDER_TYPE:Registry<net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType<Dynamic>>;
@@ -130,16 +138,28 @@ extern abstract class Registry<T> {
   public static final ROOT_PLACER_TYPE:Registry<net.minecraft.world.level.levelgen.feature.rootplacers.RootPlacerType<Dynamic>>;
   public static final TREE_DECORATOR_TYPE:Registry<net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType<Dynamic>>;
   public static final FEATURE_SIZE_TYPE:Registry<net.minecraft.world.level.levelgen.feature.featuresize.FeatureSizeType<Dynamic>>;
-  public static final BIOME_SOURCE:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.biome.BiomeSource>>;
-  public static final CHUNK_GENERATOR:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.chunk.ChunkGenerator>>;
   public static final DENSITY_FUNCTION_TYPE:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.DensityFunction>>;
-  public static final STRUCTURE_PROCESSOR:Registry<net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType<Dynamic>>;
-  public static final STRUCTURE_POOL_ELEMENT:Registry<net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType<Dynamic>>;
   public static final CAT_VARIANT:Registry<net.minecraft.world.entity.animal.CatVariant>;
   public static final FROG_VARIANT:Registry<net.minecraft.world.entity.animal.FrogVariant>;
   public static final BANNER_PATTERN:Registry<net.minecraft.world.level.block.entity.BannerPattern>;
   public static final INSTRUMENT:Registry<net.minecraft.world.item.Instrument>;
   public static final REGISTRY:Registry<net.minecraft.core.Registry<Dynamic>>;
+  #elseif minecraft_lteq_1_18_2
+  public static final MOTIVE:DefaultedRegistry<net.minecraft.world.entity.decoration.Motive>;
+  public static final STRUCTURE_FEATURE:Registry<net.minecraft.world.level.levelgen.feature.StructureFeature<Dynamic>>;
+  public static final STRUCTURE_PLACEMENT_TYPE:Registry<net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType<Dynamic>>;
+  public static final PLACEMENT_MODIFIERS:Registry<net.minecraft.world.level.levelgen.placement.PlacementModifierType<Dynamic>>;
+  public static final BLOCKSTATE_PROVIDER_TYPES:Registry<net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType<Dynamic>>;
+  public static final FOLIAGE_PLACER_TYPES:Registry<net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType<Dynamic>>;
+  public static final TRUNK_PLACER_TYPES:Registry<net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType<Dynamic>>;
+  public static final TREE_DECORATOR_TYPES:Registry<net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType<Dynamic>>;
+  public static final FEATURE_SIZE_TYPES:Registry<net.minecraft.world.level.levelgen.feature.featuresize.FeatureSizeType<Dynamic>>;
+  // public static final CONDITION:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.SurfaceRules.ConditionSource>>;
+  // public static final RULE:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.SurfaceRules.Rule>>;
+  public static final DENSITY_FUNCTION_TYPES:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.DensityFunction>>;
+  public static final STRUCTURE_PROCESSOR:Registry<net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType<Dynamic>>;
+  public static final STRUCTURE_POOL_ELEMENT:Registry<net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType<Dynamic>>;
+  #end
 
   public static overload function register<V, T:V>(registry:net.minecraft.core.Registry<V>, name:net.minecraft.resources.ResourceLocation, value:T):T;
   public static overload function register<V, T:V>(registry:net.minecraft.core.Registry<V>, key:net.minecraft.resources.ResourceKey<V>, value:T):T;

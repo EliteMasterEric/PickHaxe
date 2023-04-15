@@ -1,5 +1,8 @@
 package net.pickhaxe.tools.process;
 
+import net.pickhaxe.tools.util.Error.HaxeBuildException;
+import net.pickhaxe.tools.util.Error.HaxeVersionException;
+
 /**
  * Convenience functions for running processes from the command line.
  */
@@ -31,6 +34,11 @@ class Haxe extends CLIProcess
     var output = getProcessOutput(['generated/build.hxml'], true);
 
     var exitCode = output.exitCode;
+
+    if (exitCode != 0) {
+      throw new HaxeBuildException(output.output);
+    }
+
     var outputString = output.output;
 
     return outputString;
@@ -39,7 +47,7 @@ class Haxe extends CLIProcess
   public function validateVersion():Void {
     var version:thx.semver.Version = getVersion();
     if (version.major < 4 || version.minor < 3) {
-      throw 'Haxe version 4.3.0 or higher is required.';
+      throw new HaxeVersionException(version, "4.3.0+");
     }
   }
 

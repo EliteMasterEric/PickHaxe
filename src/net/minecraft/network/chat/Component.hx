@@ -10,10 +10,11 @@ extern interface Component
   @:mapping("method_10866")
   public function getStyle():net.minecraft.network.chat.Style;
 
+  #if minecraft_gteq_1_19
   @:mapping("method_10851")
   public function getContents():net.minecraft.network.chat.ComponentContents;
-  @:badMapping("unresolvedMethodOverride")
-  @:mapping("~~SUPEROVERRIDEFAILED:~~~IFACEOVERRIDEFAILED:^com.mojang.brigadier.Message#getString()^net.minecraft.network.chat.FormattedText#getString()")
+  #end
+
   public overload function getString():String;
 
   /**
@@ -58,33 +59,26 @@ extern interface Component
   @:badMapping("unknownMethodMapping")
   @:mapping("net.minecraft.network.chat.Component#literal(String)")
   public static function literal(text:String):net.minecraft.network.chat.MutableComponent;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component#translatable(String)")
+
+  #if minecraft_gteq_1_19
   public static overload function translatable(key:String):net.minecraft.network.chat.MutableComponent;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component#translatable(String,Dynamic[])")
   public static overload function translatable(key:String, args:java.NativeArray<Dynamic>):net.minecraft.network.chat.MutableComponent;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component#translatableWithFallback(String,String)")
+  #end
+
   public static overload function translatableWithFallback(string:String, string2:Null<String>):net.minecraft.network.chat.MutableComponent;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component#translatableWithFallback(String,String,Dynamic[])")
   public static overload function translatableWithFallback(string:String, string2:Null<String>,
     objects:java.NativeArray<Dynamic>):net.minecraft.network.chat.MutableComponent;
   @:mapping("method_43473")
   public static function empty():net.minecraft.network.chat.MutableComponent;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component#keybind(String)")
   public static function keybind(name:String):net.minecraft.network.chat.MutableComponent;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component#nbt(String,boolean,java.util.Optional,net.minecraft.network.chat.contents.DataSource)")
+  
+  #if minecraft_gteq_1_19
   public static function nbt(nbtPathPattern:String, interpreting:Bool, separator:java.util.Optional<net.minecraft.network.chat.Component>,
     dataSource:net.minecraft.network.chat.contents.DataSource):net.minecraft.network.chat.MutableComponent;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component#score(String,String)")
+  #end
+
+
   public static function score(name:String, objective:String):net.minecraft.network.chat.MutableComponent;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component#selector(String,java.util.Optional)")
   public static function selector(pattern:String,
     separator:java.util.Optional<net.minecraft.network.chat.Component>):net.minecraft.network.chat.MutableComponent;
 }

@@ -9,6 +9,9 @@ enum abstract Error(Int) from Int to Int {
 
   var GRADLE_ERROR = 200;
 
+  var HAXE_BUILD_ERROR = 300;
+  var HAXE_VERSION_ERROR = 301;
+
   /**
    * Exit the program with the given error code.
    * @param code The error code to exit with.
@@ -87,5 +90,39 @@ class GradleException extends PickHaxeException {
 
   public override function getErrorMessage():String {
     return 'Gradle error: ${msg}';
+  }
+}
+
+class HaxeBuildException extends PickHaxeException {
+  var msg:String;
+  public function new(msg:String) {
+    this.msg = msg;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.HAXE_BUILD_ERROR;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Haxe build error: ${msg}';
+  }
+}
+
+class HaxeVersionException extends PickHaxeException {
+  var actual:String;
+  var expected:String;
+  public function new(actual:String, expected:String) {
+    this.actual = actual;
+    this.expected = expected;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.HAXE_VERSION_ERROR;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Haxe version mismatch, expected ${expected}, got ${actual}.';
   }
 }
