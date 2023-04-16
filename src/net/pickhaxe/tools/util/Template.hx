@@ -144,6 +144,7 @@ class Template
     }
 
     if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18.2") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
+      // This constructor uses TagKey after 1.18.2.
       add("accessible method net/minecraft/world/item/DiggerItem <init> (FFLnet/minecraft/world/item/Tier;Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/item/Item$Properties;)V");
     }
 
@@ -152,27 +153,30 @@ class Template
       add("accessible method net/minecraft/world/item/RecordItem <init> (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;)V");
     }
 
-    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
-      // Allow modifying internal variables of Creative Mode tabs.
-      // Used for late registration.
-      add("accessible field net/minecraft/world/item/CreativeModeTab langId Ljava/lang/String;");
-      add("mutable field net/minecraft/world/item/CreativeModeTab langId Ljava/lang/String;");
-
+    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.17") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.19.2")) {
       // Allow use of constructors for non-abstract item classes.
       // Added to default Fabric in 1.19.3.
       add("accessible method net/minecraft/world/item/AxeItem <init> (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V");
       add("accessible method net/minecraft/world/item/HoeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V");
       add("accessible method net/minecraft/world/item/PickaxeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V");
+
+      // Allow modifying internal variables of Creative Mode tabs.
+      // Used for late registration. Required until 1.19.3 when Creative Tabs get reworked
+      add("accessible field net/minecraft/world/item/CreativeModeTab langId Ljava/lang/String;");
+      add("mutable field net/minecraft/world/item/CreativeModeTab langId Ljava/lang/String;");
     }
 
-    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18.1")) {
+    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.17") && MCVersion.isLessThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.18.1")) {
+      // This constructor uses Tag before 1.18.2.
       add("accessible method net/minecraft/world/item/DiggerItem <init> (FFLnet/minecraft/world/item/Tier;Lnet/minecraft/tags/Tag;Lnet/minecraft/world/item/Item$Properties;)V");
     }
 
-    // Allow modifying internal variables of Creative Mode tabs.
-    // Used for late registration.
-    add("accessible field net/minecraft/world/item/CreativeModeTab displayName Lnet/minecraft/network/chat/Component;");
-    add("mutable field net/minecraft/world/item/CreativeModeTab displayName Lnet/minecraft/network/chat/Component;");
+    if (MCVersion.isGreaterThanOrEqualToVersion(defines.pickhaxe.minecraft.version, "1.16.2")) {
+      // Allow modifying internal variables of Creative Mode tabs.
+      // Used for late registration.
+      add("accessible field net/minecraft/world/item/CreativeModeTab displayName Lnet/minecraft/network/chat/Component;");
+      add("mutable field net/minecraft/world/item/CreativeModeTab displayName Lnet/minecraft/network/chat/Component;");
+    }
 
     IO.writeFile(outputPath, accessWidenerStr);
   }
