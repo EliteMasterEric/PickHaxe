@@ -256,7 +256,9 @@ abstract extern class BlockBehaviour_BlockStateBase extends net.minecraft.world.
   public overload function is(holder:net.minecraft.core.HolderSet<net.minecraft.world.level.block.Block>):Bool;
   #end
   public function hasBlockEntity():Bool;
+  #if minecraft_gteq_1_17
   public function getTicker<T:net.minecraft.world.level.block.entity.BlockEntity>(level:net.minecraft.world.level.Level, blockEntityType:net.minecraft.world.level.block.entity.BlockEntityType<T>):Null<net.minecraft.world.level.block.entity.BlockEntityTicker<T>>;
+  #end
   public overload function is(block:net.minecraft.world.level.block.Block):Bool;
   public function getFluidState():net.minecraft.world.level.material.FluidState;
   public function isRandomlyTicking():Bool;

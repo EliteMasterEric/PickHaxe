@@ -4,8 +4,8 @@ package net.minecraft.world.item;
  * Interface `FabricItem` injected by mod fabric-item-api-v1
  */
 @:native("net.minecraft.world.item.Item")
-extern class Item implements net.minecraft.world.flag.FeatureElement implements net.minecraft.world.level.ItemLike #if fabric
-    implements net.fabricmc.fabric.api.item.v1.FabricItem #end
+extern class Item implements net.minecraft.world.flag.FeatureElement implements net.minecraft.world.level.ItemLike
+  #if (fabric && minecraft_gteq_1_17) implements net.fabricmc.fabric.api.item.v1.FabricItem #end
 {
   public static final BY_BLOCK:java.util.Map<net.minecraft.world.level.block.Block, Item>;
   public static final MAX_STACK_SIZE:Int;
@@ -64,11 +64,14 @@ extern class Item implements net.minecraft.world.flag.FeatureElement implements 
   public function isBarVisible(stack:net.minecraft.world.item.ItemStack):Bool;
   public function getBarWidth(stack:net.minecraft.world.item.ItemStack):Int;
   public function getBarColor(stack:net.minecraft.world.item.ItemStack):Int;
+
+  #if minecraft_gteq_1_17
   public function overrideStackedOnOther(stack:net.minecraft.world.item.ItemStack, slot:net.minecraft.world.inventory.Slot,
     action:net.minecraft.world.inventory.ClickAction, player:net.minecraft.world.entity.player.Player):Bool;
   public function overrideOtherStackedOnMe(stack:net.minecraft.world.item.ItemStack, other:net.minecraft.world.item.ItemStack,
     slot:net.minecraft.world.inventory.Slot, action:net.minecraft.world.inventory.ClickAction, player:net.minecraft.world.entity.player.Player,
     access:net.minecraft.world.entity.SlotAccess):Bool;
+  #end
 
   /**
    * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise the damage on the stack.
@@ -157,7 +160,10 @@ extern class Item implements net.minecraft.world.flag.FeatureElement implements 
   public function appendHoverText(stack:net.minecraft.world.item.ItemStack, level:Null<net.minecraft.world.level.Level>,
     tooltipComponents:java.util.List<net.minecraft.network.chat.Component>, isAdvanced:net.minecraft.world.item.TooltipFlag):Void;
 
+  #if minecraft_gteq_1_17
   public function getTooltipImage(stack:net.minecraft.world.item.ItemStack):java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent>;
+  #end
+  
   public function getName(stack:net.minecraft.world.item.ItemStack):net.minecraft.network.chat.Component;
 
   /**

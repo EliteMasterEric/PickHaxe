@@ -15,7 +15,9 @@ final extern class ItemStack #if (fabric && minecraft_gteq_1_19_2) implements ne
   public static final TAG_LORE:String;
   public static final TAG_DAMAGE:String;
   public static final TAG_COLOR:String;
+  #if minecraft_gteq_1_17
   public function getTooltipImage():java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent>;
+  #end
   public overload function new(itemLike:net.minecraft.world.level.ItemLike);
   public overload function new(itemLike:net.minecraft.world.level.ItemLike, i:Int);
   #if minecraft_gteq_1_18_2
@@ -106,10 +108,12 @@ final extern class ItemStack #if (fabric && minecraft_gteq_1_19_2) implements ne
   public function isBarVisible():Bool;
   public function getBarWidth():Int;
   public function getBarColor():Int;
+  #if minecraft_gteq_1_17
   public function overrideStackedOnOther(slot:net.minecraft.world.inventory.Slot, action:net.minecraft.world.inventory.ClickAction,
     player:net.minecraft.world.entity.player.Player):Bool;
   public function overrideOtherStackedOnMe(stack:net.minecraft.world.item.ItemStack, slot:net.minecraft.world.inventory.Slot,
     action:net.minecraft.world.inventory.ClickAction, player:net.minecraft.world.entity.player.Player, access:net.minecraft.world.entity.SlotAccess):Bool;
+  #end
 
   /**
    * Calls the delegated method to the Item to damage the incoming Entity, and if necessary, triggers a stats increase.

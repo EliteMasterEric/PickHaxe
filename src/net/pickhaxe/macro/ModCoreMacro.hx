@@ -119,12 +119,20 @@ class ModCoreMacro
    */
   static function buildLoggerField(params:ModCoreParams, cb:ClassBuilder):Void
   {
+    #if minecraft_gteq_1_17
     var loggerValue:Expr = macro org.slf4j.LoggerFactory.getLogger(MOD_ID);
+    #else
+    var loggerValue:Expr = macro org.apache.logging.log4j.LogManager.getLogger(MOD_ID);
+    #end
 
     var logger:Member =
       {
         name: 'LOGGER',
+        #if minecraft_gteq_1_17
         kind: FVar(Types.asComplexType('org.slf4j.Logger'), loggerValue),
+        #else
+        kind: FVar(Types.asComplexType('org.apache.logging.log4j.Logger'), loggerValue),
+        #end
         pos: MacroApi.pos(),
       };
 

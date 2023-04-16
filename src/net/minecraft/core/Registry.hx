@@ -88,7 +88,9 @@ extern abstract class Registry<T>
 {
   public static final REGISTRY:Registry<net.minecraft.core.Registry<Dynamic>>;
 
+  #if minecraft_gteq_1_17
   public static final GAME_EVENT:DefaultedRegistry<net.minecraft.world.level.gameevent.GameEvent>;
+  #end
   
   public static final SOUND_EVENT:Registry<net.minecraft.sounds.SoundEvent>;
   
