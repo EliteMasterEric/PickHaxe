@@ -5,15 +5,18 @@ package net.minecraft.world.item;
  */
 @:native("net.minecraft.world.item.CreativeModeTab")
 @:mapping("net.minecraft.class_1761")
-extern class CreativeModeTab #if (fabric && minecraft_gteq_1_19_3) implements net.fabricmc.fabric.api.itemgroup.v1.IdentifiableItemGroup #end
+extern #if (minecraft_lteq_1_19_2) abstract #end class CreativeModeTab #if (fabric && minecraft_gteq_1_19_3) implements net.fabricmc.fabric.api.itemgroup.v1.IdentifiableItemGroup #end
 {
+  // Extern access to the static fields.
+  public static final TABS:Array<CreativeModeTab>;
+
   @:mapping({srg: "f_40764_"})
   public var displayName:net.minecraft.network.chat.Component; // Exposed via access transformer.
   #if minecraft_lteq_1_19_2
   @:mapping
   public var langId:String; // Exposed via access transformer.
-  #end
 
+  #end
   #if minecraft_gteq_1_19_3
   public function new(row:net.minecraft.world.item.CreativeModeTab.Row, i:Int, type:net.minecraft.world.item.CreativeModeTab.Type,
     component:net.minecraft.network.chat.Component, supplier:java.util.function.Supplier<net.minecraft.world.item.ItemStack>,
@@ -28,8 +31,13 @@ extern class CreativeModeTab #if (fabric && minecraft_gteq_1_19_3) implements ne
   public function new(id:Int, langId:String);
 
   public static extern inline function builder() {}
-  #end
 
+  /**
+   * Fills {@code items} with all items that are in this group.
+   */
+  public function fillItemList(stacks:net.minecraft.core.NonNullList<net.minecraft.world.item.ItemStack>):Void;
+  public abstract function makeIcon():ItemStack;
+  #end
   public function getDisplayName():net.minecraft.network.chat.Component;
   public function getIconItem():net.minecraft.world.item.ItemStack;
   public function getBackgroundSuffix():String;
@@ -114,7 +122,8 @@ extern class CreativeModeTab_Builder
 
   public overload function displayItems(displayItemsGenerator:CreativeModeTab_DisplayItemsGenerator):CreativeModeTab_Builder;
 
-  public overload extern inline function displayItems(displayItemsGenerator:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorFunction_A):CreativeModeTab_Builder {
+  public overload extern inline function displayItems(displayItemsGenerator:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorFunction_A):CreativeModeTab_Builder
+  {
     return displayItems(net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorHaxe.buildA(displayItemsGenerator));
   }
 
@@ -124,7 +133,8 @@ extern class CreativeModeTab_Builder
    * ... The signatures are different in Haxe, but not in the target language
    * ... The second field is declared here
    */
-  public overload extern inline function displayItemsB(displayItemsGenerator:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorFunction_B):CreativeModeTab_Builder {
+  public overload extern inline function displayItemsB(displayItemsGenerator:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorFunction_B):CreativeModeTab_Builder
+  {
     return displayItems(net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorHaxe.buildB(displayItemsGenerator));
   }
 
@@ -189,11 +199,11 @@ extern class CreativeModeTab_ItemDisplayBuilder implements CreativeModeTab_Outpu
     acceptAll(stacks, tabVisibility);
   }
 }
+
 typedef ItemDisplayBuilder = CreativeModeTab_ItemDisplayBuilder;
 #else
 // typedef CreativeModeTab_ItemDisplayBuilder = net.pickhaxe.compat.world.item.CreativeModeTabBuilder.CreativeModeTab_ItemDisplayBuilder;
 #end
-
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.world.item.CreativeModeTab$Output")
 extern interface CreativeModeTab_Output
@@ -219,7 +229,6 @@ extern interface CreativeModeTab_Output
 #else
 typedef CreativeModeTab_Output = net.pickhaxe.compat.world.item.CreativeModeTabBuilder.CreativeModeTab_Output;
 #end
-
 typedef Output = CreativeModeTab_Output;
 
 #if minecraft_gteq_1_19_3
@@ -236,7 +245,6 @@ final extern class CreativeModeTab_TabVisibility extends java.lang.Enum<net.mine
 #else
 typedef CreativeModeTab_TabVisibility = net.pickhaxe.compat.world.item.CreativeModeTabBuilder.CreativeModeTab_TabVisibility;
 #end
-
 typedef TabVisibility = CreativeModeTab_TabVisibility;
 
 #if minecraft_gteq_1_19_4
@@ -249,8 +257,10 @@ typedef TabVisibility = CreativeModeTab_TabVisibility;
 @:mapping("net.minecraft.class_1761$class_8128")
 final extern class CreativeModeTab_ItemDisplayParameters extends java.lang.Record
 {
-  public function new(enabledFeatures:net.minecraft.world.flag.FeatureFlagSet, hasPermissions:Bool, holders:net.minecraft.core.HolderLookup.HolderLookup_Provider);
-    public function needsUpdate(featureFlagSet:net.minecraft.world.flag.FeatureFlagSet, bl:Bool, provider:net.minecraft.core.HolderLookup.HolderLookup_Provider):Bool;
+  public function new(enabledFeatures:net.minecraft.world.flag.FeatureFlagSet, hasPermissions:Bool,
+    holders:net.minecraft.core.HolderLookup.HolderLookup_Provider);
+  public function needsUpdate(featureFlagSet:net.minecraft.world.flag.FeatureFlagSet, bl:Bool,
+    provider:net.minecraft.core.HolderLookup.HolderLookup_Provider):Bool;
   public final function toString():String;
   public final function hashCode():Int;
   public final function equals(o:Dynamic):Bool;

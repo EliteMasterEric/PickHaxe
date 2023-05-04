@@ -5,12 +5,13 @@ import net.pickhaxe.compat.world.item.CreativeModeTab;
 
 #if minecraft_gteq_1_19_3
 typedef CreativeModeTabBuilder_Minecraft = net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
-#elseif fabric
+#else
 /**
  * A compatibility class which acts like CreativeModeTab.Builder but works for earlier Minecraft versions.
  */
-typedef IconSupplier = net.pickhaxe.java.util.function.Supplier<net.minecraft.world.item.ItemStack>;
-class CreativeModeTabBuilder_Compat_Fabric
+ typedef IconSupplier = net.pickhaxe.java.util.function.Supplier<net.minecraft.world.item.ItemStack>;
+ typedef AppendItemsConsumer = net.pickhaxe.java.util.function.Consumer<java.util.List<net.minecraft.world.item.ItemStack>>;
+class CreativeModeTabBuilder_Compat
 {
   var iconSupplier:IconSupplier;
   var displayItemsGenerator:DisplayItemsGeneratorHaxe;
@@ -19,9 +20,10 @@ class CreativeModeTabBuilder_Compat_Fabric
   public function new() {}
 
   public static function create():CreativeModeTabBuilder_Minecraft {
-    return new CreativeModeTabBuilder_Compat_Fabric();
+    return new CreativeModeTabBuilder_Compat();
   }
 
+  #if fabric
   public function build():CreativeModeTab
   {
     var tab:CreativeModeTab = net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -32,6 +34,13 @@ class CreativeModeTabBuilder_Compat_Fabric
       
     return tab;
   }
+  #elseif forge
+  public function build():CreativeModeTab
+  {
+    var identifier:net.minecraft.resources.ResourceLocation = new net.minecraft.resources.ResourceLocation('pickhaxe', 'internal_xyz');
+    return new CreativeModeTab.CreativeModeTab_BuilderResult(identifier, iconSupplier, appendItemsConsumer);
+  }
+  #end
 
   var appendItemsConsumer(get, null):net.pickhaxe.java.util.function.Consumer<java.util.List<net.minecraft.world.item.ItemStack>>;
   function get_appendItemsConsumer():net.pickhaxe.java.util.function.Consumer<java.util.List<net.minecraft.world.item.ItemStack>> {
@@ -39,13 +48,13 @@ class CreativeModeTabBuilder_Compat_Fabric
   }
 
   function appendItems(inputList:java.util.List<ItemStack>):Void {
-    var itemList:Array<ItemStack> = ItemDisplayBuilder_Compat_Fabric.buildResults(displayItemsGenerator);
+    var itemList:Array<ItemStack> = ItemDisplayBuilder_Compat.buildResults(displayItemsGenerator);
     for (item in itemList) {
       inputList.add(item);
     }
   }
 
-  public function icon(iconSupplier:IconSupplier):CreativeModeTabBuilder_Compat_Fabric {
+  public function icon(iconSupplier:IconSupplier):CreativeModeTabBuilder_Compat {
     this.iconSupplier = iconSupplier;
     return this;
   }
@@ -53,20 +62,20 @@ class CreativeModeTabBuilder_Compat_Fabric
   /**
    * TODO: Make these proper working overloads in Java.
    */
-  public function displayItemsG(generator:DisplayItemsGeneratorHaxe):CreativeModeTabBuilder_Compat_Fabric {
+  public function displayItemsG(generator:DisplayItemsGeneratorHaxe):CreativeModeTabBuilder_Compat {
     this.displayItemsGenerator = generator;
     return this;
   }
 
-  public function displayItemsA(callback:DisplayItemsGeneratorFunction_A):CreativeModeTabBuilder_Compat_Fabric {
+  public function displayItemsA(callback:DisplayItemsGeneratorFunction_A):CreativeModeTabBuilder_Compat {
     return displayItemsG(DisplayItemsGeneratorHaxe.buildA(callback));
   }
 
-  public function displayItemsB(callback:DisplayItemsGeneratorFunction_B):CreativeModeTabBuilder_Compat_Fabric {
+  public function displayItemsB(callback:DisplayItemsGeneratorFunction_B):CreativeModeTabBuilder_Compat {
     return displayItemsG(DisplayItemsGeneratorHaxe.buildB(callback));
   }
 }
-class ItemDisplayBuilder_Compat_Fabric implements net.minecraft.world.item.CreativeModeTab.Output {
+class ItemDisplayBuilder_Compat implements net.minecraft.world.item.CreativeModeTab.Output {
   var results:Array<ItemStack>;
   public function new() {
     results = [];
@@ -100,24 +109,11 @@ class ItemDisplayBuilder_Compat_Fabric implements net.minecraft.world.item.Creat
   }
 
   public static function buildResults(generator:net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator) {
-    var builder = new ItemDisplayBuilder_Compat_Fabric();
+    var builder = new ItemDisplayBuilder_Compat();
     generator.accept(null, builder);
     return builder.results;
   }
 }
-typedef CreativeModeTabBuilder_Compat = CreativeModeTabBuilder_Compat_Fabric;
-typedef CreativeModeTabBuilder_Minecraft = CreativeModeTabBuilder_Compat;
-#elseif forge
-/**
- * A compatibility class which acts like CreativeModeTab.Builder but works for earlier Minecraft versions.
- */
-class CreativeModeTabBuilder_Compat_Forge
-{
-  public static function create():CreativeModeTabBuilder_Minecraft {
-    return new CreativeModeTabBuilder_Compat_Forge();
-  }
-}
-typedef CreativeModeTabBuilder_Compat = CreativeModeTabBuilder_Compat_Forge;
 typedef CreativeModeTabBuilder_Minecraft = CreativeModeTabBuilder_Compat;
 #end
 

@@ -25,7 +25,6 @@ class Template
   public static function applyPickHaxeDefines(input:String, defines:PickHaxeDefines):String
   {
     var result = input;
-
     
     result = result.replace('#{pickhaxe.gradle.version}', defines.pickhaxe.gradle.version);
     result = result.replace('#{pickhaxe.java.version}', defines.pickhaxe.java.version);
@@ -43,14 +42,15 @@ class Template
     result = result.replace('#{pickhaxe.minecraft.resourcePackFormat}', '${defines.pickhaxe.minecraft.resourcePackFormat}');
     result = result.replace('#{pickhaxe.minecraft.dataPackFormat}', '${defines.pickhaxe.minecraft.dataPackFormat}');
 
-    if (defines.pickhaxe.loader.fabric.apiVersion != null) result.replace('#{pickhaxe.loader.fabric.apiVersion}', defines.pickhaxe.loader.fabric.apiVersion);
-    if (defines.pickhaxe.loader.fabric.loaderVersion != null) result.replace('#{pickhaxe.loader.fabric.loaderVersion}', defines.pickhaxe.loader.fabric.loaderVersion);
-    if (defines.pickhaxe.loader.forge.apiVersion != null) result.replace('#{pickhaxe.loader.forge.apiVersion}', defines.pickhaxe.loader.forge.apiVersion);
-    if (defines.pickhaxe.mappings.intermediary.maven != null) result.replace('#{pickhaxe.mappings.intermediary.maven}', defines.pickhaxe.mappings.intermediary.maven);
-    if (defines.pickhaxe.mappings.intermediary.version != null) result.replace('#{pickhaxe.mappings.intermediary.version}', defines.pickhaxe.mappings.intermediary.version);
-    if (defines.pickhaxe.mappings.parchment.maven != null) result.replace('#{pickhaxe.mappings.parchment.maven}', defines.pickhaxe.mappings.parchment.maven);
-    if (defines.pickhaxe.mappings.parchment.version != null) result.replace('#{pickhaxe.mappings.parchment.version}', defines.pickhaxe.mappings.parchment.version);
-    if (defines.pickhaxe.mappings.yarn.version != null) result.replace('#{pickhaxe.mappings.yarn.version}', defines.pickhaxe.mappings.yarn.version);
+    if (defines.pickhaxe.loader.fabric.apiVersion != null) result = result.replace('#{pickhaxe.loader.fabric.apiVersion}', defines.pickhaxe.loader.fabric.apiVersion);
+    if (defines.pickhaxe.loader.fabric.loaderVersion != null) result = result.replace('#{pickhaxe.loader.fabric.loaderVersion}', defines.pickhaxe.loader.fabric.loaderVersion);
+    if (defines.pickhaxe.loader.forge.apiVersion != null) result = result.replace('#{pickhaxe.loader.forge.apiVersion}', defines.pickhaxe.loader.forge.apiVersion);
+    if (defines.pickhaxe.loader.forge.fmlVersion != null) result = result.replace('#{pickhaxe.loader.forge.fmlVersion}', defines.pickhaxe.loader.forge.fmlVersion);
+    if (defines.pickhaxe.mappings.intermediary.maven != null) result = result.replace('#{pickhaxe.mappings.intermediary.maven}', defines.pickhaxe.mappings.intermediary.maven);
+    if (defines.pickhaxe.mappings.intermediary.version != null) result = result.replace('#{pickhaxe.mappings.intermediary.version}', defines.pickhaxe.mappings.intermediary.version);
+    if (defines.pickhaxe.mappings.parchment.maven != null) result = result.replace('#{pickhaxe.mappings.parchment.maven}', defines.pickhaxe.mappings.parchment.maven);
+    if (defines.pickhaxe.mappings.parchment.version != null) result = result.replace('#{pickhaxe.mappings.parchment.version}', defines.pickhaxe.mappings.parchment.version);
+    if (defines.pickhaxe.mappings.yarn.version != null) result = result.replace('#{pickhaxe.mappings.yarn.version}', defines.pickhaxe.mappings.yarn.version);
 
     return result;
   }

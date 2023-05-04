@@ -6,7 +6,7 @@
 # Mandatory, for regular Forge mods this should be javafml
 modLoader="javafml"
 # The version range for the mod loader, for regular Forge mods this should be the Forge version
-loaderVersion="[44,)"
+loaderVersion="[#{pickhaxe.loader.forge.fmlVersion},)"
 
 # The license for your mod.
 license="#{pickhaxe.mod.license}"
@@ -16,7 +16,7 @@ license="#{pickhaxe.mod.license}"
 modId="#{pickhaxe.mod.id}"
 version="#{pickhaxe.mod.version}"
 displayName="#{pickhaxe.mod.name}"
-logoFile="#{pickhaxe.mod.id}/icon.png"
+logoFile="#{pickhaxe.mod.id}_icon.png" # The filename of the mod’s logo. It must be placed in the root resource folder, not in a subfolder.
 authors="#{pickhaxe.mod.authors}"
 description='''#{pickhaxe.mod.description}'''
 #displayTest="MATCH_VERSION" # MATCH_VERSION is the default if nothing is specified (#optional)
@@ -24,7 +24,7 @@ description='''#{pickhaxe.mod.description}'''
 [[dependencies.#{pickhaxe.mod.id}]]
 modId="forge"
 mandatory=true
-versionRange="[44,)"
+versionRange="[#{pickhaxe.loader.forge.fmlVersion},)"
 ordering="NONE"
 side="BOTH"
 

@@ -28,13 +28,17 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
     abstract.setId(resourceLocation);
     // Creative Mode tabs do not need to be explicitly registered after they are built.
     #elseif forge
+    this.langId = '${resourceLocation.getNamespace()}.${resourceLocation.getPath()}';
+    net.pickhaxe.core.PickHaxe.logInfo('Set language ID of Creative Mode Tab to "${this.langId}".');
     this.displayName = buildDisplayName(resourceLocation);
+    #if (forge && minecraft_gt_1_19_3)
     CreativeModeTab_ForgeRegistrar.queue(resourceLocation,
       {
         tab: this,
         before: before,
         after: after
       });
+    #end
     #else
     net.pickhaxe.core.PickHaxe.logError('Could not register Creative Mode tab: Unknown loader (${Environment.LOADER}) detected.');
     #end
@@ -80,7 +84,41 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
   }
 }
 
-#if forge
+#if (forge && minecraft_lteq_1_19_2)
+class CreativeModeTab_BuilderResult extends net.minecraft.world.item.CreativeModeTab {
+  var resourceLocation:ResourceLocation;
+  var iconSupplier:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.IconSupplier;
+  var appendItemsConsumer:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.AppendItemsConsumer;
+  
+  public function new(resourceLocation:ResourceLocation,
+    iconSupplier:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.IconSupplier,
+    appendItemsConsumer:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.AppendItemsConsumer) {
+    super(net.minecraft.world.item.CreativeModeTab.TABS.length, 'itemGroup.${resourceLocation.getNamespace()}.${resourceLocation.getPath()}');
+    
+    this.resourceLocation = resourceLocation;
+    this.iconSupplier = iconSupplier;
+    this.appendItemsConsumer = appendItemsConsumer;
+  }
+  
+  public function makeIcon():net.minecraft.world.item.ItemStack {
+    return iconSupplier.get();
+  }
+
+  public override function fillItemList(stacks:net.minecraft.core.NonNullList<net.minecraft.world.item.ItemStack>):Void {
+    if (appendItemsConsumer != null) {
+      appendItemsConsumer.accept(stacks);
+      return;
+    }
+
+    // Else, fallback to the default behavior.
+    super.fillItemList(stacks);
+  }
+}
+#end
+
+// In 1.19.3, we need to defer registration until the appropriate event is fired.
+// In 1.19.2 and below, the CreativeModeTab constructor performs registration for us.
+#if (forge && minecraft_gteq_1_19_3)
 typedef CreativeModeTab_ForgeRegistrarEntry =
 {
   tab:CreativeModeTab,
@@ -92,8 +130,12 @@ class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeR
 {
   /**
    * Custom creative mode tabs are placed after the Spawn Eggs tab by default.
-   */
-  static final DEFAULT_AFTER_ENTRIES:Array<net.minecraft.world.item.CreativeModeTab> = [net.minecraft.world.item.CreativeModeTabs.SPAWN_EGGS];
+   */  
+  static final DEFAULT_AFTER_ENTRIES:Array<net.minecraft.world.item.CreativeModeTab> = [
+    #if minecraft_gteq_1_19_3
+    net.minecraft.world.item.CreativeModeTabs.SPAWN_EGGS
+    #end
+  ];
 
   static var instance:CreativeModeTab_ForgeRegistrar = new CreativeModeTab_ForgeRegistrar();
 
@@ -122,6 +164,7 @@ class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeR
     return entry;
   }
 
+  #if minecraft_gteq_1_19_3
   @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
   public function onRegister(event:net.minecraftforge.event.CreativeModeTabEvent.CreativeModeTabEvent_Register):Void
   {
@@ -132,6 +175,7 @@ class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeR
     }
     hasRegistered = true;
   }
+  #end
 
   /**
    * I want to register an existing Creative Mode tab and Forge only accepts a Builder.

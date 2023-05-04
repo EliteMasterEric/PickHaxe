@@ -92,8 +92,11 @@ class CommonMod #if fabric implements ModInitializer #end
     // We can rely on this class's events to be called before the Registrar events.
     forge_getEventBus().register(this);
 
-    net.pickhaxe.compat.world.item.CreativeModeTab.CreativeModeTab_ForgeRegistrar.register(forge_getEventBus());
     net.pickhaxe.compat.world.item.Item.Item_ForgeRegistrar.register(forge_getEventBus());
+
+    #if minecraft_gteq_1_19_3
+    net.pickhaxe.compat.world.item.CreativeModeTab.CreativeModeTab_ForgeRegistrar.register(forge_getEventBus());
+    #end
   }
 
   /**
@@ -107,6 +110,7 @@ class CommonMod #if fabric implements ModInitializer #end
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received NewRegistryEvent.');
   }
 
+  #if minecraft_gteq_1_19_3
   /**
    * This event is called when new creative mode tabs may be registered.
    * PickHaxe's CreativeModeTab.register() function MUST be called from this event, it will not work if it is called statically.
@@ -119,6 +123,12 @@ class CommonMod #if fabric implements ModInitializer #end
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received CreativeModeTabEvent.Register.');
     onCreativeModeTabRegister();
   }
+  #else
+  public function forge_onCreativeModeTabRegister():Void {
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod registering Creative Mode tabs.');
+    onCreativeModeTabRegister();
+  }
+  #end
 
   /**
    * This event allows for registering objects into the registries.
@@ -133,6 +143,11 @@ class CommonMod #if fabric implements ModInitializer #end
     if (!hasRegistered)
     {
       hasRegistered = true;
+
+      #if minecraft_lteq_1_19_2
+      forge_onCreativeModeTabRegister();
+      #end
+
       onRegister();
     }
   }
