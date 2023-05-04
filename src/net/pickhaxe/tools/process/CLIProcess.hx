@@ -28,7 +28,7 @@ class CLIProcess
 
         return {
           exitCode: result,
-          output: ''
+          output: 'null'
         };
       }
       else

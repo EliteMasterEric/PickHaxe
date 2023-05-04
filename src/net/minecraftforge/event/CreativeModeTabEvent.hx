@@ -1,5 +1,6 @@
 package net.minecraftforge.event;
 
+#if minecraft_gteq_1_19_3
 @:native("net.minecraftforge.event.CreativeModeTabEvent")
 extern class CreativeModeTabEvent extends net.minecraftforge.eventbus.api.Event implements net.minecraftforge.fml.event.IModBusEvent
 {
@@ -69,3 +70,4 @@ extern interface CreativeModeTabEvent_Registrar
 }
 
 // typedef Registrar = CreativeModeTabEvent_Registrar;
+#end
