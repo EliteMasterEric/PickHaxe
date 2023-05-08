@@ -338,6 +338,11 @@ class Build implements ICommand
       shouldPerformGradle = false;
     }
 
+    if (shouldPerformGradle && IO.fileStartingWithExists(IO.workingDir().joinPaths('generated/build/minecraft/minecraft-merged')))
+    {
+      // Remove the old Minecraft dependencies
+    }
+
     // Move into `generated` folder.
     Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
     CLI.print('Switched working directory: ${IO.workingDir().toString()}', Verbose);

@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.util;
 
+import sys.FileSystem;
 import haxe.PosInfos;
 import haxe.io.Path;
 import sys.io.File;
@@ -42,6 +43,10 @@ class IO
     // WARNING: This can return false on files that exist,
     // if the user is on Windows and the path is too long (260+ characters)
     return sys.FileSystem.exists(path.toString());
+  }
+
+  public static function isDirectory(path:Path):Bool {
+    return (sys.FileSystem.exists(path.toString()) && sys.FileSystem.isDirectory(path.toString()));
   }
 
   public static function fileStartingWithExists(path:Path):Bool
@@ -116,13 +121,13 @@ class IO
     if (files && !dirs)
     {
       return entries.filter(function(entry:String):Bool {
-        return !sys.FileSystem.isDirectory(path.joinPaths(entry).toString());
+        return !isDirectory(path.joinPaths(entry));
       });
     }
     else if (!files && dirs)
     {
       return entries.filter(function(entry:String):Bool {
-        return sys.FileSystem.isDirectory(path.joinPaths(entry).toString());
+        return isDirectory(path.joinPaths(entry));
       });
     }
 
@@ -145,7 +150,7 @@ class IO
     for (entry in sys.FileSystem.readDirectory(path.toString()))
     {
       var entryPath:Path = path.joinPaths(entry);
-      if (sys.FileSystem.isDirectory(entryPath.toString()))
+      if (isDirectory(entryPath))
       {
         for (subEntry in readDirectoryRecursive(entryPath, files, dirs))
         {
@@ -157,15 +162,17 @@ class IO
 
     if (files && !dirs)
     {
-      return entries.filter(function(entry:String):Bool {
-        return !sys.FileSystem.isDirectory(path.joinPaths(entry).toString());
+      var result = entries.filter(function(entry:String):Bool {
+        return !isDirectory(path.joinPaths(entry));
       });
+      return result;
     }
     else if (!files && dirs)
     {
-      return entries.filter(function(entry:String):Bool {
-        return sys.FileSystem.isDirectory(path.joinPaths(entry).toString());
+      var result = entries.filter(function(entry:String):Bool {
+        return isDirectory(path.joinPaths(entry));
       });
+      return result;
     }
 
     return entries;
@@ -174,34 +181,50 @@ class IO
   /**
    * Delete a file.
    * @param path The path to the file to delete.
+   * @param force Whether to try to delete, even if the file system says the file doesn't exist.
    */
-  public static function deleteFile(path:Path):Void
+  public static function deleteFile(path:Path, ?force:Bool = false):Void
   {
-    if (!exists(path)) return;
+    if (!exists(path) && !force) {
+      CLI.print('- WARN: Cannot delete file "$path", does not exist', Verbose);
+      return;
+    }
     sys.FileSystem.deleteFile(path.toString());
   }
 
   /**
    * Delete a directory.
+   * 
+   * NOTE: If the directories are too long (260 characters in path),
+   * this will fail on Windows. You need to use Robocopy.deleteDirectory instead.
    * @param path The path to the directory to delete.
    */
   public static function deleteDirectory(path:Path):Void
   {
+    var previousWorkingDir:Path = workingDir();
+    Sys.setCwd(path.toString());
+
+    // Changing the working directory to the directory to delete
+    // allows us to delete the directory and its contents, even
+    // if the file names are too long for the OS to handle.
+
     var files:Array<String> = readDirectoryRecursive(path, true, false);
     var dirs:Array<String> = readDirectoryRecursive(path, false, true);
     // Delete files
-    for (file in files)
-    {
+    for (file in files) {
       CLI.print('- Deleting file "$file"', Verbose);
-      deleteFile(path.joinPaths(file));
+      deleteFile(path.joinPaths(file), true);
     }
     // Delete directories
     for (dir in dirs)
     {
       CLI.print('- Deleting directory "$dir"', Verbose);
-      sys.FileSystem.deleteDirectory(path.joinPaths(dir).toString());
+      // sys.FileSystem.deleteDirectory(path.joinPaths(dir).toString());
+      sys.FileSystem.deleteDirectory(dir);
     }
+    
     // Delete the root directory
+    Sys.setCwd(previousWorkingDir.toString());
     CLI.print('- Deleting directory "$path"', Verbose);
     sys.FileSystem.deleteDirectory(path.toString());
   }

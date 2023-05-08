@@ -340,10 +340,11 @@ class Builder
       // Otherwise, we check for mappings of the previous release.
       var isSnapshot = MCVersion.isVersionSnapshot(params.mcVersion);
 
+      var currentVersion = params.mcVersion;
+      var previousVersion:String = params.mcVersion;
       while (parchmentVersion == null)
       {
-        var previousVersion:String = isSnapshot ? MCVersion.getPreviousSnapshotVersion(params.mcVersion) : MCVersion.getPreviousVersion(params.mcVersion);
-        CLI.print('Warning: Could not load Parchment version from API for version ${params.mcVersion}, trying $previousVersion');
+        previousVersion = null; // isSnapshot ? MCVersion.getPreviousSnapshotVersion(params.mcVersion) : MCVersion.getPreviousVersion(currentVersion);
 
         if (previousVersion == null)
         {
@@ -351,8 +352,14 @@ class Builder
           currentMappings = 'mojang';
           break;
         }
+        else
+        {
+          CLI.print('Warning: Could not load Parchment version from API for version ${currentVersion}, trying $previousVersion');
+        }
 
-        parchmentVersion = Parchment.fetchParchmentVersion(previousVersion);
+        currentVersion = previousVersion;
+
+        parchmentVersion = Parchment.fetchParchmentVersion(currentVersion);
 
         if (parchmentVersion == null)
         {

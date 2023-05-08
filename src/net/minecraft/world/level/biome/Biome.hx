@@ -114,3 +114,20 @@ extern class Biome_BiomeBuilder
 }
 
 typedef BiomeBuilder = Biome_BiomeBuilder;
+
+
+#if minecraft_lteq_1_16_1
+@:native("net.minecraft.world.level.biome.Biome$SpawnerData")
+extern class Biome_SpawnerData {
+  public static final CODEC:com.mojang.serialization.Codec<net.minecraft.world.level.biome.Biome.SpawnerData>;
+  public final type:net.minecraft.world.entity.EntityType<Dynamic>;
+  public final minCount:Int;
+  public final maxCount:Int;
+
+  public function new(entityType:net.minecraft.world.entity.EntityType<Dynamic>, weight:Int, minCount:Int, maxCount:Int);
+
+  public function toString():String;
+}
+
+typedef SpawnerData = Biome_SpawnerData;
+#end
