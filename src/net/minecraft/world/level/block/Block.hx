@@ -5,9 +5,10 @@ package net.minecraft.world.level.block;
  */
 @:native("net.minecraft.world.level.block.Block")
 @:mapping("net.minecraft.class_2248")
-extern class Block extends net.minecraft.world.level.block.state.BlockBehaviour implements net.minecraft.world.level.ItemLike #if (fabric
-  && minecraft_gteq_1_19_2)
-    implements net.fabricmc.fabric.api.block.v1.FabricBlock #end
+extern class Block
+  extends net.minecraft.world.level.block.state.BlockBehaviour
+  implements net.minecraft.world.level.ItemLike
+  #if (fabric && minecraft_gteq_1_19_2) implements net.fabricmc.fabric.api.block.v1.FabricBlock #end
 {
   @:mapping("field_10651")
   public static final BLOCK_STATE_REGISTRY:net.minecraft.core.IdMapper<net.minecraft.world.level.block.state.BlockState>;

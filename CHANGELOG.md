@@ -26,6 +26,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## To Fix
 - [] Broken mod icons on Fabric
 - [] Add working autocomplete to sample/template
+- [] Add proper support for contact information/author name
+- [] Allow non-standard keys in author information
 
 
 ## [0.2.0] - 2023-04-08

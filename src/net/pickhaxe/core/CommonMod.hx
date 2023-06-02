@@ -130,6 +130,7 @@ class CommonMod #if fabric implements ModInitializer #end
   }
   #end
 
+  #if minecraft_gteq_1_19
   /**
    * This event allows for registering objects into the registries.
    * This function is called MULTIPLE times, once for each registry. Be sure to filter the event by registry using `handle()`.
@@ -151,6 +152,24 @@ class CommonMod #if fabric implements ModInitializer #end
       onRegister();
     }
   }
+  #else
+  /**
+   * We add our event handling to the Block registry event, since it is the first registry to be populated.
+   * Blocks, then Items, then all other registries alphabetically.
+   */
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  public function forge_onRegisterBlock(event:net.minecraftforge.event.RegistryEvent.Register<net.minecraft.world.level.block.Block>):Void
+  {
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod received RegistryEvent.Register<Block>.');
+
+    if (!hasRegistered)
+    {
+      hasRegistered = true;
+
+      onRegister();
+    }
+  }
+  #end
 
   var hasRegistered:Bool = false;
 

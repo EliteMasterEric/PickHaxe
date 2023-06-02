@@ -71,6 +71,10 @@ class Block_ForgeRegistrar extends net.pickhaxe.compat.forge.ForgeRegistrar<Bloc
     return instance.queue(resourceLocation, item);
   }
 
+  override function applyEntryId(key:ResourceLocation, value:Block_Minecraft) {
+    value.setRegistryName(key);
+  }
+
   public override function toString():String
   {
     return "ForgeRegistrar<Block>";

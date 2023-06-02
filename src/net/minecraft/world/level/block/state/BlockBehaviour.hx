@@ -1,7 +1,9 @@
 package net.minecraft.world.level.block.state;
 
 @:native("net.minecraft.world.level.block.state.BlockBehaviour")
-abstract extern class BlockBehaviour implements net.minecraft.world.flag.FeatureElement
+abstract extern class BlockBehaviour
+  #if (forge && minecraft_lteq_1_18_2) extends net.minecraftforge.registries.ForgeRegistryEntry<Block> #end
+  implements net.minecraft.world.flag.FeatureElement
 {
   public function new(properties:net.minecraft.world.level.block.state.BlockBehaviour.Properties);
   /**

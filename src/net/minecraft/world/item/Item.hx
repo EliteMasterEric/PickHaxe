@@ -4,7 +4,10 @@ package net.minecraft.world.item;
  * Interface `FabricItem` injected by mod fabric-item-api-v1
  */
 @:native("net.minecraft.world.item.Item")
-extern class Item implements net.minecraft.world.flag.FeatureElement implements net.minecraft.world.level.ItemLike
+extern class Item
+  #if (forge && minecraft_lteq_1_18_2) extends net.minecraftforge.registries.ForgeRegistryEntry<Item> #end
+  implements net.minecraft.world.flag.FeatureElement
+  implements net.minecraft.world.level.ItemLike
   #if (fabric && minecraft_gteq_1_17) implements net.fabricmc.fabric.api.item.v1.FabricItem #end
 {
   public static final BY_BLOCK:java.util.Map<net.minecraft.world.level.block.Block, Item>;

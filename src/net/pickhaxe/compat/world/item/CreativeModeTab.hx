@@ -85,6 +85,10 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
 }
 
 #if (forge && minecraft_lteq_1_19_2)
+/**
+ * Normally, in Forge versions before 1.19.3, we have to extend CreativeModeTab to display the right results.
+ * This is our handler for that.
+ */
 class CreativeModeTab_BuilderResult extends net.minecraft.world.item.CreativeModeTab {
   var resourceLocation:ResourceLocation;
   var iconSupplier:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.IconSupplier;
