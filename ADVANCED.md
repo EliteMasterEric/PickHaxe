@@ -68,7 +68,7 @@ Minecraft JavaDocs:
 
 Mappings Lookups:
 - https://wagyourtail.xyz/Projects/MinecraftMappingViewer/App?version=1.19.4 (Fabric/MCP)
-- https://nms.screamingsandals.org/ (Spigot/Bukkit)
+- https://mappings.cephx.dev/ (Spigot/Bukkit)
 
 Common Bugs:
 - https://github.com/orgs/FabricMC/discussions/2394#discussioncomment-3148700
