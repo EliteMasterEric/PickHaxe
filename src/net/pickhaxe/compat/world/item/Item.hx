@@ -55,9 +55,11 @@ class Item_ForgeRegistrar extends net.pickhaxe.compat.forge.ForgeRegistrar<Item_
     return instance.queue(resourceLocation, item);
   }
 
+  #if minecraft_lt_1_19
   override function applyEntryId(key:ResourceLocation, value:Item_Minecraft) {
     value.setRegistryName(key);
   }
+  #end
 
   public override function toString():String
   {

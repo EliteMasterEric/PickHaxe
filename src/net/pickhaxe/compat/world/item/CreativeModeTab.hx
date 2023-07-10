@@ -28,8 +28,10 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
     abstract.setId(resourceLocation);
     // Creative Mode tabs do not need to be explicitly registered after they are built.
     #elseif forge
+    #if (forge && minecraft_lteq_1_19_2)
     this.langId = '${resourceLocation.getNamespace()}.${resourceLocation.getPath()}';
     net.pickhaxe.core.PickHaxe.logInfo('Set language ID of Creative Mode Tab to "${this.langId}".');
+    #end
     this.displayName = buildDisplayName(resourceLocation);
     #if (forge && minecraft_gt_1_19_3)
     CreativeModeTab_ForgeRegistrar.queue(resourceLocation,
