@@ -156,9 +156,6 @@ class Build implements ICommand
 
     if (!result) return;
 
-    // Do this AFTER performGradleSetup so they don't get deleted, ehe.
-    performMakeMetaINF(defines);
-
     // Move back to the parent of the working dir.
     Sys.setCwd(IO.workingDir().dir);
 
@@ -331,6 +328,9 @@ class Build implements ICommand
       // Remove the old Minecraft dependencies
     }
 
+    // Generate the META-INF folder, including access transformers/wideners.
+    performMakeMetaINF(defines);
+
     // Move into `generated` folder.
     Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
     CLI.print('Switched working directory: ${IO.workingDir().toString()}', Verbose);
@@ -399,17 +399,17 @@ class Build implements ICommand
     {
       case 'fabric':
         CLI.print('Creating meta-inf folder for fabric...');
-        IO.makeDir(IO.workingDir().joinPaths('resources/META-INF'));
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
 
-        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('resources/fabric.mod.json'));
-        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
+        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('generated/resources/fabric.mod.json'));
+        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('generated/resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
       case 'forge':
         CLI.print('Creating meta-inf folder for forge...');
-        IO.makeDir(IO.workingDir().joinPaths('resources/META-INF'));
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
 
-        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('resources/pack.mcmeta'));
-        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('resources/META-INF/mods.toml'));
-        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('resources/META-INF/accesstransformer.cfg'));
+        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('generated/resources/pack.mcmeta'));
+        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('generated/resources/META-INF/mods.toml'));
+        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('generated/resources/META-INF/accesstransformer.cfg'));
       default:
         CLI.print('WARNING: Unknown loader Forge...');
     }

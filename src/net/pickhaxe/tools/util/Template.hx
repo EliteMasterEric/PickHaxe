@@ -17,8 +17,8 @@ class Template
       .replace('#{pickhaxe.mod.parentPackage}', modParams.parentPackage)
       .replace('#{pickhaxe.mod.name}', modParams.modName)
       .replace('#{pickhaxe.mod.description}', modParams.modDescription)
-      .replace('#{pickhaxe.mod.entryPoint.init.environment}', modParams.modEnvironment)
-      .replace('#{pickhaxe.mod.entryPoint.init.value}', modParams.entryClass)
+      .replace('#{pickhaxe.mod.entryPoint.environment}', modParams.modEnvironment)
+      .replace('#{pickhaxe.mod.entryPoint.class}', modParams.entryClass)
       .replace('#{pickhaxe.mod.license}', "All Rights Reserved"); // Default to All Rights Reserved
   }
 

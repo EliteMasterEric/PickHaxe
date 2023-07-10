@@ -1,9 +1,9 @@
 package #{pickhaxe.mod.parentPackage};
 
-import net.pickhaxe.core.Mod;
+import net.pickhaxe.core.CommonMod;
 import net.pickhaxe.core.Environment;
 
-class #{pickhaxe.mod.entryPoint} extends CommonMod {
+class #{pickhaxe.mod.entryPoint.class} extends CommonMod {
   public override function onRegister():Void {
     LOGGER.info('Registering items...');
   }
