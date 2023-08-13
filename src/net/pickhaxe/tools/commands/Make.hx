@@ -19,6 +19,7 @@ class Make implements ICommand
   var loader:String;
   var mcVersion:String;
   var mappings:String;
+  var genSources:Bool = false;
 
   var additionalArgs:Array<String>;
 
@@ -49,6 +50,18 @@ class Make implements ICommand
                   Defaults to Parchment.',
           value: '[mappings]',
         },
+        {
+          short: null,
+          long: 'gen-sources',
+          blurb: 'Compile generated .java files (Java target)',
+          value: null,
+        },
+        {
+          short: null,
+          long: 'gen-archive',
+          blurb: 'Map a pre-compiled generated .jar file (JVM target)',
+          value: null,
+        }
       ]
     };
   }
@@ -68,6 +81,7 @@ class Make implements ICommand
         loader: loader,
         mcVersion: mcVersion,
         mappings: mappings,
+        jvm: !genSources,
       });
 
     var result:Bool = performGradleTask(defines);
@@ -99,6 +113,10 @@ class Make implements ICommand
             return false;
           case '--help': // Gets processed elsewhere.
             return false;
+          case '--gen-sources':
+            genSources = true;
+          case '--gen-archive':
+            genSources = false;
           case '--mappings':
             var nextArg:String = args[i + 1];
             if (nextArg != null && !nextArg.startsWith('-'))
@@ -163,7 +181,15 @@ class Make implements ICommand
     Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
 
     var gradleW:GradleWProcess = new GradleWProcess(defines);
-    var result:Bool = gradleW.performTask(["build"].concat(additionalArgs));
+
+    var result:Bool = false;
+    if (genSources) {
+      trace('build');
+      result = gradleW.performTask(["build"].concat(additionalArgs));
+    } else {
+      trace('remapJar');
+      result = gradleW.performTask(["remapJar"].concat(additionalArgs));
+    }
 
     // Move back to the parent of the workding dir.
     Sys.setCwd(IO.workingDir().dir);

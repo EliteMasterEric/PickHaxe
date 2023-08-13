@@ -3,7 +3,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.0] - 2023-05-??
+## [0.4.0]
+## Added
+- Updated JVM target to be functional, and to be the default mode (to allow for improved code generation from Haxe).
+  - In this mode, Pickhaxe will now generate an unmapped "dev" JAR rather than a set of Java source files.
+## Changed
+- Haxe dependency updated to require `5.0.0-alpha` (unless they end up releasing a 4.3.2).
+## Fixed
+## To Fix
+- [] Broken mod icons on Fabric
+- [] Add working autocomplete to sample/template
+- [] Add proper support for contact information/author name
+- [] Allow non-standard keys in author information
+
+
+## [0.3.0] - 2023-07-10
 ## Added
 - Implemented basic support for these versions:
   - `1.18.2` `fabric`
@@ -23,11 +37,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fixed an issue where the `init` command said dashes were valid in mod IDs.
 - `pickhaxe build` now properly ends if one of the Gradle tasks fails.
 - Fixed various build issues.
-## To Fix
-- [] Broken mod icons on Fabric
-- [] Add working autocomplete to sample/template
-- [] Add proper support for contact information/author name
-- [] Allow non-standard keys in author information
 
 
 ## [0.2.0] - 2023-04-08

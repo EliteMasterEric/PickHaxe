@@ -18,6 +18,7 @@ class GradleW implements ICommand
 
   var loader:String;
   var mcVersion:String;
+  var genSources:Bool = false;
 
   var task:String;
   var additionalArgs:Array<String>;
@@ -40,6 +41,18 @@ class GradleW implements ICommand
           long: 'help',
           blurb: 'Output usage information',
           value: null,
+        },
+        {
+          short: null,
+          long: 'gen-sources',
+          blurb: 'Compile generated .java files (Java target)',
+          value: null,
+        },
+        {
+          short: null,
+          long: 'gen-archive',
+          blurb: 'Map a pre-compiled generated .jar file (JVM target)',
+          value: null,
         }
       ]
     };
@@ -59,6 +72,7 @@ class GradleW implements ICommand
       {
         loader: loader,
         mcVersion: mcVersion,
+        jvm: !genSources,
       });
 
     var result:Bool = performGradleTask(defines);
@@ -90,6 +104,10 @@ class GradleW implements ICommand
             return false;
           case '--help': // Gets processed elsewhere.
             return false;
+          case '--gen-sources':
+            genSources = true;
+          case '--gen-archive':
+            genSources = false;
           default:
             additionalArgs.push(arg);
         }
