@@ -1,5 +1,6 @@
 package net.minecraftforge.event;
 
+#if minecraft_gteq_1_19_3
 @:native("net.minecraftforge.event.CreativeModeTabEvent")
 extern class CreativeModeTabEvent extends net.minecraftforge.eventbus.api.Event implements net.minecraftforge.fml.event.IModBusEvent
 {
@@ -22,8 +23,7 @@ extern class CreativeModeTabEvent_Register extends CreativeModeTabEvent
 // typedef Register = CreativeModeTabEvent_Register;
 
 @:native("net.minecraftforge.event.CreativeModeTabEvent$BuildContents")
-extern class CreativeModeTabEvent_BuildContents extends CreativeModeTabEvent
-    implements net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Output
+extern class CreativeModeTabEvent_BuildContents extends CreativeModeTabEvent implements net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Output
 {
   function new(tab:net.minecraft.world.item.CreativeModeTab, flags:net.minecraft.world.flag.FeatureFlagSet, hasPermissions:Bool,
     entries:net.minecraftforge.common.util.MutableHashedLinkedMap<net.minecraft.world.item.ItemStack,
@@ -70,3 +70,4 @@ extern interface CreativeModeTabEvent_Registrar
 }
 
 // typedef Registrar = CreativeModeTabEvent_Registrar;
+#end

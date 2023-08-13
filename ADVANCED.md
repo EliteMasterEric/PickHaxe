@@ -12,7 +12,18 @@ Mojang does this for several reasons; it makes the binary smaller, it makes it f
 
 For as long as Minecraft modding has existed, people have been developing mappings (literally just a file that says "`cdp == net.minecraft.world.item.Item`" for every class), as well as tools to help create mappings, and tools to apply them to compile mods. Due to differences in philosophy and naming conventions, different mappings often have different package names, class names, method names, or public field names, even when the underlying obfuscated source is the same.
 
-With the release of 1.14.4, Minecraft now saves a mappings file alongside their obfuscated jar and distributes it with each client version, available for modders to download and reference under a 
+## Minecraft Version Notes
+
+- As of 1.14.4, Minecraft now saves a mappings file alongside their obfuscated jar and distributes it with each client version, available for modders to download and reference under a restrictive license.
+  - Minecraft 1.14.3 and earlier do not include MojMaps.
+- As of 1.19.3, minor versions can include major refactors, and not just bug fixes.
+  - https://help.minecraft.net/hc/en-us/articles/9971900758413
+
+## Haxe Notes
+
+- Getting errors regarding floats? There is a commmon source of confusion here: Doubles in Java (the 8-byte ones) are known as Floats in Haxe, and referencing Floats in Java (the 4-byte ones) require the rarely-used `Singles` type.
+
+Getting errors about floats and doubles? The 32-bit 
 
 ## List of Mappings
 
@@ -32,6 +43,12 @@ Yarn: Mappings provided by the Fabric Team.
 MCP: A set of mappings made by the MCP team, one of the oldest mapping teams. 
   - Notably under a restrictive license that prevented use by other coding projects, which was why the Fabric team created Yarn.
 
+## Formatting Notes
+- Static before instance
+- Variables before functions
+- All-version before version-specific
+- PickHaxe convenience functions after the primary function
+
 ## Build process
 
 - Built Fabric JARs use intermediary class and field names, and not obfuscated names?
@@ -50,7 +67,8 @@ Minecraft JavaDocs:
 - Forge: https://nekoyue.github.io/ForgeJavaDocs-NG/
 
 Mappings Lookups:
-- https://wagyourtail.xyz/Projects/MinecraftMappingViewer/App?version=1.19.4
+- https://wagyourtail.xyz/Projects/MinecraftMappingViewer/App?version=1.19.4 (Fabric/MCP)
+- https://mappings.cephx.dev/ (Spigot/Bukkit)
 
 Common Bugs:
 - https://github.com/orgs/FabricMC/discussions/2394#discussioncomment-3148700

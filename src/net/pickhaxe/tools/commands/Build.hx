@@ -1,8 +1,6 @@
 package net.pickhaxe.tools.commands;
 
-import net.pickhaxe.tools.util.Template;
 import haxe.io.Path;
-import net.pickhaxe.tools.util.MCVersion;
 import net.pickhaxe.api.FabricMeta;
 import net.pickhaxe.schema.FabricMod;
 import net.pickhaxe.tools.commands.Help.CommandInfo;
@@ -11,6 +9,10 @@ import net.pickhaxe.tools.process.Haxe;
 import net.pickhaxe.tools.schema.PickHaxeDefines;
 import net.pickhaxe.tools.schema.PickHaxeDefines.Builder as PickHaxeDefinesBuilder;
 import net.pickhaxe.tools.util.JSON;
+import net.pickhaxe.tools.util.Error.UnknownLoaderException;
+import net.pickhaxe.tools.util.Error.GradleException;
+import net.pickhaxe.tools.util.MCVersion;
+import net.pickhaxe.tools.util.Template;
 
 /**
  * Command for building a new project for a specific Minecraft version and mod loader.
@@ -22,6 +24,7 @@ class Build implements ICommand
   var debug:Bool = false;
   var skipGradle:Bool = false;
   var forceGradle:Bool = false;
+  var attachGradle:Bool = false;
   var noResources:Bool = false;
   var noMapping:Bool = true; // Default to TRUE!
   var genSources:Bool = true; // Default to TRUE!
@@ -66,6 +69,12 @@ class Build implements ICommand
           short: null,
           long: 'force-gradle',
           blurb: 'Force Gradle dependency building steps',
+          value: null,
+        },
+        {
+          short: null,
+          long: 'attach-gradle',
+          blurb: 'Attach Gradle process to capture output',
           value: null,
         },
         {
@@ -143,24 +152,12 @@ class Build implements ICommand
         mappings: mappings,
       });
 
-    switch (loader)
-    {
-      case 'fabric':
-        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
-
-        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('generated/resources/fabric.mod.json'));
-        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('generated/resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
-      case 'forge':
-        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
-
-        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('generated/resources/pack.mcmeta'));
-        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('generated/resources/META-INF/mods.toml'));
-        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('generated/resources/META-INF/accesstransformer.cfg'));
-    }
-
     var result:Bool = performGradleSetup(defines);
 
     if (!result) return;
+
+    // Do this AFTER performGradleSetup so they don't get deleted, ehe.
+    performMakeMetaINF(defines);
 
     // Move back to the parent of the working dir.
     Sys.setCwd(IO.workingDir().dir);
@@ -194,6 +191,8 @@ class Build implements ICommand
           case '--force-gradle':
             skipGradle = false;
             forceGradle = true;
+          case '--attach-gradle':
+            attachGradle = true;
           case '--dump':
             var nextArg:String = args[i + 1];
             if (nextArg != null && !nextArg.startsWith('-'))
@@ -257,16 +256,14 @@ class Build implements ICommand
     if (loader == null)
     {
       printUsage();
-      CLI.print('');
-      CLI.print('Error: No loader specified, expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].');
-      return false;
+
+      throw new UnknownLoaderException(null);
     }
     else if (!MCVersion.isLoaderValid(loader))
     {
       printUsage();
-      CLI.print('');
-      CLI.print('Error: Invalid loader specified, expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].');
-      return false;
+
+      throw new UnknownLoaderException(loader);
     }
 
     if (mcVersion == null)
@@ -308,6 +305,7 @@ class Build implements ICommand
 
     // Copy Gradle files to the `generated` folder.
     var gradleFiles:Array<String> = IO.readDirectoryRecursive(IO.libraryDir().joinPaths('gradle'), true, false);
+    CLI.print('Copying ${gradleFiles.length} Gradle files...');
     for (gradleFile in gradleFiles)
     {
       if (gradleFile.startsWith('.gradle')) continue;
@@ -328,8 +326,14 @@ class Build implements ICommand
       shouldPerformGradle = false;
     }
 
+    if (shouldPerformGradle && IO.fileStartingWithExists(IO.workingDir().joinPaths('generated/build/minecraft/minecraft-merged')))
+    {
+      // Remove the old Minecraft dependencies
+    }
+
     // Move into `generated` folder.
     Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
+    CLI.print('Switched working directory: ${IO.workingDir().toString()}', Verbose);
 
     // Perform actual gradle steps.
     if (shouldPerformGradle)
@@ -339,38 +343,42 @@ class Build implements ICommand
       var gradleWProcess:GradleW = new GradleW(defines);
 
       CLI.print('Fetching dependency JARs...');
-      var copyDependenciesSuccess:Bool = gradleWProcess.copyDependencies(); // Copies all of Minecraft's dependencies to the `generated/build/minecraft` folder.
+      var copyDependenciesSuccess:Bool = gradleWProcess.copyDependencies(!attachGradle); // Copies all of Minecraft's dependencies to the `generated/build/minecraft` folder.
 
       if (!copyDependenciesSuccess)
       {
-        CLI.print('Error: Failed to copy dependencies.');
-        return false;
+        throw new GradleException('Failed to copy dependencies.');
       }
 
       if (loader == "fabric")
       {
         CLI.print('Generating sources...');
-        var genSourceSuccess:Bool = gradleWProcess.genSources(); // Generates mapped sources for Minecraft.
+        var genSourceSuccess:Bool = gradleWProcess.genSources(!attachGradle); // Generates mapped sources for Minecraft.
 
         if (!genSourceSuccess)
         {
-          CLI.print('Error: Failed to generate sources.');
-          return false;
+          throw new GradleException('Failed to generate sources.');
         }
 
         CLI.print('Moving sources...');
-        var loomCache:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven'), false, true);
+
+        var loomCache:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven'), true, false);
         for (loomCacheFile in loomCache)
         {
-          if (loomCacheFile.endsWith('-sources.jar'))
-          {
-            IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
-              IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
+          var targetFile:Path = IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven', loomCacheFile);
+
+          if (!IO.exists(targetFile)) {
+            trace('WARNING: Could not copy minecraft build JAR. Potential path length issue?');
+            continue;
           }
-          else if (loomCacheFile.endsWith('.jar'))
+
+          if (targetFile.toString().endsWith('-sources.jar'))
           {
-            IO.copyFile(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven/${loomCacheFile}'),
-              IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
+            IO.copyFile(targetFile, IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
+          }
+          else if (targetFile.toString().endsWith('.jar'))
+          {
+            IO.copyFile(targetFile, IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
           }
         }
       }
@@ -384,6 +392,27 @@ class Build implements ICommand
 
     // Cleanup after Gradle.
     return true;
+  }
+
+  function performMakeMetaINF(defines:PickHaxeDefines):Void {
+    switch (loader)
+    {
+      case 'fabric':
+        CLI.print('Creating meta-inf folder for fabric...');
+        IO.makeDir(IO.workingDir().joinPaths('resources/META-INF'));
+
+        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('resources/fabric.mod.json'));
+        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
+      case 'forge':
+        CLI.print('Creating meta-inf folder for forge...');
+        IO.makeDir(IO.workingDir().joinPaths('resources/META-INF'));
+
+        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('resources/pack.mcmeta'));
+        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('resources/META-INF/mods.toml'));
+        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('resources/META-INF/accesstransformer.cfg'));
+      default:
+        CLI.print('WARNING: Unknown loader Forge...');
+    }
   }
 
   /**
@@ -504,13 +533,13 @@ class Build implements ICommand
       if (jvm)
       {
         // Tell Haxe to include these files in the JAR.
-        args = args.concat(['--resource', 'generated/fabric.mod.json@fabric.mod.json']);
+        // args = args.concat(['--resource', 'generated/resources/fabric.mod.json@fabric.mod.json']);
 
-        var resources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'));
+        var resources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/resources'));
 
         for (resource in resources)
         {
-          args = args.concat(['--resource', 'resources/${resource}@${resource}']);
+          args = args.concat(['--resource', 'generated/resources/${resource}@${resource}']);
         }
       }
       else

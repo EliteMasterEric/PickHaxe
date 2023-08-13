@@ -41,7 +41,7 @@ class Init implements ICommand
 
     var modId:String = CLI.prompt(
       {
-        question: 'Enter your mod ID (e.g. my-test-mod): ',
+        question: 'Enter your mod ID (e.g. mytestmod): ',
         validator: validateModId
       });
 

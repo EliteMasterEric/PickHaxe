@@ -53,14 +53,11 @@ extern class ResourceLocation implements java.lang.Comparable<net.minecraft.reso
   @:badMapping("unknownMethodMapping")
   @:mapping("net.minecraft.resources.ResourceLocation#read(String)")
   public static overload function read(location:String):com.mojang.serialization.DataResult<net.minecraft.resources.ResourceLocation>;
-  @:mapping("method_12832")
   public function getPath():String;
-  @:mapping("method_12836")
   public function getNamespace():String;
   @:badMapping("unknownMethodMapping")
   @:mapping("net.minecraft.resources.ResourceLocation#withPath(String)")
   public overload function withPath(path:String):net.minecraft.resources.ResourceLocation;
-  @:mapping("method_45134")
   public overload function withPath(pathOperator:java.util.function.UnaryOperator<String>):net.minecraft.resources.ResourceLocation;
   @:badMapping("unknownMethodMapping")
   @:mapping("net.minecraft.resources.ResourceLocation#withPrefix(String)")
@@ -71,13 +68,9 @@ extern class ResourceLocation implements java.lang.Comparable<net.minecraft.reso
   public function toString():String;
   public function equals(object:Dynamic):Bool;
   public function hashCode():Int;
-  @:mapping("method_12833")
   public function compareTo(other:net.minecraft.resources.ResourceLocation):Int;
-  @:mapping("method_36181")
   public function toDebugFileName():String;
-  @:mapping("method_42094")
   public overload function toLanguageKey():String;
-  @:mapping("method_43903")
   public function toShortLanguageKey():String;
   @:badMapping("unknownMethodMapping")
   @:mapping("net.minecraft.resources.ResourceLocation#toLanguageKey(String)")
@@ -85,12 +78,9 @@ extern class ResourceLocation implements java.lang.Comparable<net.minecraft.reso
   @:badMapping("unknownMethodMapping")
   @:mapping("net.minecraft.resources.ResourceLocation#toLanguageKey(String,String)")
   public overload function toLanguageKey(string:String, string2:String):String;
-  @:mapping("method_12835")
   public static overload function read(reader:com.mojang.brigadier.StringReader):net.minecraft.resources.ResourceLocation;
-  @:mapping("method_12831")
   public static function isAllowedInResourceLocation(character:Int):Bool;
 
-  @:mapping("method_29184")
   public static function validPathChar(pathChar:Int):Bool;
 
   /**
@@ -110,10 +100,8 @@ extern class ResourceLocation_Serializer implements com.google.gson.JsonDeserial
     implements com.google.gson.JsonSerializer<net.minecraft.resources.ResourceLocation>
 {
   public function new();
-  @:mapping("method_12840")
   public function deserialize(json:com.google.gson.JsonElement, typeOfT:java.lang.reflect.Type,
     context:com.google.gson.JsonDeserializationContext):net.minecraft.resources.ResourceLocation;
-  @:mapping("method_12839")
   public function serialize(resourceLocation:net.minecraft.resources.ResourceLocation, typeOfT:java.lang.reflect.Type,
     context:com.google.gson.JsonSerializationContext):com.google.gson.JsonElement;
 }

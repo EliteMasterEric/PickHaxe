@@ -1,13 +1,15 @@
 package net.pickhaxe.compat.core;
 
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
-#if forge
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
+#if (forge)
 import net.minecraftforge.registries.IForgeRegistry;
 #end
+#if (fabric)
+#end
+import net.pickhaxe.compat.core.Registry;
 
 /**
  * Contains automatic redirects to writeable registries.
@@ -21,21 +23,33 @@ class Registries
 
   static inline function get_BLOCKS():Registry<Block>
   {
-    return BuiltInRegistries.BLOCK;
+    #if minecraft_gteq_1_19_3
+    return net.minecraft.core.registries.BuiltInRegistries.BLOCK;
+    #else
+    return net.minecraft.core.Registry.BLOCK;
+    #end
   }
 
   public static var FLUIDS(get, null):Registry<Fluid>;
 
   static inline function get_FLUIDS():Registry<Fluid>
   {
-    return BuiltInRegistries.FLUID;
+    #if minecraft_gteq_1_19_3
+    return net.minecraft.core.registries.BuiltInRegistries.FLUID;
+    #else
+    return net.minecraft.core.Registry.FLUID;
+    #end
   }
 
   public static var ITEMS(get, null):Registry<Item>;
 
   static inline function get_ITEMS():Registry<Item>
   {
-    return BuiltInRegistries.ITEM;
+    #if minecraft_gteq_1_19_3
+    return net.minecraft.core.registries.BuiltInRegistries.ITEM;
+    #else
+    return net.minecraft.core.Registry.ITEM;
+    #end
   }
   #elseif forge
   public static var BLOCKS(get, null):IForgeRegistry<Block>;

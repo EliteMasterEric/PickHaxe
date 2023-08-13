@@ -27,7 +27,6 @@ class CommonMod #if fabric implements ModInitializer #end
    * Populated automatically by macros.
    */
   // public static final MOD_ID:String;
-
   /**
    * A logger for this mod. Use this for reporting info, debug, and error messages.
    * Populated automatically by macros.
@@ -54,7 +53,8 @@ class CommonMod #if fabric implements ModInitializer #end
    * Main initialization method for the mod.
    * Equivalent to `net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent` in Forge.
    */
-  public function onModInitialize():Void {
+  public function onModInitialize():Void
+  {
     // Do nothing. Override me!
   }
 
@@ -63,7 +63,8 @@ class CommonMod #if fabric implements ModInitializer #end
    * Equivalent to `net.minecraftforge.registries.RegisterEvent` in Forge.
    * NOTE: Only called once.
    */
-  public function onRegister():Void {
+  public function onRegister():Void
+  {
     // Do nothing. Override me!
   }
 
@@ -71,16 +72,17 @@ class CommonMod #if fabric implements ModInitializer #end
    * Called when creative mode tabs are ready to be registered.
    * Equivalent to `net.minecraftforge.event.CreativeModeTabEvent` in Forge.
    */
-  public function onCreativeModeTabRegister():Void {
+  public function onCreativeModeTabRegister():Void
+  {
     // Do nothing. Override me!
   }
 
   //
   // Don't overrride these functions, please.
   //
-
   #if forge
-  public function forge_getEventBus():IEventBus {
+  public function forge_getEventBus():IEventBus
+  {
     return FMLJavaModLoadingContext.get().getModEventBus();
   }
 
@@ -90,8 +92,11 @@ class CommonMod #if fabric implements ModInitializer #end
     // We can rely on this class's events to be called before the Registrar events.
     forge_getEventBus().register(this);
 
-    net.pickhaxe.compat.world.item.CreativeModeTab.CreativeModeTab_ForgeRegistrar.register(forge_getEventBus());
     net.pickhaxe.compat.world.item.Item.Item_ForgeRegistrar.register(forge_getEventBus());
+
+    #if minecraft_gteq_1_19_3
+    net.pickhaxe.compat.world.item.CreativeModeTab.CreativeModeTab_ForgeRegistrar.register(forge_getEventBus());
+    #end
   }
 
   /**
@@ -105,6 +110,7 @@ class CommonMod #if fabric implements ModInitializer #end
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received NewRegistryEvent.');
   }
 
+  #if minecraft_gteq_1_19_3
   /**
    * This event is called when new creative mode tabs may be registered.
    * PickHaxe's CreativeModeTab.register() function MUST be called from this event, it will not work if it is called statically.
@@ -112,11 +118,19 @@ class CommonMod #if fabric implements ModInitializer #end
    * @param event 
    */
   @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
-  public function forge_onCreativeModeTabRegister(event:net.minecraftforge.event.CreativeModeTabEvent.CreativeModeTabEvent_Register):Void {
+  public function forge_onCreativeModeTabRegister(event:net.minecraftforge.event.CreativeModeTabEvent.CreativeModeTabEvent_Register):Void
+  {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received CreativeModeTabEvent.Register.');
     onCreativeModeTabRegister();
   }
+  #else
+  public function forge_onCreativeModeTabRegister():Void {
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod registering Creative Mode tabs.');
+    onCreativeModeTabRegister();
+  }
+  #end
 
+  #if minecraft_gteq_1_19
   /**
    * This event allows for registering objects into the registries.
    * This function is called MULTIPLE times, once for each registry. Be sure to filter the event by registry using `handle()`.
@@ -127,11 +141,36 @@ class CommonMod #if fabric implements ModInitializer #end
   {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received RegisterEvent.');
 
-    if (!hasRegistered) {
+    if (!hasRegistered)
+    {
       hasRegistered = true;
+
+      #if minecraft_lteq_1_19_2
+      forge_onCreativeModeTabRegister();
+      #end
+
       onRegister();
     }
   }
+  #else
+  /**
+   * We add our event handling to the Block registry event, since it is the first registry to be populated.
+   * Blocks, then Items, then all other registries alphabetically.
+   */
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  public function forge_onRegisterBlock(event:net.minecraftforge.event.RegistryEvent.Register<net.minecraft.world.level.block.Block>):Void
+  {
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod received RegistryEvent.Register<Block>.');
+
+    if (!hasRegistered)
+    {
+      hasRegistered = true;
+
+      onRegister();
+    }
+  }
+  #end
+
   var hasRegistered:Bool = false;
 
   /**

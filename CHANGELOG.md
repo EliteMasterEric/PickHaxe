@@ -3,6 +3,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2023-05-??
+## Added
+- Implemented basic support for these versions:
+  - `1.18.2` `fabric`
+  - `1.17.1` `fabric`
+  - `1.16.5` `fabric`
+- Added improved error handling to the PickHaxe tool.
+  - In the event of an error, specific non-zero exit codes will be used for each problem.
+- You can now use `latest` or `latest-snapshot` when defining a target version for `pickhaxe build` and `pickhaxe make`.
+## Changed
+- Moved sample projects to their own repository.
+  - This repo supports Github Actions for automated validation.
+- Mod icon now located in the root of the assets folder, to fix an issue with old versions of Forge Modloader.
+- Modified `pickhaxe setup` to use a script rather than an executable. You should not longer have to rerun it every update.
+## Fixed
+- Fixed an issue where the `pickhaxe clean` command would not work on Windows.
+- Fixed various issues which caused problems with certain versions of Forge.
+- Fixed an issue where the `init` command said dashes were valid in mod IDs.
+- `pickhaxe build` now properly ends if one of the Gradle tasks fails.
+- Fixed various build issues.
+## To Fix
+- [] Broken mod icons on Fabric
+- [] Add working autocomplete to sample/template
+- [] Add proper support for contact information/author name
+- [] Allow non-standard keys in author information
+
+
 ## [0.2.0] - 2023-04-08
 ## Added
 - Implemented basic support for Forge 1.19.3.
@@ -84,11 +111,3 @@ Initial release.
 - Added Made in Haxe sample project.
 - Added Obsidian Armor sample project.
 
-
-## Pending Tasks
-- [ ] The `build` command now automatically calls the `make` command once it completes. This means the build process is now a single step by default. Yay!
-  - [ ] Added the `--no-make` to disable this behavior for testing.
-- [ ] Added a verison check for Java; if the Minecraft version's associated Java version exceeds the JDK's version, builds will fail.
-  - [ ] This means that new versions of Minecraft will fail if JDK 8 is installed, since they require JDK 17.
-  - [ ] Old versions of Minecraft don't fail when building with newer JDKs.
-- [ ] The `build` command now halts if one of the operations fails (such as a Gradle build failing).

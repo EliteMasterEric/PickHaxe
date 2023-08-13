@@ -27,11 +27,8 @@ extern class TrimPatterns
   public static final RIB:net.minecraft.resources.ResourceKey<net.minecraft.world.item.armortrim.TrimPattern>;
   @:mapping("field_42026")
   public static final SPIRE:net.minecraft.resources.ResourceKey<net.minecraft.world.item.armortrim.TrimPattern>;
-  @:mapping("method_48450")
-  public static function bootstrap(bootstapContext:net.minecraft.data.worldgen.BootstapContext<net.minecraft.world.item.armortrim.TrimPattern>):Void;
-  @:mapping("method_48452")
-  public static function nextUpdate(bootstapContext:net.minecraft.data.worldgen.BootstapContext<net.minecraft.world.item.armortrim.TrimPattern>):Void;
-  @:mapping("method_48448")
-  public static function getFromTemplate(registryAccess:net.minecraft.core.RegistryAccess,
+    public static function bootstrap(bootstapContext:net.minecraft.data.worldgen.BootstapContext<net.minecraft.world.item.armortrim.TrimPattern>):Void;
+    public static function nextUpdate(bootstapContext:net.minecraft.data.worldgen.BootstapContext<net.minecraft.world.item.armortrim.TrimPattern>):Void;
+    public static function getFromTemplate(registryAccess:net.minecraft.core.RegistryAccess,
     itemStack:net.minecraft.world.item.ItemStack):java.util.Optional<net.minecraft.core.Holder.Holder_Reference<net.minecraft.world.item.armortrim.TrimPattern>>;
 }

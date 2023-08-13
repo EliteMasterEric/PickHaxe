@@ -30,7 +30,7 @@ class PickHaxeVersionMappingsReader
    */
   public static function read(version:String, stable:Bool = true):PickHaxeVersionMappings
   {
-    var parentDir:Path = IO.libraryDir().joinPaths('metadata/versions', stable ? 'stable' : 'snapshot', 'release-${version}');
+    var parentDir:Path = IO.libraryDir().joinPaths('metadata/versions', stable ? 'stable' : 'snapshot', '${version}');
     var path:Path = parentDir.joinPaths('mappings.json');
 
     try

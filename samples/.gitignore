@@ -1,7 +1,0 @@
-build/
-bin/
-generated/
-dump/
-
-log.txt
-build.hxml

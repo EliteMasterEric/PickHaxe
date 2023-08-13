@@ -1,5 +1,7 @@
 package net.pickhaxe.tools.commands;
 
+import net.pickhaxe.tools.process.Robocopy;
+import net.pickhaxe.tools.util.Platform;
 import net.pickhaxe.tools.commands.Help.CommandInfo;
 
 /**
@@ -38,6 +40,23 @@ class Clean implements ICommand
   {
     CLI.print('Cleaning build files...');
 
+    switch (Platform.detectHostPlatform())
+    {
+      case WINDOWS:
+        performWindows();
+      default:
+        performDefault();
+    }
+  }
+
+  function performWindows():Void {
+    Robocopy.instance.deleteDirectory(IO.workingDir().joinPaths('dump').toString());
+    Robocopy.instance.deleteDirectory(IO.workingDir().joinPaths('generated').toString());
+    
+    performDefault();
+  }
+
+  function performDefault():Void {
     IO.delete(IO.workingDir().joinPaths('dump'));
     IO.delete(IO.workingDir().joinPaths('generated'));
   }

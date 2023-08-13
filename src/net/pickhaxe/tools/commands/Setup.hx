@@ -60,8 +60,8 @@ class Setup implements ICommand
 
     try
     {
-      var source:Path = IO.libraryDir().joinPaths('templates/bin/${Constants.LIBRARY_ID}.exe');
-      var target:Path = haxePath.joinPaths('${Constants.LIBRARY_ID}.exe');
+      var source:Path = IO.libraryDir().joinPaths('templates/bin/${Constants.LIBRARY_ID}.bat');
+      var target:Path = haxePath.joinPaths('${Constants.LIBRARY_ID}.bat');
 
       IO.copyFile(source, target);
     }

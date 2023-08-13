@@ -1,0 +1,5 @@
+{
+  "haxe.configurations": [
+    ["generated/build.hxml"]
+  ]
+}

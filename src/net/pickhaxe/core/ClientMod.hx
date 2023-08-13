@@ -1,7 +1,11 @@
 package net.pickhaxe.core;
 
 #if fabric
+<<<<<<< HEAD
+import net.fabricmc.api.ClientModInitializer;
+=======
 import net.fabricmc.api.ModInitializer;
+>>>>>>> main
 #elseif forge
 #end
 
@@ -13,7 +17,7 @@ import net.fabricmc.api.ModInitializer;
  */
 @:tink
 @:autoBuild(net.pickhaxe.macro.ModCoreMacro.build())
-interface Mod #if fabric extends ModInitializer #end
+class ClientMod #if fabric implements ClientModInitializer #end
 {
   /**
    * The mod ID for this mod.
@@ -27,5 +31,29 @@ interface Mod #if fabric extends ModInitializer #end
    */
   // public static final LOGGER:org.slf4j.Logger;
 
-  
+  /**
+   * The constructor must be public and have no parameters.
+   */
+  public function new()
+  {
+    #if forge
+    forge_registerListeners();
+    #end
+  }
+
+  /**
+   * Main initialization method for the mod.
+   * Equivalent to `net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent` in Forge.
+   */
+   public function onModInitialize():Void {
+    // Do nothing. Override me!
+  }
+
+  #if fabric
+  public function onInitializeClient():Void
+  {
+    // There is no event bus. Just call each of the functions in approximately the order that Forge would.
+    onModInitialize();
+  }
+  #end
 }

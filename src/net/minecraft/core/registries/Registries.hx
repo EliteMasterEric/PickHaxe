@@ -175,8 +175,6 @@ extern class Registries
   public static final DIMENSION:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.Level>>;
   @:mapping("field_41224")
   public static final LEVEL_STEM:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.dimension.LevelStem>>;
-  @:mapping("method_47516")
-  public static function levelStemToLevel(levelStem:net.minecraft.resources.ResourceKey<net.minecraft.world.level.dimension.LevelStem>):net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>;
-  @:mapping("method_47518")
-  public static function levelToLevelStem(level:net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>):net.minecraft.resources.ResourceKey<net.minecraft.world.level.dimension.LevelStem>;
+    public static function levelStemToLevel(levelStem:net.minecraft.resources.ResourceKey<net.minecraft.world.level.dimension.LevelStem>):net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>;
+    public static function levelToLevelStem(level:net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>):net.minecraft.resources.ResourceKey<net.minecraft.world.level.dimension.LevelStem>;
 }

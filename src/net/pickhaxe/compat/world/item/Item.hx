@@ -2,9 +2,6 @@ package net.pickhaxe.compat.world.item;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item as Item_Minecraft;
-#if forge
-import net.minecraftforge.registries.RegisterEvent;
-#end
 
 /**
  * TODO: I wanted this to REPLACE net.minecraft.world.item.Item, 
@@ -57,6 +54,12 @@ class Item_ForgeRegistrar extends net.pickhaxe.compat.forge.ForgeRegistrar<Item_
     net.pickhaxe.core.PickHaxe.logInfo("Queued item: " + resourceLocation);
     return instance.queue(resourceLocation, item);
   }
+
+  #if minecraft_lt_1_19
+  override function applyEntryId(key:ResourceLocation, value:Item_Minecraft) {
+    value.setRegistryName(key);
+  }
+  #end
 
   public override function toString():String
   {

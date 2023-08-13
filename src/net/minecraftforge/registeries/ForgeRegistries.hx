@@ -17,7 +17,8 @@ extern class ForgeRegistries
 
   public static var ENTITY_TYPES(default, never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.entity.EntityType<Dynamic>>;
 
-  public static var BLOCK_ENTITY_TYPES(default, never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.level.block.entity.BlockEntityType<Dynamic>>;
+  public static var BLOCK_ENTITY_TYPES(default,
+    never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.level.block.entity.BlockEntityType<Dynamic>>;
 
   public static var PARTICLE_TYPES(default, never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.core.particles.ParticleType<Dynamic>>;
 
@@ -27,7 +28,8 @@ extern class ForgeRegistries
 
   public static var RECIPE_TYPES(default, never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.item.crafting.RecipeType<Dynamic>>;
 
-  public static var RECIPE_SERIALIZERS(default, never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.item.crafting.RecipeSerializer<Dynamic>>;
+  public static var RECIPE_SERIALIZERS(default,
+    never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.item.crafting.RecipeSerializer<Dynamic>>;
 
   public static var ATTRIBUTES(default, never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.entity.ai.attributes.Attribute>;
 
@@ -40,7 +42,8 @@ extern class ForgeRegistries
 
   public static var POI_TYPES(default, never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.entity.ai.village.poi.PoiType>;
 
-  public static var MEMORY_MODULE_TYPES(default, never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.entity.ai.memory.MemoryModuleType<Dynamic>>;
+  public static var MEMORY_MODULE_TYPES(default,
+    never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.entity.ai.memory.MemoryModuleType<Dynamic>>;
 
   public static var SENSOR_TYPES(default, never):net.minecraftforge.registries.IForgeRegistry<net.minecraft.world.entity.ai.sensing.SensorType<Dynamic>>;
 
@@ -98,7 +101,8 @@ extern class ForgeRegistries_Keys
 
   public static var POTIONS(default, never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.item.alchemy.Potion>>;
 
-  public static var ATTRIBUTES(default, never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.entity.ai.attributes.Attribute>>;
+  public static var ATTRIBUTES(default,
+    never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.entity.ai.attributes.Attribute>>;
 
   public static var STAT_TYPES(default, never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.stats.StatType<Dynamic>>>;
 
@@ -107,9 +111,11 @@ extern class ForgeRegistries_Keys
 
   public static var SOUND_EVENTS(default, never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.sounds.SoundEvent>>;
 
-  public static var ENCHANTMENTS(default, never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.item.enchantment.Enchantment>>;
+  public static var ENCHANTMENTS(default,
+    never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.item.enchantment.Enchantment>>;
 
-  public static var ENTITY_TYPES(default, never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.entity.EntityType<Dynamic>>>;
+  public static var ENTITY_TYPES(default,
+    never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.entity.EntityType<Dynamic>>>;
 
   public static var PAINTING_VARIANTS(default,
     never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.entity.decoration.PaintingVariant>>;
@@ -117,7 +123,8 @@ extern class ForgeRegistries_Keys
   public static var PARTICLE_TYPES(default,
     never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.core.particles.ParticleType<Dynamic>>>;
 
-  public static var MENU_TYPES(default, never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.inventory.MenuType<Dynamic>>>;
+  public static var MENU_TYPES(default,
+    never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.inventory.MenuType<Dynamic>>>;
 
   public static var BLOCK_ENTITY_TYPES(default,
     never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.block.entity.BlockEntityType<Dynamic>>>;
@@ -131,7 +138,8 @@ extern class ForgeRegistries_Keys
   public static var VILLAGER_PROFESSIONS(default,
     never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.entity.npc.VillagerProfession>>;
 
-  public static var POI_TYPES(default, never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.entity.ai.village.poi.PoiType>>;
+  public static var POI_TYPES(default,
+    never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.entity.ai.village.poi.PoiType>>;
 
   public static var MEMORY_MODULE_TYPES(default,
     never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.entity.ai.memory.MemoryModuleType<Dynamic>>>;
@@ -179,7 +187,8 @@ extern class ForgeRegistries_Keys
   public static var HOLDER_SET_TYPES(default,
     never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraftforge.registries.holdersets.HolderSetType>>;
 
-  public static var BIOME_MODIFIERS(default, never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraftforge.common.world.BiomeModifier>>;
+  public static var BIOME_MODIFIERS(default,
+    never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraftforge.common.world.BiomeModifier>>;
 
   public static var STRUCTURE_MODIFIERS(default,
     never):net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraftforge.common.world.StructureModifier>>;

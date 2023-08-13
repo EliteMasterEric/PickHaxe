@@ -3,6 +3,7 @@ package net.minecraft.core.registries;
 import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.Registry;
 
+#if minecraft_gteq_1_19_3
 @:native("net.minecraft.core.registries.BuiltInRegistries")
 @:mapping("net.minecraft.class_7923")
 extern class BuiltInRegistries
@@ -81,6 +82,7 @@ extern class BuiltInRegistries
   #end
   public static function bootStrap():Void;
 }
+#end
 
 @:functionalInterface // This interface acts as a lambda.
 @:native("net.minecraft.core.registries.BuiltInRegistries$RegistryBootstrap")

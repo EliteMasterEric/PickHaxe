@@ -1,5 +1,7 @@
 package net.pickhaxe.tools;
 
+import net.pickhaxe.tools.util.Error;
+import net.pickhaxe.tools.util.Error.PickHaxeException;
 import net.pickhaxe.tools.commands.Make;
 import net.pickhaxe.tools.process.Haxe;
 import net.pickhaxe.tools.commands.Clean;
@@ -119,14 +121,27 @@ class Main
       }
     }
 
-    try {
+    try
+    {
       Haxe.instance.validateVersion();
-    } catch (error:haxe.Exception) {
-      CLI.print('A fatal exception occurred within PickHaxe while performing this operation.');
-     
+    }
+    catch (pickhaxeError:PickHaxeException)
+    {
+      CLI.print('An exception occurred within PickHaxe while performing this operation.');
+
+      CLI.print('${pickhaxeError.message}');
+      CLI.print('${pickhaxeError.stack}');
+
+      pickhaxeError.exit();
+    }
+    catch (error:haxe.Exception)
+    {
+      CLI.print('An unknown exception occurred within PickHaxe while performing this operation.');
+
       CLI.print('${error.message}');
       CLI.print('${error.stack}');
-      return;
+
+      Error.exit(UNKNOWN);
     }
 
     if (command == null)
@@ -187,11 +202,24 @@ class Main
         default:
           CLI.print('Case fallthrough for command ${command}.');
       }
-    } catch (error) {
-      CLI.print('A fatal exception occurred within PickHaxe while performing this operation.');
-     
+    }
+    catch (pickhaxeError:PickHaxeException)
+    {
+      CLI.print('An exception occurred within PickHaxe while performing this operation.');
+
+      CLI.print('${pickhaxeError.message}');
+      CLI.print('${pickhaxeError.stack}');
+
+      pickhaxeError.exit();
+    }
+    catch (error:haxe.Exception)
+    {
+      CLI.print('An unknown exception occurred within PickHaxe while performing this operation.');
+
       CLI.print('${error.message}');
       CLI.print('${error.stack}');
+
+      Error.exit(UNKNOWN);
     }
   }
 }

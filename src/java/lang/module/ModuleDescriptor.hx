@@ -5,6 +5,4 @@ package java.lang.module;
  * They are a restricted form of class ideal for immutable data carriers.
  */
 @:dce
-extern abstract class ModuleDescriptor
-{
-}
+extern abstract class ModuleDescriptor {}

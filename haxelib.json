@@ -6,8 +6,8 @@
   "classPath": "src",
   "description": "A Haxe framework to build Minecraft mods. Fabric, Forge, and more.",
   "contributors": ["MasterEric"],
-  "releasenote": "Initial support for Forge.",
-  "version": "0.2.0",
+  "releasenote": "Support for 1.18, 1.17, 1.16.",
+  "version": "0.3.0",
   "dependencies": {
     "thx.semver": "",
     "tink_lang": "",

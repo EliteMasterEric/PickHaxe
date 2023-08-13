@@ -1,5 +1,6 @@
 package net.minecraftforge.registeries;
 
+#if (forge && minecraft_gteq_1_19)
 @:native("net.minecraftforge.registries.RegisterEvent")
 extern class RegisterEvent extends net.minecraftforge.eventbus.api.Event implements net.minecraftforge.fml.event.IModBusEvent
 {
@@ -29,3 +30,4 @@ extern interface RegisterEvent_RegisterHelper<T:Dynamic>
 }
 
 typedef RegisterHelper<T> = RegisterEvent_RegisterHelper<T>;
+#end

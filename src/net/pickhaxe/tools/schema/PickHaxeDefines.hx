@@ -1,5 +1,7 @@
 package net.pickhaxe.tools.schema;
 
+import net.pickhaxe.tools.util.Error.NoProjectXMLException;
+import net.pickhaxe.tools.util.Error.UnknownLoaderException;
 import net.pickhaxe.tools.schema.PickHaxeProject.HaxelibEntry;
 import net.pickhaxe.tools.schema.FabricMeta.FabricMetaLoaderVersionData;
 import net.pickhaxe.api.Parchment;
@@ -29,8 +31,7 @@ typedef PickHaxeDefinesPickHaxe =
   version:String,
   haxe:
   {
-    libraries:Array<HaxelibEntry>,
-    version:String,
+    libraries:Array<HaxelibEntry>, version:String,
   },
   gradle:
   {
@@ -42,11 +43,7 @@ typedef PickHaxeDefinesPickHaxe =
   },
   minecraft:
   {
-    release:Bool,
-    snapshot:Bool,
-    version:String,
-    resourcePackFormat:Int,
-    dataPackFormat:Int,
+    release:Bool, snapshot:Bool, version:String, resourcePackFormat:Int, dataPackFormat:Int,
   },
   loader:
   {
@@ -55,7 +52,7 @@ typedef PickHaxeDefinesPickHaxe =
       apiVersion:String, loaderVersion:String,
     }, forge:
     {
-      apiVersion:String,
+      apiVersion:String, fmlVersion:String,
     }
   },
   mappings:
@@ -65,8 +62,7 @@ typedef PickHaxeDefinesPickHaxe =
       version:String
     }, parchment:
     {
-      maven:String,
-      version:String
+      maven:String, version:String
     }, intermediary:
     {
       maven:String, version:String
@@ -83,10 +79,8 @@ typedef PickHaxeDefinesMod =
   parentPackage:String,
   version:String,
   description:String,
-
   entryPoints:Array<PickHaxeProject.ModEntryPoint>,
-
-  license: String,
+  license:String,
 }
 
 typedef BuildParams =
@@ -117,11 +111,15 @@ class Builder
   {
     params = validateBuildParams(params);
 
+    CLI.print("Reading project file...");
+
     var projectFile:PickHaxeProject = net.pickhaxe.tools.util.XML.readProjectFile(IO.workingDir().joinPaths('project.xml'));
+
+    CLI.print("Read project file.");
 
     if (projectFile == null)
     {
-      throw 'Could not find project.xml file.';
+      throw new NoProjectXMLException();
     }
 
     return switch (params.loader)
@@ -140,6 +138,9 @@ class Builder
     if (params.loader == null) throw 'Loader must be specified.';
     if (params.mcVersion == null) throw 'Minecraft version must be specified.';
 
+    if (params.mcVersion == 'latest') params.mcVersion = MCVersion.getLatestStableVersion();
+    if (params.mcVersion == 'latest-snapshot') params.mcVersion = MCVersion.getLatestVersion();
+
     params.noMapping = params.noMapping ?? false;
     params.mappings = params.mappings ?? 'parchment';
 
@@ -149,33 +150,44 @@ class Builder
   static function buildFabric(projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
   {
     var versionMetadata:PickHaxeVersionMetadata = PickHaxeVersionMetadataReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
-    var versionMappings:PickHaxeVersionMappings = PickHaxeVersionMappingsReader.read(params.mcVersion, MCVersion.isVersionStable(params.mcVersion));
 
     var mojangVersionData:VersionData = Mojang.fetchVersionData(params.mcVersion);
-    if (mojangVersionData == null) {
+    if (mojangVersionData == null)
+    {
       throw 'Could not load Mojang version data from API for version ${params.mcVersion}';
-    } else {
+    }
+    else
+    {
       CLI.print('Mojang version: ${mojangVersionData.id}', Verbose);
     }
 
     var fabricLoaderData:FabricMetaLoaderVersionData = FabricMeta.fetchLoaderDataForGameVersion(params.mcVersion)[0];
-    if (fabricLoaderData == null) {
+    if (fabricLoaderData == null)
+    {
       throw 'Could not load Fabric loader data from API for version ${params.mcVersion}';
-    } else {
+    }
+    else
+    {
       CLI.print('Fabric loader version: ${fabricLoaderData.loader.version}', Verbose);
     }
 
     var fabricYarnData:FabricMetaYarnDataItem = FabricMeta.fetchYarnData(params.mcVersion)[0];
-    if (fabricYarnData == null) {
+    if (fabricYarnData == null)
+    {
       throw 'Could not load Fabric Yarn data from API for version ${params.mcVersion}';
-    } else {
+    }
+    else
+    {
       CLI.print('Fabric yarn version: ${fabricYarnData.version}', Verbose);
     }
 
     var fabricIntermediaryData:FabricMetaIntermediaryDataItem = FabricMeta.fetchIntermediaryData(params.mcVersion)[0];
-    if (fabricIntermediaryData == null) {
+    if (fabricIntermediaryData == null)
+    {
       throw 'Could not load Fabric Intermediary data from API for version ${params.mcVersion}';
-    } else {
+    }
+    else
+    {
       CLI.print('Fabric intermediary version: ${fabricIntermediaryData.version}', Verbose);
     }
 
@@ -192,14 +204,18 @@ class Builder
 
       var currentVersion = params.mcVersion;
       var previousVersion:String = params.mcVersion;
-      while (parchmentVersion == null) {
+      while (parchmentVersion == null)
+      {
         previousVersion = isSnapshot ? MCVersion.getPreviousSnapshotVersion(previousVersion) : MCVersion.getPreviousVersion(previousVersion);
-        
-        if (previousVersion == null) {
+
+        if (previousVersion == null)
+        {
           CLI.print('Warning: Could not load Parchment version from API for version $previousVersion, falling back to plain MojMaps with no Parchment.');
           currentMappings = 'mojang';
           break;
-        } else {
+        }
+        else
+        {
           CLI.print('Warning: Could not load Parchment version from API for version ${currentVersion}, trying $previousVersion');
         }
 
@@ -207,7 +223,8 @@ class Builder
 
         parchmentVersion = Parchment.fetchParchmentVersion(currentVersion);
 
-        if (parchmentVersion == null) {
+        if (parchmentVersion == null)
+        {
           continue;
         }
         else
@@ -265,7 +282,8 @@ class Builder
                 },
               forge:
                 {
-                  apiVersion: null
+                  apiVersion: null,
+                  fmlVersion: null,
                 },
             },
 
@@ -322,19 +340,29 @@ class Builder
       // Otherwise, we check for mappings of the previous release.
       var isSnapshot = MCVersion.isVersionSnapshot(params.mcVersion);
 
-      while (parchmentVersion == null) {
-        var previousVersion:String = isSnapshot ? MCVersion.getPreviousSnapshotVersion(params.mcVersion) : MCVersion.getPreviousVersion(params.mcVersion);
-        CLI.print('Warning: Could not load Parchment version from API for version ${params.mcVersion}, trying $previousVersion');
+      var currentVersion = params.mcVersion;
+      var previousVersion:String = params.mcVersion;
+      while (parchmentVersion == null)
+      {
+        previousVersion = null; // isSnapshot ? MCVersion.getPreviousSnapshotVersion(params.mcVersion) : MCVersion.getPreviousVersion(currentVersion);
 
-        if (previousVersion == null) {
+        if (previousVersion == null)
+        {
           CLI.print('Warning: Could not load Parchment version from API for version $previousVersion, falling back to plain MojMaps with no Parchment.');
           currentMappings = 'mojang';
           break;
         }
+        else
+        {
+          CLI.print('Warning: Could not load Parchment version from API for version ${currentVersion}, trying $previousVersion');
+        }
 
-        parchmentVersion = Parchment.fetchParchmentVersion(previousVersion);
+        currentVersion = previousVersion;
 
-        if (parchmentVersion == null) {
+        parchmentVersion = Parchment.fetchParchmentVersion(currentVersion);
+
+        if (parchmentVersion == null)
+        {
           continue;
         }
         else
@@ -346,7 +374,7 @@ class Builder
         }
       }
     }
-    
+
     return {
       pickhaxe:
         {
@@ -383,11 +411,13 @@ class Builder
               forge:
                 {
                   apiVersion: versionMetadata.forgeVersion,
+                  fmlVersion: versionMetadata.fmlVersion,
                 },
-              fabric: {
-                apiVersion: null,
-                loaderVersion: null
-              }
+              fabric:
+                {
+                  apiVersion: null,
+                  loaderVersion: null
+                }
             },
 
           mappings:
@@ -436,15 +466,22 @@ class Builder
     result.append(DEFINE, 'pickhaxe.gradle.version=${defines.pickhaxe.gradle.version}');
     result.append(DEFINE, 'pickhaxe.java.version=${defines.pickhaxe.java.version}');
     result.append(DEFINE, 'pickhaxe.loader.current=${defines.pickhaxe.loader.current}');
-    if (defines.pickhaxe.loader.fabric.apiVersion != null) result.append(DEFINE, 'pickhaxe.loader.fabric.apiVersion=${defines.pickhaxe.loader.fabric.apiVersion}');
-    if (defines.pickhaxe.loader.fabric.loaderVersion != null) result.append(DEFINE, 'pickhaxe.loader.fabric.loaderVersion=${defines.pickhaxe.loader.fabric.loaderVersion}');
-    if (defines.pickhaxe.loader.forge.apiVersion != null) result.append(DEFINE, 'pickhaxe.loader.forge.apiVersion=${defines.pickhaxe.loader.forge.apiVersion}');
+    if (defines.pickhaxe.loader.fabric.apiVersion != null) result.append(DEFINE,
+      'pickhaxe.loader.fabric.apiVersion=${defines.pickhaxe.loader.fabric.apiVersion}');
+    if (defines.pickhaxe.loader.fabric.loaderVersion != null) result.append(DEFINE,
+      'pickhaxe.loader.fabric.loaderVersion=${defines.pickhaxe.loader.fabric.loaderVersion}');
+    if (defines.pickhaxe.loader.forge.apiVersion != null) result.append(DEFINE,
+      'pickhaxe.loader.forge.apiVersion=${defines.pickhaxe.loader.forge.apiVersion}');
     result.append(DEFINE, 'pickhaxe.mappings.enabled=${defines.pickhaxe.mappings.enabled}');
     result.append(DEFINE, 'pickhaxe.mappings.current=${defines.pickhaxe.mappings.current}');
-    if (defines.pickhaxe.mappings.intermediary.maven != null) result.append(DEFINE, 'pickhaxe.mappings.intermediary.maven=${defines.pickhaxe.mappings.intermediary.maven}');
-    if (defines.pickhaxe.mappings.intermediary.version != null) result.append(DEFINE, 'pickhaxe.mappings.intermediary.version=${defines.pickhaxe.mappings.intermediary.version}');
-    if (defines.pickhaxe.mappings.parchment.maven != null) result.append(DEFINE, 'pickhaxe.mappings.parchment.maven=${defines.pickhaxe.mappings.parchment.maven}');
-    if (defines.pickhaxe.mappings.parchment.version != null) result.append(DEFINE, 'pickhaxe.mappings.parchment.version=${defines.pickhaxe.mappings.parchment.version}');
+    if (defines.pickhaxe.mappings.intermediary.maven != null) result.append(DEFINE,
+      'pickhaxe.mappings.intermediary.maven=${defines.pickhaxe.mappings.intermediary.maven}');
+    if (defines.pickhaxe.mappings.intermediary.version != null) result.append(DEFINE,
+      'pickhaxe.mappings.intermediary.version=${defines.pickhaxe.mappings.intermediary.version}');
+    if (defines.pickhaxe.mappings.parchment.maven != null) result.append(DEFINE,
+      'pickhaxe.mappings.parchment.maven=${defines.pickhaxe.mappings.parchment.maven}');
+    if (defines.pickhaxe.mappings.parchment.version != null) result.append(DEFINE,
+      'pickhaxe.mappings.parchment.version=${defines.pickhaxe.mappings.parchment.version}');
     if (defines.pickhaxe.mappings.yarn.version != null) result.append(DEFINE, 'pickhaxe.mappings.yarn.version=${defines.pickhaxe.mappings.yarn.version}');
     result.append(DEFINE, 'pickhaxe.minecraft.version=${defines.pickhaxe.minecraft.version}');
     result.append(DEFINE, 'pickhaxe.minecraft.resourcePackFormat=${defines.pickhaxe.minecraft.resourcePackFormat}');

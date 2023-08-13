@@ -5,6 +5,4 @@ package java.lang;
  * They are a restricted form of class ideal for immutable data carriers.
  */
 @:dce
-extern abstract class ModuleLayer
-{
-}
+extern abstract class ModuleLayer {}

@@ -10,11 +10,9 @@ extern class RegistryDataLoader
   public static final WORLDGEN_REGISTRIES:java.util.List<net.minecraft.resources.RegistryDataLoader.RegistryData<Dynamic>>;
   @:mapping("field_39969")
   public static final DIMENSION_REGISTRIES:java.util.List<net.minecraft.resources.RegistryDataLoader.RegistryData<Dynamic>>;
-  @:mapping("method_45121")
   public static function load(resourceManager:net.minecraft.server.packs.resources.ResourceManager, registryAccess:net.minecraft.core.RegistryAccess,
     registryData2:java.util.List<net.minecraft.resources.RegistryDataLoader.RegistryData<Dynamic>>):net.minecraft.core.RegistryAccess.Frozen;
 
-  @:mapping("method_45122")
   static function loadRegistryContents<E>(registryInfoLookup:net.minecraft.resources.RegistryOps.RegistryInfoLookup,
     resourceManager:net.minecraft.server.packs.resources.ResourceManager, resourceKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<E>>,
     writableRegistry:net.minecraft.core.WritableRegistry<E>, decoder:com.mojang.serialization.Decoder<E>,
@@ -38,7 +36,6 @@ typedef Loader = RegistryDataLoader_Loader;
 final extern class RegistryDataLoader_RegistryData<T> extends java.lang.Record
 {
   public function new(key:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<T>>, elementCodec:com.mojang.serialization.Codec<T>);
-  @:mapping("method_45131")
   function create(registryLifecycle:com.mojang.serialization.Lifecycle,
     map:java.util.Map<net.minecraft.resources.ResourceKey<Dynamic>,
       java.lang.Exception>):com.mojang.datafixers.util.Pair<net.minecraft.core.WritableRegistry<Dynamic>, net.minecraft.resources.RegistryDataLoader.Loader>;

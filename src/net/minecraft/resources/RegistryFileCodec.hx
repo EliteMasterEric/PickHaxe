@@ -10,11 +10,9 @@ final extern class RegistryFileCodec<E> implements com.mojang.serialization.Code
   /**
    * Creates a codec for a single registry element, which is held as an un-resolved `Supplier<E>`. Both inline definitions of the object, and references to an existing registry element id are allowed.@param : registryKey The registry which elements may belong to.@param : elementCodec The codec used to decode either inline definitions, or elements before entering them into the registry.
    */
-  @:mapping("method_29749")
   public static overload function create<E>(registryKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<E>>,
     elementCodec:com.mojang.serialization.Codec<E>):net.minecraft.resources.RegistryFileCodec<E>;
 
-  @:mapping("method_31192")
   public static overload function create<E>(registryKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<E>>,
     elementCodec:com.mojang.serialization.Codec<E>, allowInline:Bool):net.minecraft.resources.RegistryFileCodec<E>;
 

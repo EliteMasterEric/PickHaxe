@@ -4,7 +4,6 @@ package net.minecraft.world.item.crafting;
  * Interface `FabricIngredient` injected by mod fabric-recipe-api-v1 when RECIPE-API is installed.
  */
 @:native("net.minecraft.world.item.crafting.Ingredient")
-@:mapping("net.minecraft.class_1856")
 final extern class Ingredient implements java.util.function.Predicate<net.minecraft.world.item.ItemStack> // implements net.fabricmc.fabric.api.recipe.v1.ingredient.FabricIngredient
 {
   public static final EMPTY:net.minecraft.world.item.crafting.Ingredient;
@@ -15,35 +14,39 @@ final extern class Ingredient implements java.util.function.Predicate<net.minecr
   public function toJson():com.google.gson.JsonElement;
   public function isEmpty():Bool;
 
-  /*
-   * TODO: How to resolve these?
-   * These functions share names with each other before mappings are applied, but don't after.
-   * Haxe is assuming they do, so only the first one is applied.
-   * If we remove `overload`, Haxe complains that the functions have the same name.
-   * If we add `extern`, Haxe never applies the mappings at all.
-   * 
-   * Current solution is to rename the functions (this is not ideal as it is a breaking API change)
-   */
-  @:native("of")
-  public static overload function of():net.minecraft.world.item.crafting.Ingredient;
-  @:native("of")
-  public static function ofItemsNative(items:java.NativeArray<net.minecraft.world.level.ItemLike>):net.minecraft.world.item.crafting.Ingredient;
-  // public static overload function of(items:java.NativeArray<net.minecraft.world.level.ItemLike>):net.minecraft.world.item.crafting.Ingredient;
-  @:native("of")
-  public static overload function ofStacks(stacks:java.NativeArray<net.minecraft.world.item.ItemStack>):net.minecraft.world.item.crafting.Ingredient;
-
   /**
-   * Construct an Ingredient from a Haxe `Array<ItemLike>`.
-   * @param items The items to construct the Ingredient from.
-   * @return The constructed Ingredient.
+   * Returns an empty Ingredient.
    */
-  public static inline function ofItems(items:Array<net.minecraft.world.level.ItemLike>):net.minecraft.world.item.crafting.Ingredient
+  public static overload function of():net.minecraft.world.item.crafting.Ingredient;
+  public static overload function of(items:java.NativeArray<net.minecraft.world.level.ItemLike>):net.minecraft.world.item.crafting.Ingredient;
+  public static overload function of(stacks:java.NativeArray<net.minecraft.world.item.ItemStack>):net.minecraft.world.item.crafting.Ingredient;
+  public static overload function of(stacks:java.util.stream.Stream<net.minecraft.world.item.ItemStack>):net.minecraft.world.item.crafting.Ingredient;
+  #if minecraft_gteq_1_19
+  public static overload function of(tag:net.minecraft.tags.TagKey<net.minecraft.world.item.Item>):net.minecraft.world.item.crafting.Ingredient;
+  #else
+  public static overload function of(tag:net.minecraft.tags.Tag<net.minecraft.world.item.Item>):net.minecraft.world.item.crafting.Ingredient;
+  #end
+
+  public static extern inline overload function of(items:Array<net.minecraft.world.level.ItemLike>):net.minecraft.world.item.crafting.Ingredient
   {
-    return ofItemsNative(net.pickhaxe.java.NativeArrayUtil.fromArray(items));
+    return of(net.pickhaxe.java.NativeArrayUtil.fromArray(items));
   }
 
-  public static function ofStackStream(stacks:java.util.stream.Stream<net.minecraft.world.item.ItemStack>):net.minecraft.world.item.crafting.Ingredient;
-  public static function ofTag(tag:net.minecraft.tags.TagKey<net.minecraft.world.item.Item>):net.minecraft.world.item.crafting.Ingredient;
+  public static extern inline overload function of(...items:net.minecraft.world.level.ItemLike):net.minecraft.world.item.crafting.Ingredient
+  {
+    return of(net.pickhaxe.java.NativeArrayUtil.fromArray(items));
+  }
+
+  public static extern inline overload function of(stacks:Array<net.minecraft.world.item.ItemStack>):net.minecraft.world.item.crafting.Ingredient
+  {
+    return of(net.pickhaxe.java.NativeArrayUtil.fromArray(stacks));
+  }
+
+  public static extern inline overload function of(...stacks:net.minecraft.world.item.ItemStack):net.minecraft.world.item.crafting.Ingredient
+  {
+    return of(net.pickhaxe.java.NativeArrayUtil.fromArray(stacks));
+  }
+
   public static function fromNetwork(buffer:net.minecraft.network.FriendlyByteBuf):net.minecraft.world.item.crafting.Ingredient;
   public static function fromJson(json:Null<com.google.gson.JsonElement>):net.minecraft.world.item.crafting.Ingredient;
 
@@ -53,7 +56,6 @@ final extern class Ingredient implements java.util.function.Predicate<net.minecr
 }
 
 @:native("net.minecraft.world.item.crafting.Ingredient$Value")
-@:mapping("net.minecraft.class_1856$class_1859")
 extern interface Ingredient_Value
 {
   public function getItems():java.util.Collection<net.minecraft.world.item.ItemStack>;
@@ -63,20 +65,19 @@ extern interface Ingredient_Value
 typedef Value = Ingredient_Value;
 
 @:native("net.minecraft.world.item.crafting.Ingredient$TagValue")
-@:realPath("net.minecraft.world.item.crafting.Ingredient_TagValue")
-@:mapping("net.minecraft.class_1856$class_1858")
 extern class Ingredient_TagValue implements net.minecraft.world.item.crafting.Ingredient.Value
 {
+  #if minecraft_gteq_1_18_2
   public function new(tagKey:net.minecraft.tags.TagKey<net.minecraft.world.item.Item>);
+  #else
+  public function new(tagKey:net.minecraft.tags.Tag<net.minecraft.world.item.Item>);
+  #end
   public function getItems():java.util.Collection<net.minecraft.world.item.ItemStack>;
   public function serialize():com.google.gson.JsonObject;
 }
-
 typedef TagValue = Ingredient_TagValue;
 
 @:native("net.minecraft.world.item.crafting.Ingredient$ItemValue")
-@:realPath("net.minecraft.world.item.crafting.Ingredient_ItemValue")
-@:mapping("net.minecraft.class_1856$class_1857")
 extern class Ingredient_ItemValue implements net.minecraft.world.item.crafting.Ingredient.Value
 {
   public function new(itemStack:net.minecraft.world.item.ItemStack);

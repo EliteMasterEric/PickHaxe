@@ -4,8 +4,7 @@ package net.minecraft.world.item;
  * Interface `FabricItemStack` injected by mod fabric-item-api-v1, BUT ONLY 2.1.9+
  */
 @:native("net.minecraft.world.item.ItemStack")
-@:mapping("net.minecraft.class_1799")
-final extern class ItemStack #if fabric implements net.fabricmc.fabric.api.item.v1.FabricItemStack #end
+final extern class ItemStack #if (fabric && minecraft_gteq_1_19_2) implements net.fabricmc.fabric.api.item.v1.FabricItemStack #end
 {
   public static final CODEC:com.mojang.serialization.Codec<net.minecraft.world.item.ItemStack>;
   public static final EMPTY:net.minecraft.world.item.ItemStack;
@@ -16,12 +15,15 @@ final extern class ItemStack #if fabric implements net.fabricmc.fabric.api.item.
   public static final TAG_LORE:String;
   public static final TAG_DAMAGE:String;
   public static final TAG_COLOR:String;
+  #if minecraft_gteq_1_17
   public function getTooltipImage():java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent>;
+  #end
   public overload function new(itemLike:net.minecraft.world.level.ItemLike);
-  public overload function new(holder:net.minecraft.core.Holder<net.minecraft.world.item.Item>);
-
-  public overload function new(holder:net.minecraft.core.Holder<net.minecraft.world.item.Item>, i:Int);
   public overload function new(itemLike:net.minecraft.world.level.ItemLike, i:Int);
+  #if minecraft_gteq_1_18_2
+  public overload function new(holder:net.minecraft.core.Holder<net.minecraft.world.item.Item>);
+  public overload function new(holder:net.minecraft.core.Holder<net.minecraft.world.item.Item>, i:Int);
+  #end
   public static function of(compoundTag:net.minecraft.nbt.CompoundTag):net.minecraft.world.item.ItemStack;
   public function isEmpty():Bool;
   public function isItemEnabled(enabledFlags:net.minecraft.world.flag.FeatureFlagSet):Bool;
@@ -36,12 +38,19 @@ final extern class ItemStack #if fabric implements net.fabricmc.fabric.api.item.
    */
   public function getItem():net.minecraft.world.item.Item;
 
+  #if minecraft_gteq_1_18_2
   public function getItemHolder():net.minecraft.core.Holder<net.minecraft.world.item.Item>;
-  public overload function is(tag:net.minecraft.tags.TagKey<net.minecraft.world.item.Item>):Bool;
+  #end
+
   public overload function is(item:net.minecraft.world.item.Item):Bool;
+  #if minecraft_gteq_1_18_2
   public overload function is(predicate:java.util.function.Predicate<net.minecraft.core.Holder<net.minecraft.world.item.Item>>):Bool;
   public overload function is(holder:net.minecraft.core.Holder<net.minecraft.world.item.Item>):Bool;
+  public overload function is(tag:net.minecraft.tags.TagKey<net.minecraft.world.item.Item>):Bool;
   public function getTags():java.util.stream.Stream<net.minecraft.tags.TagKey<net.minecraft.world.item.Item>>;
+  #else
+  public overload function is(tag:net.minecraft.tags.Tag<net.minecraft.world.item.Item>):Bool;
+  #end
   public function useOn(context:net.minecraft.world.item.context.UseOnContext):net.minecraft.world.InteractionResult;
   public function getDestroySpeed(state:net.minecraft.world.level.block.state.BlockState):Single;
 
@@ -99,10 +108,12 @@ final extern class ItemStack #if fabric implements net.fabricmc.fabric.api.item.
   public function isBarVisible():Bool;
   public function getBarWidth():Int;
   public function getBarColor():Int;
+  #if minecraft_gteq_1_17
   public function overrideStackedOnOther(slot:net.minecraft.world.inventory.Slot, action:net.minecraft.world.inventory.ClickAction,
     player:net.minecraft.world.entity.player.Player):Bool;
   public function overrideOtherStackedOnMe(stack:net.minecraft.world.item.ItemStack, slot:net.minecraft.world.inventory.Slot,
     action:net.minecraft.world.inventory.ClickAction, player:net.minecraft.world.entity.player.Player, access:net.minecraft.world.entity.SlotAccess):Bool;
+  #end
 
   /**
    * Calls the delegated method to the Item to damage the incoming Entity, and if necessary, triggers a stats increase.
@@ -300,7 +311,6 @@ final extern class ItemStack #if fabric implements net.fabricmc.fabric.api.item.
 }
 
 @:native("net.minecraft.world.item.ItemStack$TooltipPart")
-@:mapping("net.minecraft.class_1799$class_5422")
 final extern class ItemStack_TooltipPart extends java.lang.Enum<net.minecraft.world.item.ItemStack.TooltipPart>
 {
   public static function values():java.NativeArray<net.minecraft.world.item.ItemStack.TooltipPart>;

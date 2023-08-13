@@ -26,7 +26,7 @@ class MCVersion
   }
 
   /**
-   * Return true if the string is a stable Minecraft version.
+   * Return true if the string is a valid, stable Minecraft version.
    * @param version The version to check.
    * @return True if the version is stable.
    */
@@ -37,7 +37,7 @@ class MCVersion
   }
 
   /**
-   * Return true if the string is a snapshot Minecraft version.
+   * Return true if the string is a valid, snapshot Minecraft version.
    * @param version The version to check.
    * @return True if the version is a snapshot.
    */
@@ -48,7 +48,7 @@ class MCVersion
   }
 
   /**
-   * Return true if the string is a beta Minecraft version.
+   * Return true if the string is a valid, beta Minecraft version.
    * @param version The version to check.
    * @return True if the version is an old beta.
    */
@@ -66,6 +66,32 @@ class MCVersion
   public static function isLoaderValid(loader:String)
   {
     return Constants.MINECRAFT_LOADERS.contains(loader);
+  }
+
+  /**
+   * Returns the latest Minecraft version.
+   * @return A stable OR snapshot version string.
+   */
+   public static function getLatestVersion():String {
+    var latestVersion:MinecraftVersion = Mojang.getByIndex(0);
+
+    return latestVersion.id;
+  }
+
+  /**
+   * Returns the latest stable Minecraft version.
+   * @return A stable version string.
+   */
+  public static function getLatestStableVersion():String {
+    var latestVersion:String = Mojang.getByIndex(0).id;
+    while (isVersionValid(latestVersion)) {
+      if (!isVersionStable(latestVersion)) {
+        latestVersion = getPreviousVersion(latestVersion);
+      } else {
+        return latestVersion;
+      }
+    }
+    return null;
   }
 
   /**
@@ -178,6 +204,71 @@ class MCVersion
 
     return nextVersion.id;
   }
+  
+  /**
+   * Get a list of the previous Minecraft versions.
+   */
+   public static function getPreviousVersions(mcVersion:String):Array<String> {
+    var results:Array<String> = [];
+
+    var result:String = getPreviousVersion(mcVersion);
+    while (result != null) {
+      results.push(result);
+      result = getPreviousVersion(result);
+    }
+
+    return results;
+  }
+
+  /**
+   * Get a list of the next Minecraft versions.
+   */
+  public static function getNextVersions(mcVersion:String):Array<String> {
+    var results:Array<String> = [];
+
+    var result:String = getNextVersion(mcVersion);
+    while (result != null) {
+      results.push(result);
+      result = getNextVersion(result);
+    }
+
+    return results;
+  }
+
+  /**
+   * Return true if the target version is in the ruleVersion's previous versions.
+   */
+  public static function isLessThanVersion(targetVersion:String, ruleVersion:String):Bool {
+    var result:String = getPreviousVersion(ruleVersion);
+    while (result != null) {
+      if (result == targetVersion) return true;
+      result = getPreviousVersion(result);
+    }
+    return false;
+  }
+  
+  /**
+   * Return true if the target version is in the ruleVersion's next versions.
+   */
+  public static function isGreaterThanVersion(targetVersion:String, ruleVersion:String):Bool {
+    var result:String = getNextVersion(ruleVersion);
+    while (result != null) {
+      if (result == targetVersion) return true;
+      result = getNextVersion(result);
+    }
+    return false;
+  }
+
+  public static function isLessThanOrEqualToVersion(targetVersion:String, ruleVersion:String):Bool {
+    if (targetVersion == ruleVersion) return true;
+    return isLessThanVersion(targetVersion, ruleVersion);
+  }
+
+  public static function isGreaterThanOrEqualToVersion(targetVersion:String, ruleVersion:String):Bool {
+    if (targetVersion == ruleVersion) return true;
+    return isGreaterThanVersion(targetVersion, ruleVersion);
+  }
+
 
   /**
    * TODO: Unhardcode this, but how?

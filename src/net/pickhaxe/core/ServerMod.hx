@@ -20,12 +20,9 @@ interface Mod #if fabric extends ModInitializer #end
    * Populated automatically by macros.
    */
   // public static final MOD_ID:String;
-
   /**
    * A logger for this mod. Use this for reporting info, debug, and error messages.
    * Populated automatically by macros.
    */
   // public static final LOGGER:org.slf4j.Logger;
-
-  
 }

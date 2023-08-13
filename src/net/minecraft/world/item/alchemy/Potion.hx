@@ -27,12 +27,10 @@ extern class Potion
   /**
    * Gets the base effects applied by the potion.@return The effects applied by the potion.
    */
-  @:mapping("method_8049")
-  public function getEffects():java.util.List<net.minecraft.world.effect.MobEffectInstance>;
+    public function getEffects():java.util.List<net.minecraft.world.effect.MobEffectInstance>;
 
   /**
    * Checks if the potion contains any instant effects such as instant health or instant damage.@return Whether the potion contained an instant effect.
    */
-  @:mapping("method_8050")
-  public function hasInstantEffects():Bool;
+    public function hasInstantEffects():Bool;
 }
