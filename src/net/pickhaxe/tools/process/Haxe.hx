@@ -46,9 +46,14 @@ class Haxe extends CLIProcess
 
   public function validateVersion():Void {
     var version:thx.semver.Version = getVersion();
-    if (version.major < 4 || version.minor < 3) {
+    if (version.major < 5) {
+      throw new HaxeVersionException(version, "5.0.0-alpha+");
+    }
+    /*
+    if (version.major < 4 || (version.major == 4 && version.minor < 3)) {
       throw new HaxeVersionException(version, "4.3.0+");
     }
+    */
   }
 
   public function getVersion():thx.semver.Version {

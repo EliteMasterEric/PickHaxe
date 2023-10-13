@@ -27,7 +27,7 @@ class Build implements ICommand
   var attachGradle:Bool = false;
   var noResources:Bool = false;
   var noMapping:Bool = true; // Default to TRUE!
-  var genSources:Bool = true; // Default to TRUE!
+  var genSources:Bool = false;
   var dumpType:String = null;
   var clean:Bool = false;
   var loader:String;
@@ -106,13 +106,13 @@ class Build implements ICommand
         {
           short: null,
           long: 'gen-sources',
-          blurb: 'Produce .java files rather than a .jar file',
+          blurb: 'Produce .java files rather than a .jar file (Java target)',
           value: null,
         },
         {
           short: null,
           long: 'gen-archive',
-          blurb: 'Produce a .jar file rather than a .java files',
+          blurb: 'Produce a .jar file rather than a .java files (JVM target)',
           value: null,
         },
         {
@@ -150,6 +150,7 @@ class Build implements ICommand
         mcVersion: mcVersion,
         noMapping: noMapping,
         mappings: mappings,
+        jvm: !genSources,
       });
 
     var result:Bool = performGradleSetup(defines);
@@ -329,6 +330,9 @@ class Build implements ICommand
       // Remove the old Minecraft dependencies
     }
 
+    // Generate the META-INF folder, including access transformers/wideners.
+    performMakeMetaINF(defines);
+
     // Move into `generated` folder.
     Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
     CLI.print('Switched working directory: ${IO.workingDir().toString()}', Verbose);
@@ -401,17 +405,17 @@ class Build implements ICommand
     {
       case 'fabric':
         CLI.print('Creating meta-inf folder for fabric...');
-        IO.makeDir(IO.workingDir().joinPaths('resources/META-INF'));
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
 
-        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('resources/fabric.mod.json'));
-        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
+        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('generated/resources/fabric.mod.json'));
+        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('generated/resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
       case 'forge':
         CLI.print('Creating meta-inf folder for forge...');
-        IO.makeDir(IO.workingDir().joinPaths('resources/META-INF'));
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
 
-        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('resources/pack.mcmeta'));
-        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('resources/META-INF/mods.toml'));
-        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('resources/META-INF/accesstransformer.cfg'));
+        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('generated/resources/pack.mcmeta'));
+        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('generated/resources/META-INF/mods.toml'));
+        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('generated/resources/META-INF/accesstransformer.cfg'));
       default:
         CLI.print('WARNING: Unknown loader Forge...');
     }
@@ -480,8 +484,9 @@ class Build implements ICommand
     {
       if (jarExtern.endsWith('.jar'))
       {
-        // args = args.concat(['--java-lib-extern', './generated/build/minecraft/${jarExtern}']);
-        args = args.concat(['--java-lib', './generated/build/minecraft/${jarExtern}']);
+        // If `extern`, library is not exported into the `lib/` folder.
+        args = args.concat(['--java-lib-extern', './generated/build/minecraft/${jarExtern}']);
+        // args = args.concat(['--java-lib', './generated/build/minecraft/${jarExtern}']);
       }
     }
 
@@ -489,14 +494,18 @@ class Build implements ICommand
     if (jvm)
     {
       CLI.print('Compiling to Java ${defines.pickhaxe.java.version}...');
+      // --c-arg: Add Java compilation args
       args = args.concat(['--c-arg', '-source']);
       args = args.concat(['--c-arg', '${defines.pickhaxe.java.version}']);
       args = args.concat(['--c-arg', '-target']);
       args = args.concat(['--c-arg', '${defines.pickhaxe.java.version}']);
+      // haxe.noNativeLibsCache: Native libraries are cached internally during build process.
+      // args = args.concat(['--define', 'haxe.noNativeLibsCache']);
+      // TODO: How to 
 
       args = args.concat([
         '--jvm',
-        './build/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${defines.pickhaxe.mod.id}-${defines.pickhaxe.mod.version}.jar'
+        './build/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${defines.pickhaxe.mod.id}-${defines.pickhaxe.mod.version}-dev.jar'
       ]);
     }
     else
@@ -525,7 +534,8 @@ class Build implements ICommand
         // Do nothing.
     }
 
-    args = args.concat(['--define', 'java-ver=17']);
+    // TODO: java-ver only supports 5-7
+    //args = args.concat(['--define', 'java-ver=17']);
 
     // We don't need an entry point for this.
     args = args.concat(['--define', 'no-root']);
@@ -541,6 +551,7 @@ class Build implements ICommand
 
         for (resource in resources)
         {
+          CLI.print('Adding resource:' + 'generated/resources/${resource}@${resource}');
           args = args.concat(['--resource', 'generated/resources/${resource}@${resource}']);
         }
       }

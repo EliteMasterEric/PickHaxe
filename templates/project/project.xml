@@ -10,8 +10,8 @@
 
   <!-- An entry point can be CLIENT, SERVER, or *, defaulting to * (both) -->
   <mod-entry-point
-    environment="#{pickhaxe.mod.entryPoint.init.environment}"
-    value="#{pickhaxe.mod.entryPoint.init.value}"
+    environment="#{pickhaxe.mod.entryPoint.environment}"
+    value="#{pickhaxe.mod.entryPoint.class}"
   />
 
   <mod-metadata 

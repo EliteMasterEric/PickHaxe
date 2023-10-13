@@ -31,7 +31,7 @@ typedef PickHaxeDefinesPickHaxe =
   version:String,
   haxe:
   {
-    libraries:Array<HaxelibEntry>, version:String,
+    libraries:Array<HaxelibEntry>, version:String, jvm:String
   },
   gradle:
   {
@@ -87,6 +87,7 @@ typedef BuildParams =
 {
   loader:String,
   mcVersion:String,
+  jvm:Bool,
   ?noMapping:Bool,
   ?mappings:String,
 }
@@ -249,6 +250,7 @@ class Builder
             {
               libraries: projectFile.haxelibs,
               version: Constants.HAXE_VERSION,
+              jvm: params.jvm ? 'jvm' : '',
             },
 
           java:
@@ -384,6 +386,7 @@ class Builder
             {
               libraries: projectFile.haxelibs,
               version: Constants.HAXE_VERSION,
+              jvm: params.jvm ? 'jvm' : '',
             },
 
           java:
@@ -463,6 +466,7 @@ class Builder
 
     // result = result.concat(DEFINE, 'pickhaxe.version=' + defines.pickhaxe.version); // Use `pickhaxe` instead.
     // result.append(DEFINE, 'pickhaxe.gradle.version=${defines.pickhaxe.gradle.version}'); // Use `haxe` instead.
+    result.append(DEFINE, 'pickhaxe.haxe.jvm=${defines.pickhaxe.haxe.jvm}');
     result.append(DEFINE, 'pickhaxe.gradle.version=${defines.pickhaxe.gradle.version}');
     result.append(DEFINE, 'pickhaxe.java.version=${defines.pickhaxe.java.version}');
     result.append(DEFINE, 'pickhaxe.loader.current=${defines.pickhaxe.loader.current}');
