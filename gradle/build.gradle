@@ -245,7 +245,6 @@ if (System.getProperty('pickhaxe.haxe.jvm').equals('true')) {
     archiveFileName = "../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
   }
 } else {
-  remapJar {}
 }
 
 if (System.getProperty('pickhaxe.loader.current').equals('fabric')) {

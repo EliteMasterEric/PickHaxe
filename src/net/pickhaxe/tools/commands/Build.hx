@@ -330,9 +330,6 @@ class Build implements ICommand
       // Remove the old Minecraft dependencies
     }
 
-    // Generate the META-INF folder, including access transformers/wideners.
-    performMakeMetaINF(defines);
-
     // Move into `generated` folder.
     Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
     CLI.print('Switched working directory: ${IO.workingDir().toString()}', Verbose);
