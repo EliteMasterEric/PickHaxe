@@ -250,7 +250,7 @@ class Builder
             {
               libraries: projectFile.haxelibs,
               version: Constants.HAXE_VERSION,
-              jvm: params.jvm ? 'jvm' : '',
+              jvm: params.jvm ? 'true' : 'false',
             },
 
           java:
@@ -386,7 +386,7 @@ class Builder
             {
               libraries: projectFile.haxelibs,
               version: Constants.HAXE_VERSION,
-              jvm: params.jvm ? 'jvm' : '',
+              jvm: params.jvm ? 'true' : 'false',
             },
 
           java:

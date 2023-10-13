@@ -242,7 +242,7 @@ shadowJar {
 if (System.getProperty('pickhaxe.haxe.jvm').equals('true')) {
   remapJar {
     input = file("../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
-    archiveFileName = "../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
+    archiveFileName = "../../../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
   }
 } else {
 }

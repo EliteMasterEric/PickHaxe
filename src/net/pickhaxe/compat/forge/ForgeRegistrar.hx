@@ -62,7 +62,7 @@ class ForgeRegistrar<T>
   /**
    * Called whenever ANY registry is ready for entries.
    */
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function onRegister(event:net.minecraftforge.registries.RegisterEvent)
   {
     net.pickhaxe.core.PickHaxe.logDebug('ForgeRegistrar received RegisterEvent');
@@ -102,7 +102,7 @@ class ForgeRegistrar<T>
    * The registries will be visited in alphabetic order of their name, except blocks and items,
    * which will be visited FIRST and SECOND respectively.
    */
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function onRegister(event:net.minecraftforge.event.RegistryEvent.Register<T>)
   {
     net.pickhaxe.core.PickHaxe.logDebug('ForgeRegistrar received RegistryEvent');

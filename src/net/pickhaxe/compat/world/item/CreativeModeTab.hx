@@ -171,7 +171,7 @@ class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeR
   }
 
   #if minecraft_gteq_1_19_3
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function onRegister(event:net.minecraftforge.event.CreativeModeTabEvent.CreativeModeTabEvent_Register):Void
   {
     net.pickhaxe.core.PickHaxe.logInfo('Registering ${registry.size()} Creative Mode tabs...');

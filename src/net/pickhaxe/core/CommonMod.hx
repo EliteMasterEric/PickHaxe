@@ -104,7 +104,7 @@ class CommonMod #if fabric implements ModInitializer #end
    * This function is called once.
    * @param event The event object.
    */
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function forge_onNewRegistry(event:net.minecraftforge.registries.NewRegistryEvent):Void
   {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received NewRegistryEvent.');
@@ -117,7 +117,7 @@ class CommonMod #if fabric implements ModInitializer #end
    * This function is called once.
    * @param event 
    */
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function forge_onCreativeModeTabRegister(event:net.minecraftforge.event.CreativeModeTabEvent.CreativeModeTabEvent_Register):Void
   {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received CreativeModeTabEvent.Register.');
@@ -136,7 +136,7 @@ class CommonMod #if fabric implements ModInitializer #end
    * This function is called MULTIPLE times, once for each registry. Be sure to filter the event by registry using `handle()`.
    * @param event The event object.
    */
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function forge_onRegister(event:net.minecraftforge.registries.RegisterEvent):Void
   {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received RegisterEvent.');
@@ -157,7 +157,7 @@ class CommonMod #if fabric implements ModInitializer #end
    * We add our event handling to the Block registry event, since it is the first registry to be populated.
    * Blocks, then Items, then all other registries alphabetically.
    */
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function forge_onRegisterBlock(event:net.minecraftforge.event.RegistryEvent.Register<net.minecraft.world.level.block.Block>):Void
   {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received RegistryEvent.Register<Block>.');
@@ -178,7 +178,7 @@ class CommonMod #if fabric implements ModInitializer #end
    * This function is called once.
    * @param event The event object.
    */
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function forge_onInitialize(event:net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent):Void
   {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received FMLCommonSetupEvent.');
