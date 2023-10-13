@@ -18,7 +18,7 @@ class GradleW implements ICommand
 
   var loader:String;
   var mcVersion:String;
-  var genSources:Bool = false;
+  var genSources:Bool = true;
 
   var task:String;
   var additionalArgs:Array<String>;

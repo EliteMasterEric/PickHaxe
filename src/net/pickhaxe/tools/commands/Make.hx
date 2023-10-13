@@ -19,7 +19,7 @@ class Make implements ICommand
   var loader:String;
   var mcVersion:String;
   var mappings:String;
-  var genSources:Bool = false;
+  var genSources:Bool = true;
 
   var additionalArgs:Array<String>;
 

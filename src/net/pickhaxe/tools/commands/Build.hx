@@ -27,7 +27,7 @@ class Build implements ICommand
   var attachGradle:Bool = false;
   var noResources:Bool = false;
   var noMapping:Bool = true; // Default to TRUE!
-  var genSources:Bool = false;
+  var genSources:Bool = true;
   var dumpType:String = null;
   var clean:Bool = false;
   var loader:String;
