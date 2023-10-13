@@ -156,9 +156,6 @@ class Build implements ICommand
 
     if (!result) return;
 
-    // Do this AFTER performGradleSetup so they don't get deleted, ehe.
-    performMakeMetaINF(defines);
-
     // Move back to the parent of the working dir.
     Sys.setCwd(IO.workingDir().dir);
 
@@ -296,6 +293,7 @@ class Build implements ICommand
 
     // Create the `generated` folder and all subfolders.
     IO.makeDir(IO.workingDir().joinPaths('generated'));
+
     var gradleDirs:Array<String> = IO.readDirectory(IO.libraryDir().joinPaths('gradle'), false, true);
     for (gradleDir in gradleDirs)
     {
@@ -334,6 +332,10 @@ class Build implements ICommand
     // Move into `generated` folder.
     Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
     CLI.print('Switched working directory: ${IO.workingDir().toString()}', Verbose);
+
+    // Create mod manifest and access widener files.
+    // Do this AFTER Gradle cleanup so they don't get deleted.
+    performMakeMetaINF(defines);
 
     // Perform actual gradle steps.
     if (shouldPerformGradle)

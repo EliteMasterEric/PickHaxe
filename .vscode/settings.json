@@ -2,5 +2,6 @@
   // Force spaces for indentation.
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "editor.detectIndentation": false
+  "editor.detectIndentation": false,
+  "java.configuration.updateBuildConfiguration": "disabled"
 }
