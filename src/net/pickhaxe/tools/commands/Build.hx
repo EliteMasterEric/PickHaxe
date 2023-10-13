@@ -330,13 +330,13 @@ class Build implements ICommand
       // Remove the old Minecraft dependencies
     }
 
-    // Move into `generated` folder.
-    Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
-    CLI.print('Switched working directory: ${IO.workingDir().toString()}', Verbose);
-
     // Create mod manifest and access widener files.
     // Do this AFTER Gradle cleanup so they don't get deleted.
     performMakeMetaINF(defines);
+
+    // Move into `generated` folder.
+    Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
+    CLI.print('Switched working directory: ${IO.workingDir().toString()}', Verbose);
 
     // Perform actual gradle steps.
     if (shouldPerformGradle)
