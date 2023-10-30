@@ -39,10 +39,8 @@ plugins {
 // Select the Gradle plugin based on the loader.
 switch(System.getProperty('pickhaxe.loader.current')) {
   case 'forge':
-    apply plugin: 'net.minecraftforge.gradle'
-    apply plugin: 'net.minecraftforge.gradle.mcp'
-    // apply plugin: 'net.minecraftforge.gradle.patcher'
-    apply plugin: 'org.parchmentmc.librarian.forgegradle'
+      apply plugin: 'net.minecraftforge.gradle'
+      apply plugin: 'org.parchmentmc.librarian.forgegradle'
     break
   case 'fabric':
     apply plugin: 'fabric-loom'
@@ -248,30 +246,24 @@ if (System.getProperty('pickhaxe.loader.current').equals('fabric') && System.get
     input = file("../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
     archiveFileName = "../../../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
   }
-} else if (System.getProperty('pickhaxe.loader.current').equals('forge') && System.getProperty('pickhaxe.haxe.jvm').equals('true')) {
-  // Had to recreate this task here because `net.minecraftforge.gradle.patches` is incompatible with `net.minecraftforge.gradle`
-  task createMcp2Srg(type: net.minecraftforge.gradle.mcp.tasks.GenerateSRG) {
-    setReverse(true)
+} else if (System.getProperty('pickhaxe.loader.current').equals('forge') && System.getProperty('pickhaxe.haxe.jvm').equals('true') && System.getProperty('pickhaxe.task').equals('reobfSourcesJar')) {
+  task sourcesJar(type: Jar) {
+    from zipTree("../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
   }
 
-  task reobfSourcesJar(type: net.minecraftforge.gradle.userdev.tasks.RenameJar, dependsOn: tasks.createMcp2Srg) {
-    input = file("../../../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
-    output = file("../../../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar")
-    mappings = tasks.createMcp2Srg.srg
+  reobf {
+    sourcesJar {
+      finalizedBy('copyReobfSourcesJar')
+    } 
   }
-  // task copyReobfSourcesJar(type: Copy) {
-  //   def buildFile = file("$buildDir/reobfSourcesJar/output.jar")
-  //   from buildFile
-  //   into "../../../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
-  // }
 
-  // reobf.create('sourcesJar')
-  // reobf {
-  //   sourcesJar {
-  //     getInput().set(file("../../../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar"))
-  //     // finalizedBy 'copyReobfSourcesJar'
-  //   } 
-  // }
+  task copyReobfSourcesJar(type: Copy) {
+    from("$buildDir/reobfSourcesJar") {
+      rename "output.jar", "${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
+    }
+    exclude '**/*.txt'
+    into "../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/"
+  }
 }
 
 if (System.getProperty('pickhaxe.loader.current').equals('fabric')) {
