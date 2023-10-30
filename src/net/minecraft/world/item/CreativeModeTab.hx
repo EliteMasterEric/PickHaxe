@@ -5,7 +5,9 @@ package net.minecraft.world.item;
  */
 @:native("net.minecraft.world.item.CreativeModeTab")
 @:mapping("net.minecraft.class_1761")
-extern #if (minecraft_lteq_1_19_2) abstract #end class CreativeModeTab #if (fabric && minecraft_gteq_1_19_3) implements net.fabricmc.fabric.api.itemgroup.v1.IdentifiableItemGroup #end
+extern #if (minecraft_lteq_1_19_2) abstract #end class CreativeModeTab
+  #if (fabric && minecraft_gteq_1_19_3 && minecraft_lt_1_20) implements net.fabricmc.fabric.api.itemgroup.v1.IdentifiableItemGroup #end
+  // IdentifiableItemGroup was completely removed in 1.20.
 {
   // Extern access to the static fields.
   public static final TABS:Array<CreativeModeTab>;

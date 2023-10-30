@@ -10,6 +10,7 @@
   "version": "0.4.0",
   "dependencies": {
     "thx.semver": "",
+    "json2object": "",
     "tink_lang": "",
     "tink_macro": "",
     "tink_xml": ""

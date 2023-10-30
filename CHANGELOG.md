@@ -7,14 +7,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## Added
 - Updated JVM target to be functional, and to be the default mode (to allow for improved code generation from Haxe).
   - In this mode, Pickhaxe will now generate an unmapped "dev" JAR rather than a set of Java source files.
+- Fixes to mod metadata now add `authors` and `contributors`
 ## Changed
 - Haxe dependency updated to require `5.0.0-alpha` (unless they end up releasing a 4.3.2).
 ## Fixed
+- Fixed an issue where mod icons were not displaying. Make sure the icon is located at `resources/assets/<modid>_icon.png` so it works.
 ## To Fix
-- [] Broken mod icons on Fabric
-- [] Add working autocomplete to sample/template
-- [] Add proper support for contact information/author name
-- [] Allow non-standard keys in author information
+- [] Fabric 1.19.2: https://github.com/HaxeFoundation/haxe/issues/11352
+- [X] Fabric 1.19.3
+- [X] Fabric 1.19.4
+- [X] Fabric 1.20
+- [] Fabric 1.20.1: 
+- [] Fabric 1.20.2: 
+- [] Fabric 1.20.3 (Snapshot): 
+- [] Forge 1.19.2: https://github.com/HaxeFoundation/haxe/issues/11352
+- [] Forge 1.19.3: https://github.com/EliteMasterEric/PickHaxe/issues/23
+- [] Forge 1.19.4: https://github.com/EliteMasterEric/PickHaxe/issues/23
+- Prompt to clean when switching versions, and save last version
+- Option to auto-make
+
 
 
 ## [0.3.0] - 2023-07-10

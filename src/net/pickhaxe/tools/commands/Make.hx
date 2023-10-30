@@ -19,7 +19,7 @@ class Make implements ICommand
   var loader:String;
   var mcVersion:String;
   var mappings:String;
-  var genSources:Bool = true;
+  var genSources:Bool = false; // Default to genArchive.
 
   var additionalArgs:Array<String>;
 
@@ -187,8 +187,15 @@ class Make implements ICommand
       trace('build');
       result = gradleW.performTask(["build"].concat(additionalArgs));
     } else {
-      trace('remapJar');
-      result = gradleW.performTask(["remapJar"].concat(additionalArgs));
+      if (loader == 'forge') {
+        trace('reobfSourcesJar');
+        result = gradleW.performTask(["reobfSourcesJar"].concat(additionalArgs));
+      } else if (loader == 'fabric') {
+        trace('remapJar');
+        result = gradleW.performTask(["remapJar"].concat(additionalArgs));
+      } else {
+        trace('[WARNING] Unknown loader (${loader}) for make task.');
+      }
     }
 
     // Move back to the parent of the workding dir.

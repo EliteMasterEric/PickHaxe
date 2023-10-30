@@ -27,7 +27,7 @@ class Build implements ICommand
   var attachGradle:Bool = false;
   var noResources:Bool = false;
   var noMapping:Bool = true; // Default to TRUE!
-  var genSources:Bool = true;
+  var genSources:Bool = false; // Default to genArchive.
   var dumpType:String = null;
   var clean:Bool = false;
   var loader:String;
@@ -541,12 +541,17 @@ class Build implements ICommand
     {
       if (jvm)
       {
-        // Tell Haxe to include these files in the JAR.
-        // args = args.concat(['--resource', 'generated/resources/fabric.mod.json@fabric.mod.json']);
+        CLI.print('Adding resources...');
 
-        var resources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/resources'));
+        var baseResources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'));
+        for (resource in baseResources)
+        {
+          CLI.print('Adding resource:' + 'resources/${resource}@${resource}');
+          args = args.concat(['--resource', 'resources/${resource}@${resource}']);
+        }
 
-        for (resource in resources)
+        var generatedResources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/resources'));
+        for (resource in generatedResources)
         {
           CLI.print('Adding resource:' + 'generated/resources/${resource}@${resource}');
           args = args.concat(['--resource', 'generated/resources/${resource}@${resource}']);

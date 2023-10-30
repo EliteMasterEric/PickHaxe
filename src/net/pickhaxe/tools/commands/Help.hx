@@ -307,8 +307,8 @@ typedef CommandInfo =
  */
 typedef CommandOption =
 {
-  short:Null<String>,
-  long:Null<String>,
-  blurb:String,
-  value:Null<String>
+  var blurb:String;
+  var ?short:String;
+  var ?long:String;
+  var ?value:String;
 };

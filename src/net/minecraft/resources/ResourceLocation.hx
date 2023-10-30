@@ -10,17 +10,12 @@ package net.minecraft.resources;
  *  Generally, and by the implementation of `#toString()`, the string representation of this class is expressed in the form `namespace:path`. The colon is also used as the default separator for parsing strings as a `ResourceLocation`.@see net.minecraft.resources.ResourceKey
  */
 @:native("net.minecraft.resources.ResourceLocation")
-@:mapping("net.minecraft.class_2960")
-extern class ResourceLocation implements java.lang.Comparable<net.minecraft.resources.ResourceLocation>
+extern class ResourceLocation extends java.lang.Object implements java.lang.Comparable<net.minecraft.resources.ResourceLocation>
 {
-  @:mapping("field_25139")
   public static final CODEC:com.mojang.serialization.Codec<net.minecraft.resources.ResourceLocation>;
 
-  @:mapping("field_33380")
   public static final NAMESPACE_SEPARATOR:Int;
-  @:mapping("field_33381")
   public static final DEFAULT_NAMESPACE:String;
-  @:mapping("field_33382")
   public static final REALMS_NAMESPACE:String;
 
   public overload function new(string:String, string2:String);
@@ -32,8 +27,6 @@ extern class ResourceLocation implements java.lang.Comparable<net.minecraft.reso
    *  
    *  If the `separator` char is not present in the `location`, the namespace defaults to `minecraft`, taking the `location` as the path.@throws net.minecraft.ResourceLocationException if there is a non ,{@code [a-z0-9_.-]}, character in the decomposed namespace or a non ,{@code [a-z0-9/._-]}, character in the decomposed path.@see #tryParse(String)@see #isValidResourceLocation(String)@param : location the location string to parse as a ,{@code ResourceLocation}@param : separator the separator to separate the namespace and path by. This should not be any of these characters: ,{@code [a-z0-9/._-]},.
    */
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.resources.ResourceLocation#of(String,char)")
   public static function of(location:String, separator:Int):net.minecraft.resources.ResourceLocation;
 
   /**
@@ -42,28 +35,16 @@ extern class ResourceLocation implements java.lang.Comparable<net.minecraft.reso
    *  
    *  If no colon is present in the `location`, the namespace defaults to `minecraft`, taking the `location` as the path.@return the parsed resource location; otherwise ,{@code null}, if there is a non ,{@code [a-z0-9_.-]}, character in the decomposed namespace or a non ,{@code [a-z0-9/._-]}, character in the decomposed path@see #of(String, char)@param : location the location string to try to parse as a ,{@code ResourceLocation}
    */
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.resources.ResourceLocation#tryParse(String)")
   public static function tryParse(location:String):Null<net.minecraft.resources.ResourceLocation>;
 
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.resources.ResourceLocation#tryBuild(String,String)")
   public static function tryBuild(namespace:String, path:String):Null<net.minecraft.resources.ResourceLocation>;
 
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.resources.ResourceLocation#read(String)")
   public static overload function read(location:String):com.mojang.serialization.DataResult<net.minecraft.resources.ResourceLocation>;
   public function getPath():String;
   public function getNamespace():String;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.resources.ResourceLocation#withPath(String)")
   public overload function withPath(path:String):net.minecraft.resources.ResourceLocation;
   public overload function withPath(pathOperator:java.util.function.UnaryOperator<String>):net.minecraft.resources.ResourceLocation;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.resources.ResourceLocation#withPrefix(String)")
   public function withPrefix(pathPrefix:String):net.minecraft.resources.ResourceLocation;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.resources.ResourceLocation#withSuffix(String)")
   public function withSuffix(string:String):net.minecraft.resources.ResourceLocation;
   public function toString():String;
   public function equals(object:Dynamic):Bool;
@@ -72,11 +53,7 @@ extern class ResourceLocation implements java.lang.Comparable<net.minecraft.reso
   public function toDebugFileName():String;
   public overload function toLanguageKey():String;
   public function toShortLanguageKey():String;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.resources.ResourceLocation#toLanguageKey(String)")
   public overload function toLanguageKey(type:String):String;
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.resources.ResourceLocation#toLanguageKey(String,String)")
   public overload function toLanguageKey(string:String, string2:String):String;
   public static overload function read(reader:com.mojang.brigadier.StringReader):net.minecraft.resources.ResourceLocation;
   public static function isAllowedInResourceLocation(character:Int):Bool;
@@ -88,14 +65,11 @@ extern class ResourceLocation implements java.lang.Comparable<net.minecraft.reso
    *  
    *  If no colon is present in the `location`, the namespace defaults to `minecraft`, taking the `location` as the path.@return {@code true}, if both the decomposed namespace and path are valid@see #isValidPath(String)@see #isValidNamespace(String)
    */
-  @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.resources.ResourceLocation#isValidResourceLocation(String)")
   public static function isValidResourceLocation(location:String):Bool;
 }
 
 @:native("net.minecraft.resources.ResourceLocation$Serializer")
 @:realPath("net.minecraft.resources.ResourceLocation_Serializer")
-@:mapping("net.minecraft.class_2960$class_2961")
 extern class ResourceLocation_Serializer implements com.google.gson.JsonDeserializer<net.minecraft.resources.ResourceLocation>
     implements com.google.gson.JsonSerializer<net.minecraft.resources.ResourceLocation>
 {

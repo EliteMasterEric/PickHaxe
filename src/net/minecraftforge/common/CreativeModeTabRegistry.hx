@@ -16,6 +16,6 @@ extern class CreativeModeTabRegistry
   /**
    * Made available by an access transformer.
    */
-  public static function processCreativeModeTab(creativeModeTab:net.minecraft.world.item.CreativeModeTab, name:net.minecraft.resources.ResourceLocation,
-    afterEntries:java.util.List<java.lang.Object>, beforeEntries:java.util.List<java.lang.Object>):Void;
+  public static function processCreativeModeTab<T:java.lang.Object, U:java.lang.Object>(creativeModeTab:net.minecraft.world.item.CreativeModeTab, name:net.minecraft.resources.ResourceLocation,
+    afterEntries:java.util.List<T>, beforeEntries:java.util.List<U>):Void;
 }

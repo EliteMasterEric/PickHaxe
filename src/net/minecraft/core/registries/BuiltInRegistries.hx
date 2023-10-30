@@ -76,6 +76,9 @@ extern class BuiltInRegistries
   public static final FROG_VARIANT:Registry<net.minecraft.world.entity.animal.FrogVariant>;
   public static final BANNER_PATTERN:Registry<net.minecraft.world.level.block.entity.BannerPattern>;
   public static final INSTRUMENT:Registry<net.minecraft.world.item.Instrument>;
+  #if minecraft_gteq_1_20
+  public static final CREATIVE_MODE_TAB:Registry<net.minecraft.world.item.CreativeModeTab>;
+  #end
   public static final REGISTRY:Registry<net.minecraft.core.Registry<Dynamic>>;
   #if minecraft_eq_23w13a_or_b
   public static final RULE:Registry<net.minecraft.voting.rules.Rule>;

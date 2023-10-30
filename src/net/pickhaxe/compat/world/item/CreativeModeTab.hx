@@ -15,12 +15,14 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
   /**
    * Calls the appropriate function to register a new Creative Mode tab, depending on the loader.
    * @param resourceLocation The ID to assign to the tab.
-   * @param before An array of Creative Mode tabs to place the new tab before. Optional.
-   * @param after An array of Creative Mode tabs to place the new tab after. Optional.
+   * @param before An array of IDs for Creative Mode tabs to place before the new tab. Optional.
+   * @param after An array of IDs for Creative Mode tabs to place after the new tab. Optional.
    */
-  public function register(resourceLocation:ResourceLocation, ?before:Array<CreativeModeTab>, ?after:Array<CreativeModeTab>):CreativeModeTab
+  public function register(resourceLocation:ResourceLocation, ?before:Array<ResourceLocation>, ?after:Array<ResourceLocation>):CreativeModeTab
   {
-    #if (fabric && minecraft_gteq_1_19_3)
+    #if (fabric && minecraft_gteq_1_20)
+    net.pickhaxe.compat.core.Registries.CREATIVE_MODE_TABS.register(resourceLocation, this);
+    #elseif (fabric && minecraft_gteq_1_19_3)
     abstract.setId(resourceLocation); // Fabric sets the displayName for us based on the ID.
     this.displayName = buildDisplayName(resourceLocation);
     net.fabricmc.fabric.impl.itemgroup.ItemGroupHelper.appendItemGroup(this);
@@ -33,6 +35,7 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
     net.pickhaxe.core.PickHaxe.logInfo('Set language ID of Creative Mode Tab to "${this.langId}".');
     #end
     this.displayName = buildDisplayName(resourceLocation);
+    net.pickhaxe.core.PickHaxe.logDebug('Queuing CreativeModeTab ${resourceLocation.getNamespace()}:${resourceLocation.getPath()} for registration.');
     #if (forge && minecraft_gt_1_19_3)
     CreativeModeTab_ForgeRegistrar.queue(resourceLocation,
       {
@@ -48,7 +51,7 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
     return this;
   }
 
-  #if fabric
+  #if (fabric && minecraft_lteq_1_19_4)
   /**
    * @see https://github.com/FabricMC/fabric/blob/36f990282f52d8aa7150a5b6771b022d5cf3227e/fabric-item-group-api-v1/src/main/java/net/fabricmc/fabric/impl/itemgroup/FabricItemGroupBuilderImpl.java
    */
@@ -128,8 +131,8 @@ class CreativeModeTab_BuilderResult extends net.minecraft.world.item.CreativeMod
 typedef CreativeModeTab_ForgeRegistrarEntry =
 {
   tab:CreativeModeTab,
-  before:Array<CreativeModeTab>,
-  after:Array<CreativeModeTab>
+  before:Array<ResourceLocation>,
+  after:Array<ResourceLocation>
 };
 
 class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeRegistrar
@@ -137,9 +140,9 @@ class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeR
   /**
    * Custom creative mode tabs are placed after the Spawn Eggs tab by default.
    */  
-  static final DEFAULT_AFTER_ENTRIES:Array<net.minecraft.world.item.CreativeModeTab> = [
+  static final DEFAULT_AFTER_ENTRIES:Array<ResourceLocation> = [
     #if minecraft_gteq_1_19_3
-    net.minecraft.world.item.CreativeModeTabs.SPAWN_EGGS
+    new ResourceLocation("spawn_eggs")
     #end
   ];
 
@@ -199,30 +202,24 @@ class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeR
       return;
     }
     var creativeModeTab:CreativeModeTab = entry.value.tab;
-    var before:Array<CreativeModeTab> = entry.value.before;
-    var after:Array<CreativeModeTab> = entry.value.after;
+    var before:Array<ResourceLocation> = entry.value.before ?? [];
+    var after:Array<ResourceLocation> = entry.value.after;
 
-    var beforeList:java.util.List<java.lang.Object> = if (before == null)
+    var beforeList:java.util.List<ResourceLocation> = net.pickhaxe.java.util.List.of(before);
+
+    var afterList:java.util.List<ResourceLocation> = if (after == null || after.length == 0)
     {
-      net.pickhaxe.java.util.List.ofGeneric([]);
+      net.pickhaxe.java.util.List.of(DEFAULT_AFTER_ENTRIES);
     }
     else
     {
-      net.pickhaxe.java.util.List.ofGeneric(before);
-    }
-
-    var afterList:java.util.List<java.lang.Object> = if (after == null || after.length == 0)
-    {
-      net.pickhaxe.java.util.List.ofGeneric(DEFAULT_AFTER_ENTRIES);
-    }
-    else
-    {
-      net.pickhaxe.java.util.List.ofGeneric(after);
+      net.pickhaxe.java.util.List.of(after);
     }
 
     // Getting up to some tomfoolery here.
     // This function is only accessible due to an access transformer.
-    net.minecraftforge.common.CreativeModeTabRegistry.processCreativeModeTab(creativeModeTab, resourceLocation, beforeList, afterList);
+    net.minecraftforge.common.CreativeModeTabRegistry.processCreativeModeTab(creativeModeTab, resourceLocation, 
+      afterList, beforeList);
   }
 }
 #end

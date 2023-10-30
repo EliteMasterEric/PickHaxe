@@ -271,26 +271,26 @@ typedef LibraryRequirement =
    * A list of custom rules detailing when this library should be downloaded.
    * For example, whether the library is only for demo users or whether the library is only for certain operating systems.
    */
-  rules:Null<Array<ManifestRule>>,
+  ?rules:Array<ManifestRule>,
 }
 
 typedef ManifestRule =
 {
-  action:String,
-  os:Null<ManifestOSRule>,
-  features:Null<ManifestFeatureRule>,
+  var action:String;
+  var ?os:ManifestOSRule;
+  var ?features:ManifestFeatureRule;
 }
 
 typedef ManifestOSRule =
 {
-  arch:Null<String>,
-  name:Null<String>,
-  version:Null<String>,
+  var ?arch:String;
+  var ?name:String;
+  var ?version:String;
 }
 
 typedef ManifestFeatureRule =
 {
-  is_demo_user:Null<Bool>,
+  var ?is_demo_user:Bool;
 }
 
 /**

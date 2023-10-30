@@ -81,6 +81,31 @@ typedef PickHaxeDefinesMod =
   description:String,
   entryPoints:Array<PickHaxeProject.ModEntryPoint>,
   license:String,
+
+  authorData:AuthorData,
+
+  homepage:String,
+  email:String,
+  issues:String,
+  sources:String,
+}
+
+typedef AuthorData = {
+  /**
+   * A comma separated list of author names with no contact info.
+   * Used by Forge.
+   */
+  authorsString:String,
+  /**
+   * An array of authors (either strings or objects with name and contact info).
+   * Used by Fabric.
+   */
+  authors:Array<net.pickhaxe.schema.FabricMod.Person>,
+  /**
+   * An array of contributors (either strings or objects with name and contact info).
+   * Used by Fabric.
+   */
+  contributors:Array<net.pickhaxe.schema.FabricMod.Person>,
 }
 
 typedef BuildParams =
@@ -241,6 +266,26 @@ class Builder
     var fabricAPIVersion:String = FabricMeta.getApiVersionForMinecraft(params.mcVersion);
     if (fabricAPIVersion == null) throw 'Could not load Fabric API version from API for version ${params.mcVersion}';
 
+    var authors:Array<net.pickhaxe.schema.FabricMod.Person> = [for (author in projectFile.authors) Right({
+      name: author.name,
+      contact: {
+        homepage: author.homepage,
+        email: author.email,
+        issues: author.issues,
+        sources: author.sources,
+      },
+    })];
+
+    var contributors:Array<net.pickhaxe.schema.FabricMod.Person> = [for (contributor in projectFile.contributors) Right({
+      name: contributor.name,
+      contact: {
+        homepage: contributor.homepage,
+        email: contributor.email,
+        issues: contributor.issues,
+        sources: contributor.sources,
+      },
+    })];
+
     return {
       pickhaxe:
         {
@@ -321,6 +366,17 @@ class Builder
               entryPoints: projectFile.entryPoints,
 
               license: projectFile.license.value,
+
+              authorData: {
+                authorsString: '',
+                authors: authors,
+                contributors: contributors,
+              },
+
+              homepage: projectFile.contact.homepage,
+              email: projectFile.contact.email,
+              issues: projectFile.contact.issues,
+              sources: projectFile.contact.sources,
             },
         }
     };
@@ -376,6 +432,22 @@ class Builder
         }
       }
     }
+
+    var authorsStringParts:Array<String> = [];
+
+    for (author in projectFile.authors)
+    {
+      var authorName:String = author.name;
+      if (authorName != null) authorsStringParts.push(authorName);
+    }
+  
+    for (contributor in projectFile.contributors)
+    {
+      var contributorName:String = contributor.name;
+      if (contributorName != null) authorsStringParts.push(contributorName);
+    }
+  
+    var authorsString:String = authorsStringParts.join(', ');
 
     return {
       pickhaxe:
@@ -455,6 +527,17 @@ class Builder
               entryPoints: projectFile.entryPoints,
 
               license: projectFile.license.value,
+
+              authorData: {
+                authorsString: authorsString,
+                authors: [],
+                contributors: [],
+              },
+
+              homepage: projectFile.contact.homepage,
+              email: projectFile.contact.email,
+              issues: projectFile.contact.issues,
+              sources: projectFile.contact.sources,
             },
         }
     };

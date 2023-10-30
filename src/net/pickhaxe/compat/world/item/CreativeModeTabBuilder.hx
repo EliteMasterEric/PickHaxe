@@ -37,6 +37,7 @@ class CreativeModeTabBuilder_Compat
   #elseif forge
   public function build():CreativeModeTab
   {
+    net.pickhaxe.core.PickHaxe.logDebug('Constructing temporary CreativeModeTab with internal_xyz ID.');
     var identifier:net.minecraft.resources.ResourceLocation = new net.minecraft.resources.ResourceLocation('pickhaxe', 'internal_xyz');
     return new CreativeModeTab.CreativeModeTab_BuilderResult(identifier, iconSupplier, appendItemsConsumer);
   }

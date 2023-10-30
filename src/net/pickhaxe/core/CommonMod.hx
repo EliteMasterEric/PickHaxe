@@ -88,6 +88,8 @@ class CommonMod #if fabric implements ModInitializer #end
 
   function forge_registerListeners()
   {
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod constructed, registering Forge lifecycle listeners...');
+
     // Add each lifecycle function to the event bus.
     // We can rely on this class's events to be called before the Registrar events.
     forge_getEventBus().register(this);

@@ -25,6 +25,12 @@ typedef PickHaxe =
   @:tag('mod-metadata') var metadata:ModMetadata;
   @:tag('mod-license') var license:ModLicense;
 
+  @:tag('mod-contact') var contact:ModContact;
+
+  @:list('mod-author') var authors:Array<ModAuthor>;
+
+  @:list('mod-contributor') var contributors:Array<ModAuthor>;
+
   /**
    * Add new Haxelibs as dependencies to the project.
    */
@@ -67,6 +73,45 @@ typedef Mod =
 };
 
 /**
+ * `<mod-contact>` tag.
+ */
+ typedef ModContact =
+ {
+   /**
+    * The user's website.
+    */
+  @:optional @:attr var homepage:String;
+ 
+   /**
+    * The user's email.
+    */
+  @:optional @:attr var email:String;
+ 
+   /**
+    * The user's IRC handle.
+    */
+  @:optional @:attr var irc:String;
+
+   /**
+    * An issue tracker URL.
+    */
+  @:optional @:attr var issues:String;
+ 
+   /**
+    * The path where the mod's source code is located.
+    */
+  @:optional @:attr var sources:String;
+};
+
+/**
+ * `<mod-author>` tag.
+ */
+typedef ModAuthor = {
+  > ModContact,
+  @:optional @:attr var name:String;
+}
+
+/**
  * `<mod-entry-point>` tag.
  */
 typedef ModEntryPoint =
@@ -78,26 +123,26 @@ typedef ModEntryPoint =
 /**
  * `<haxelib>` tag.
  */
- typedef HaxelibEntry =
- {
-   /**
-    * The name of the library to include.
-    */
-   @:attr var name:String;
+typedef HaxelibEntry =
+{
+  /**
+   * The name of the library to include.
+   */
+  @:attr var name:String;
  
-   /**
-    * The version of the library to include.
-    * Optional.
-    */
-   @:attr var version:Null<String>;
+  /**
+   * The version of the library to include.
+   * Optional.
+   */
+  @:optional @:attr var version:String;
 
   /**
    * The URL to a Git repository.
    * You may suffix with `#<branch>` to specify a branch.
    * Optional.
    */
-  @:attr var git:Null<String>;
-};
+  @:optional @:attr var git:String;
+}
 
 /**
  * `<mod-metadata>` tag.
