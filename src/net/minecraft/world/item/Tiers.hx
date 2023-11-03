@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 @:native("net.minecraft.world.item.Tiers")
-@:mapping("net.minecraft.class_1834")
 final extern class Tiers extends java.lang.Enum<net.minecraft.world.item.Tiers>
 {
   public static function values():java.NativeArray<net.minecraft.world.item.Tiers>;

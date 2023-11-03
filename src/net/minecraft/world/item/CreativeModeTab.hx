@@ -4,7 +4,6 @@ package net.minecraft.world.item;
  * Interface `IdentifiableItemGroup` injected by mod fabric-item-group-api-v1
  */
 @:native("net.minecraft.world.item.CreativeModeTab")
-@:mapping("net.minecraft.class_1761")
 extern #if (minecraft_lteq_1_19_2) abstract #end class CreativeModeTab
   #if (fabric && minecraft_gteq_1_19_3 && minecraft_lt_1_20) implements net.fabricmc.fabric.api.itemgroup.v1.IdentifiableItemGroup #end
   // IdentifiableItemGroup was completely removed in 1.20.
@@ -68,7 +67,6 @@ extern #if (minecraft_lteq_1_19_2) abstract #end class CreativeModeTab
 
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.world.item.CreativeModeTab$Row")
-@:mapping("net.minecraft.class_1761$class_7915")
 final extern class CreativeModeTab_Row extends java.lang.Enum<net.minecraft.world.item.CreativeModeTab.Row>
 {
   public static function values():java.NativeArray<net.minecraft.world.item.CreativeModeTab.Row>;
@@ -82,7 +80,6 @@ typedef Row = CreativeModeTab_Row;
 
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.world.item.CreativeModeTab$Type")
-@:mapping("net.minecraft.class_1761$class_7916")
 final extern class CreativeModeTab_Type extends java.lang.Enum<net.minecraft.world.item.CreativeModeTab.Type>
 {
   public static function values():java.NativeArray<net.minecraft.world.item.CreativeModeTab.Type>;
@@ -99,7 +96,6 @@ typedef Type = CreativeModeTab_Type;
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.world.item.CreativeModeTab$Builder")
 @:realPath("net.minecraft.world.item.CreativeModeTab_Builder")
-@:mapping("net.minecraft.class_1761$class_7913")
 extern class CreativeModeTab_Builder
 {
   public function new(row:CreativeModeTab_Row, i:Int);
@@ -147,7 +143,6 @@ extern class CreativeModeTab_Builder
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.world.item.CreativeModeTab$ItemDisplayBuilder")
 @:realPath("net.minecraft.world.item.CreativeModeTab_ItemDisplayBuilder")
-@:mapping("net.minecraft.class_1761$class_7703")
 extern class CreativeModeTab_ItemDisplayBuilder implements CreativeModeTab_Output
 {
   public final tabContents:java.util.Collection<net.minecraft.world.item.ItemStack>;
@@ -235,7 +230,6 @@ typedef Output = CreativeModeTab_Output;
 
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.world.item.CreativeModeTab$TabVisibility")
-@:mapping("net.minecraft.class_1761$class_7705")
 final extern class CreativeModeTab_TabVisibility extends java.lang.Enum<net.minecraft.world.item.CreativeModeTab.TabVisibility>
 {
   public static function values():java.NativeArray<net.minecraft.world.item.CreativeModeTab.TabVisibility>;
@@ -256,7 +250,6 @@ typedef TabVisibility = CreativeModeTab_TabVisibility;
  */
 @:native("net.minecraft.world.item.CreativeModeTab$ItemDisplayParameters")
 @:realPath("net.minecraft.world.item.CreativeModeTab_ItemDisplayParameters")
-@:mapping("net.minecraft.class_1761$class_8128")
 final extern class CreativeModeTab_ItemDisplayParameters extends java.lang.Record
 {
   public function new(enabledFeatures:net.minecraft.world.flag.FeatureFlagSet, hasPermissions:Bool,
@@ -278,7 +271,6 @@ typedef ItemDisplayParameters = CreativeModeTab_ItemDisplayParameters;
 
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.world.item.CreativeModeTab$DisplayItemsGenerator")
-@:mapping("net.minecraft.class_1761$class_7914")
 extern interface CreativeModeTab_DisplayItemsGenerator
 {
   #if (minecraft >= "1.19.4")

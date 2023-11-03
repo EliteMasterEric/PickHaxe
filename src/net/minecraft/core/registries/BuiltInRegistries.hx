@@ -5,7 +5,6 @@ import net.minecraft.core.Registry;
 
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.core.registries.BuiltInRegistries")
-@:mapping("net.minecraft.class_7923")
 extern class BuiltInRegistries
 {
   public function new();
@@ -65,10 +64,8 @@ extern class BuiltInRegistries
   public static final BIOME_SOURCE:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.biome.BiomeSource>>;
   public static final CHUNK_GENERATOR:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.chunk.ChunkGenerator>>;
   // TODO: Readd these.
-  // @:mapping("field_41158")
-  // public static final MATERIAL_CONDITION:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.SurfaceRules.ConditionSource>>;
-  // @:mapping("field_41159")
-  // public static final MATERIAL_RULE:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.SurfaceRules.RuleSource>>;
+  //   // public static final MATERIAL_CONDITION:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.SurfaceRules.ConditionSource>>;
+  //   // public static final MATERIAL_RULE:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.SurfaceRules.RuleSource>>;
   public static final DENSITY_FUNCTION_TYPE:Registry<com.mojang.serialization.Codec<net.minecraft.world.level.levelgen.DensityFunction>>;
   public static final STRUCTURE_PROCESSOR:Registry<net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType<Dynamic>>;
   public static final STRUCTURE_POOL_ELEMENT:Registry<net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType<Dynamic>>;
@@ -89,7 +86,6 @@ extern class BuiltInRegistries
 
 @:functionalInterface // This interface acts as a lambda.
 @:native("net.minecraft.core.registries.BuiltInRegistries$RegistryBootstrap")
-@:mapping("net.minecraft.class_7923$class_6889")
 extern interface BuiltInRegistries_RegistryBootstrap<T>
 {
   @:badMapping("unknownMethodMapping")

@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 @:native("net.minecraft.world.item.Equipable")
-@:mapping("net.minecraft.class_5151")
 extern interface Equipable
 {
     public function getEquipmentSlot():net.minecraft.world.entity.EquipmentSlot;

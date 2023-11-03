@@ -1,13 +1,10 @@
 package net.minecraft.world.item;
 
 @:native("net.minecraft.world.item.BlockItem")
-@:mapping("net.minecraft.class_1747")
 extern class BlockItem extends net.minecraft.world.item.Item
 {
-  @:mapping("field_30849")
-  public static final BLOCK_ENTITY_TAG:String;
-  @:mapping("field_30850")
-  public static final BLOCK_STATE_TAG:String;
+    public static final BLOCK_ENTITY_TAG:String;
+    public static final BLOCK_STATE_TAG:String;
 
   public function new(block:net.minecraft.world.level.block.Block, properties:net.minecraft.world.item.Item.Properties);
     public function useOn(context:net.minecraft.world.item.context.UseOnContext):net.minecraft.world.InteractionResult;

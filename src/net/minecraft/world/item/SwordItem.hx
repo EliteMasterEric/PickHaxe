@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 @:native("net.minecraft.world.item.SwordItem")
-@:mapping("net.minecraft.class_1829")
 extern class SwordItem extends net.minecraft.world.item.TieredItem implements net.minecraft.world.item.Vanishable
 {
   public function new(tier:net.minecraft.world.item.Tier, i:Int, f:Single, properties:net.minecraft.world.item.Item.Properties);

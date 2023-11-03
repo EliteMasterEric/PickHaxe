@@ -1,14 +1,11 @@
 package net.minecraft.world.item.armortrim;
 
 @:native("net.minecraft.world.item.armortrim.ArmorTrim")
-@:mapping("net.minecraft.class_8053")
 extern class ArmorTrim
 {
-  @:mapping("field_41994")
-  public static final CODEC:com.mojang.serialization.Codec<net.minecraft.world.item.armortrim.ArmorTrim>;
+    public static final CODEC:com.mojang.serialization.Codec<net.minecraft.world.item.armortrim.ArmorTrim>;
 
-  @:mapping("field_41995")
-  public static final TAG_TRIM_ID:String;
+    public static final TAG_TRIM_ID:String;
 
   public function new(holder:net.minecraft.core.Holder<net.minecraft.world.item.armortrim.TrimMaterial>,
     holder2:net.minecraft.core.Holder<net.minecraft.world.item.armortrim.TrimPattern>);

@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 @:native("net.minecraft.world.item.HoeItem")
-@:mapping("net.minecraft.class_1794")
 extern class HoeItem extends net.minecraft.world.item.DiggerItem
 {
   /**

@@ -1,12 +1,12 @@
 package net.pickhaxe.java.util;
 
 class Collection {
-  public static function of<T>(args:Array<T>):java.util.Collection<T> {
+  public static function of<T:java.lang.Object>(args:Array<T>):java.util.Collection<T> {
     return net.pickhaxe.java.util.List.of(args);
   }
 
-  public static function ofGeneric(args:Array<Dynamic>):java.util.Collection<java.lang.Object> {
-    return net.pickhaxe.java.util.List.ofGeneric(args);
+  public static function ofObject(args:Array<Dynamic>):java.util.Collection<java.lang.Object> {
+    return net.pickhaxe.java.util.List.ofObject(args);
   }
 
   public static function to<T>(collection:java.util.Collection<T>):Array<T> {

@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 @:native("net.minecraft.world.item.Rarity")
-@:mapping("net.minecraft.class_1814")
 final extern class Rarity extends java.lang.Enum<net.minecraft.world.item.Rarity>
 {
   public static function values():java.NativeArray<net.minecraft.world.item.Rarity>;

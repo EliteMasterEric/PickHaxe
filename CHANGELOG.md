@@ -13,7 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## Fixed
 - Fixed an issue where mod icons were not displaying. Make sure the icon is located at `resources/assets/<modid>_icon.png` so it works.
 ## To Fix
-- [] Fabric 1.19.2: https://github.com/HaxeFoundation/haxe/issues/11352
+- [] Fabric 1.18.2
+- [X] Fabric 1.19
+- [X] Fabric 1.19.1
+- [X] Fabric 1.19.2
 - [X] Fabric 1.19.3
 - [X] Fabric 1.19.4
 - [X] Fabric 1.20
