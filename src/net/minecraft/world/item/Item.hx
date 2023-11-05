@@ -37,7 +37,11 @@ extern class Item
   /**
    * Called when this item is used when targeting a Block
    */
+  #if minecraft_lteq_1_16_1
+  public function useOn(context:net.minecraft.world.item.UseOnContext):net.minecraft.world.InteractionResult;
+  #else
   public function useOn(context:net.minecraft.world.item.context.UseOnContext):net.minecraft.world.InteractionResult;
+  #end
 
   public function getDestroySpeed(stack:net.minecraft.world.item.ItemStack, state:net.minecraft.world.level.block.state.BlockState):Single;
 

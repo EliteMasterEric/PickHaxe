@@ -12,11 +12,14 @@ final extern class Biome
 
   public static final BIOME_INFO_NOISE:net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
 
+  #if minecraft_gteq_1_16_2
   public function new(climateSettings:net.minecraft.world.level.biome.Biome.ClimateSettings,
     biomeSpecialEffects:net.minecraft.world.level.biome.BiomeSpecialEffects, biomeGenerationSettings:net.minecraft.world.level.biome.BiomeGenerationSettings,
     mobSpawnSettings:net.minecraft.world.level.biome.MobSpawnSettings);
-  public function getSkyColor():Int;
   public function getMobSettings():net.minecraft.world.level.biome.MobSpawnSettings;
+  public function getGenerationSettings():net.minecraft.world.level.biome.BiomeGenerationSettings;
+  #end
+  public function getSkyColor():Int;
   public function hasPrecipitation():Bool;
   public function getPrecipitationAt(blockPos:net.minecraft.core.BlockPos):net.minecraft.world.level.biome.Biome.Precipitation;
 
@@ -26,7 +29,6 @@ final extern class Biome
   public function warmEnoughToRain(pos:net.minecraft.core.BlockPos):Bool;
   public function shouldMeltFrozenOceanIcebergSlightly(pos:net.minecraft.core.BlockPos):Bool;
   public function shouldSnow(level:net.minecraft.world.level.LevelReader, pos:net.minecraft.core.BlockPos):Bool;
-  public function getGenerationSettings():net.minecraft.world.level.biome.BiomeGenerationSettings;
   public function getFogColor():Int;
   public function getGrassColor(posX:Float, posZ:Float):Int;
 
@@ -102,12 +104,14 @@ extern class Biome_BiomeBuilder
 {
   public function new();
 
+  #if minecraft_gteq_1_16_2
+  public function mobSpawnSettings(mobSpawnSettings:net.minecraft.world.level.biome.MobSpawnSettings):net.minecraft.world.level.biome.Biome.Biome_BiomeBuilder;
+  public function generationSettings(generationSettings:net.minecraft.world.level.biome.BiomeGenerationSettings):net.minecraft.world.level.biome.Biome.Biome_BiomeBuilder;
+  #end
   public function hasPrecipitation(bl:Bool):net.minecraft.world.level.biome.Biome.Biome_BiomeBuilder;
   public function temperature(temperature:Float):net.minecraft.world.level.biome.Biome.Biome_BiomeBuilder;
   public function downfall(downfall:Float):net.minecraft.world.level.biome.Biome.Biome_BiomeBuilder;
   public function specialEffects(effects:net.minecraft.world.level.biome.BiomeSpecialEffects):net.minecraft.world.level.biome.Biome.Biome_BiomeBuilder;
-  public function mobSpawnSettings(mobSpawnSettings:net.minecraft.world.level.biome.MobSpawnSettings):net.minecraft.world.level.biome.Biome.Biome_BiomeBuilder;
-  public function generationSettings(generationSettings:net.minecraft.world.level.biome.BiomeGenerationSettings):net.minecraft.world.level.biome.Biome.Biome_BiomeBuilder;
   public function temperatureAdjustment(temperatureSettings:net.minecraft.world.level.biome.Biome.TemperatureModifier):net.minecraft.world.level.biome.Biome.Biome_BiomeBuilder;
   public function build():net.minecraft.world.level.biome.Biome;
   public function toString():String;

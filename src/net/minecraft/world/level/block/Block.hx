@@ -131,7 +131,10 @@ extern class Block
 
   public function stepOn(level:net.minecraft.world.level.Level, pos:net.minecraft.core.BlockPos, state:net.minecraft.world.level.block.state.BlockState,
     entity:net.minecraft.world.entity.Entity):Void;
-  public function getStateForPlacement(context:net.minecraft.world.item.context.BlockPlaceContext):Null<net.minecraft.world.level.block.state.BlockState>;
+    
+    #if minecraft_gteq_1_16_2
+    public function getStateForPlacement(context:net.minecraft.world.item.context.BlockPlaceContext):Null<net.minecraft.world.level.block.state.BlockState>;
+    #end
 
   /**
    * Called after a player has successfully harvested this block. This method will only be called if the player has used the correct tool and drops should be spawned.

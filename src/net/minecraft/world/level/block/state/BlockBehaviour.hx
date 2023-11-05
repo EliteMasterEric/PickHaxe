@@ -56,7 +56,9 @@ abstract extern class BlockBehaviour
    * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed blockstate.@deprecated call via ,{@link net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#mirror}, whenever possible. Implementing/overriding is fine.
    */
   public function mirror(state:net.minecraft.world.level.block.state.BlockState, mirror:net.minecraft.world.level.block.Mirror):net.minecraft.world.level.block.state.BlockState;
+  #if minecraft_gteq_1_16_2
   public overload function canBeReplaced(state:net.minecraft.world.level.block.state.BlockState, useContext:net.minecraft.world.item.context.BlockPlaceContext):Bool;
+  #end
   public overload function canBeReplaced(state:net.minecraft.world.level.block.state.BlockState, fluid:net.minecraft.world.level.material.Fluid):Bool;
   public function getDrops(state:net.minecraft.world.level.block.state.BlockState, builder:net.minecraft.world.level.storage.loot.LootContext.LootContext_Builder):java.util.List<net.minecraft.world.item.ItemStack>;
   /**
@@ -279,7 +281,9 @@ abstract extern class BlockBehaviour_BlockStateBase extends net.minecraft.world.
   public function isViewBlocking(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):Bool;
   public function updateShape(direction:net.minecraft.core.Direction, queried:net.minecraft.world.level.block.state.BlockState, level:net.minecraft.world.level.LevelAccessor, currentPos:net.minecraft.core.BlockPos, offsetPos:net.minecraft.core.BlockPos):net.minecraft.world.level.block.state.BlockState;
   public function isPathfindable(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos, type:net.minecraft.world.level.pathfinder.PathComputationType):Bool;
+  #if minecraft_gteq_1_16_2
   public overload function canBeReplaced(useContext:net.minecraft.world.item.context.BlockPlaceContext):Bool;
+  #end
   public overload function canBeReplaced(fluid:net.minecraft.world.level.material.Fluid):Bool;
   public overload function canBeReplaced():Bool;
   public function canSurvive(level:net.minecraft.world.level.LevelReader, pos:net.minecraft.core.BlockPos):Bool;
@@ -302,7 +306,9 @@ abstract extern class BlockBehaviour_BlockStateBase extends net.minecraft.world.
   public function getSoundType():net.minecraft.world.level.block.SoundType;
   public function onProjectileHit(level:net.minecraft.world.level.Level, state:net.minecraft.world.level.block.state.BlockState, hit:net.minecraft.world.phys.BlockHitResult, projectile:net.minecraft.world.entity.projectile.Projectile):Void;
   public overload function isFaceSturdy(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos, direction:net.minecraft.core.Direction):Bool;
+  #if minecraft_gteq_1_16_2
   public overload function isFaceSturdy(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos, face:net.minecraft.core.Direction, supportType:net.minecraft.world.level.block.SupportType):Bool;
+  #end
   public function isCollisionShapeFullBlock(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):Bool;
 
   public function requiresCorrectToolForDrops():Bool;
@@ -315,7 +321,9 @@ typedef BlockStateBase = BlockBehaviour_BlockStateBase;
 final extern class BlockBehaviour_BlockStateBase_Cache
 {
   public function new(blockState:net.minecraft.world.level.block.state.BlockState);
+  #if minecraft_gteq_1_16_2
   public function isFaceSturdy(direction:net.minecraft.core.Direction, supportType:net.minecraft.world.level.block.SupportType):Bool;
+  #end
 }
 typedef Cache = BlockBehaviour_BlockStateBase_Cache;
 

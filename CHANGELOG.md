@@ -13,21 +13,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## Fixed
 - Fixed an issue where mod icons were not displaying. Make sure the icon is located at `resources/assets/<modid>_icon.png` so it works.
 ## To Fix
-- [] Fabric 1.18.2
+- [] Fabric 1.16
+- [] Fabric 1.16.1
+Caused by: java.lang.NoSuchFieldError: displayName
+	at net.pickhaxe.compat.world.item.CreativeModeTab$CreativeModeTab_Impl_.setId(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/compat/world/item/CreativeModeTab.hx:66)
+	at net.pickhaxe.compat.world.item.CreativeModeTab$CreativeModeTab_Impl_.register(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/compat/world/item/CreativeModeTab.hx:30)
+	at com.elitemastereric.madeinhaxe.items.ModItems.registerCreativeTab(./src/com/elitemastereric/madeinhaxe/items/ModItems.hx:38)
+	at com.elitemastereric.madeinhaxe.MadeInHaxeMod.onCreativeModeTabRegister(./src/com/elitemastereric/madeinhaxe/MadeInHaxeMod.hx:13)
+	at net.pickhaxe.core.CommonMod.onInitialize(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/core/CommonMod.hx:196)
+	at net.fabricmc.loader.impl.FabricLoaderImpl.invokeEntrypoints(FabricLoaderImpl.java:383)
+- [X] Fabric 1.16.2
+- [X] Fabric 1.16.3
+- [X] Fabric 1.16.4
+- [X] Fabric 1.16.5
+- [X] Fabric 1.17
+- [X] Fabric 1.17.1
+- [X] Fabric 1.18
+- [X] Fabric 1.18.1
+- [X] Fabric 1.18.2
 - [X] Fabric 1.19
 - [X] Fabric 1.19.1
 - [X] Fabric 1.19.2
 - [X] Fabric 1.19.3
 - [X] Fabric 1.19.4
 - [X] Fabric 1.20
-- [] Fabric 1.20.1: 
-- [] Fabric 1.20.2: 
-- [] Fabric 1.20.3 (Snapshot): 
-- [] Forge 1.19.2: https://github.com/HaxeFoundation/haxe/issues/11352
+- [X] Fabric 1.20.1
+- [X] Fabric 1.20.2
+- [X] Fabric 1.20.3 (Snapshot)
+- [] Forge 1.19.2
 - [] Forge 1.19.3: https://github.com/EliteMasterEric/PickHaxe/issues/23
 - [] Forge 1.19.4: https://github.com/EliteMasterEric/PickHaxe/issues/23
-- Prompt to clean when switching versions, and save last version
-- Option to auto-make
+- [] Prompt to clean when switching versions, and save last version
+- [] Option to auto-make
 
 
 

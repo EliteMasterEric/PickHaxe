@@ -102,7 +102,7 @@ extern class StringRepresentable_EnumCodec<E:EnumValue & StringRepresentable> im
 
   function withLifecycle(pThis:com.mojang.serialization.Lifecycle):com.mojang.serialization.Codec<E>;
 
-  function promotePartial(pThis:java.util.function.Consumer<String>):com.mojang.serialization.Codec<E>;
+  // function promotePartial(pThis:java.util.function.Consumer<String>):com.mojang.serialization.Codec<E>;
 
   function fieldOf(pThis:String):com.mojang.serialization.MapCodec<E>;
 }

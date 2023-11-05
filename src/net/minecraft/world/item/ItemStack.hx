@@ -51,7 +51,9 @@ final extern class ItemStack #if (fabric && minecraft_gteq_1_19_2) implements ne
   #else
   public overload function is(tag:net.minecraft.tags.Tag<net.minecraft.world.item.Item>):Bool;
   #end
+  #if minecraft_gteq_1_16_2
   public function useOn(context:net.minecraft.world.item.context.UseOnContext):net.minecraft.world.InteractionResult;
+  #end
   public function getDestroySpeed(state:net.minecraft.world.level.block.state.BlockState):Single;
 
   /**
