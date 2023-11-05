@@ -588,7 +588,15 @@ class Build implements ICommand
       args.push('${defines.pickhaxe.mod.parentPackage}.${entryPoint.value}');
     }
 
+    CLI.print('Performing build...');
+
+    CLI.print('(Build arguments: [${args.join(' ')}])', Verbose);
+
     var exitCode:String = Haxe.instance.performBuild(args);
+
+    CLI.print('Build complete.');
+
+    CLI.print('(Exit code: ${exitCode})', Verbose);
 
     // CLI.print(exitCode);
   }
