@@ -3,16 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.0]
-## Added
-- Updated JVM target to be functional, and to be the default mode (to allow for improved code generation from Haxe).
-  - In this mode, Pickhaxe will now generate an unmapped "dev" JAR rather than a set of Java source files.
-- Fixes to mod metadata now add `authors` and `contributors`
-## Changed
-- Haxe dependency updated to require `5.0.0-alpha` (unless they end up releasing a 4.3.2).
-## Fixed
-- Fixed an issue where mod icons were not displaying. Make sure the icon is located at `resources/assets/<modid>_icon.png` so it works.
-## To Fix
+## Upcoming
 - [] Fabric 1.16
 - [] Fabric 1.16.1
 Caused by: java.lang.NoSuchFieldError: displayName
@@ -22,6 +13,36 @@ Caused by: java.lang.NoSuchFieldError: displayName
 	at com.elitemastereric.madeinhaxe.MadeInHaxeMod.onCreativeModeTabRegister(./src/com/elitemastereric/madeinhaxe/MadeInHaxeMod.hx:13)
 	at net.pickhaxe.core.CommonMod.onInitialize(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/core/CommonMod.hx:196)
 	at net.fabricmc.loader.impl.FabricLoaderImpl.invokeEntrypoints(FabricLoaderImpl.java:383)
+- [] Forge 1.19.2
+Caused by: java.lang.NoSuchFieldError: f_40748_
+	at net.pickhaxe.compat.world.item.CreativeModeTab_BuilderResult.<init>(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/compat/world/item/CreativeModeTab.hx:105) ~[madeinhaxe-0.4.0.jar%23152!/:?] {re:classloading}
+	at net.pickhaxe.compat.world.item.CreativeModeTabBuilder_Compat.build(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/compat/world/item/CreativeModeTabBuilder.hx:42) ~[madeinhaxe-0.4.0.jar%23152!/:?] {re:classloading}
+	at com.elitemastereric.madeinhaxe.items.ModItems.<clinit>(./src/com/elitemastereric/madeinhaxe/items/ModItems.hx:22) ~[madeinhaxe-0.4.0.jar%23152!/:?] {re:classloading}
+	at com.elitemastereric.madeinhaxe.MadeInHaxeMod.onCreativeModeTabRegister(./src/com/elitemastereric/madeinhaxe/MadeInHaxeMod.hx:13) ~[madeinhaxe-0.4.0.jar%23152!/:?] {re:classloading}
+	at net.pickhaxe.core.CommonMod.forge_onCreativeModeTabRegister(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/core/CommonMod.hx:131) ~[madeinhaxe-0.4.0.jar%23152!/:?] {re:classloading}
+	at net.pickhaxe.core.CommonMod.forge_onRegister(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/core/CommonMod.hx:151) ~[madeinhaxe-0.4.0.jar%23152!/:?] {re:classloading}
+	at net.pickhaxe.core.__CommonMod_forge_onRegister_RegisterEvent.invoke(.dynamic) ~[madeinhaxe-0.4.0.jar%23152!/:?] {re:classloading,pl:eventbus:B}
+	at net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:73) ~[eventbus-6.0.3.jar%23134!/:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:315) ~[eventbus-6.0.3.jar%23134!/:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:296) ~[eventbus-6.0.3.jar%23134!/:?] {}
+	at net.minecraftforge.fml.javafmlmod.FMLModContainer.acceptEvent(FMLModContainer.java:107) ~[javafmllanguage-1.19.2-43.2.0.jar%23155!/:?] {}
+- [] Forge 1.19.3: https://github.com/EliteMasterEric/PickHaxe/issues/23
+- [] Forge 1.19.4: https://github.com/EliteMasterEric/PickHaxe/issues/23
+- [] Prompt to clean when switching versions, and save last version so we know when to do that
+- [] Option to auto-make when building
+
+## [0.4.0]
+## Added
+- Updated JVM target to be functional, and to be the default mode (to allow for improved code generation from Haxe).
+  - In this mode, Pickhaxe will now generate an unmapped "dev" JAR rather than a set of Java source files.
+- Fixes to mod metadata now add `authors` and `contributors`
+## Changed
+- Haxe dependency updated to require `5.0.0-alpha` (unless they end up releasing a 4.3.3).
+  - Easiest way to handle this is to modify `.vscode/settings.json` and change `terminal.integrated.env.windows` to add
+## Fixed
+- Updates to fix Fabric 1.16.0-1.20.2, as well as Fabric on snapshot 23w44a.
+- Fixed an issue where mod icons were not displaying. Make sure the icon is located at `resources/assets/<modid>_icon.png` so it works.
+## To Fix
 - [X] Fabric 1.16.2
 - [X] Fabric 1.16.3
 - [X] Fabric 1.16.4
@@ -40,12 +61,6 @@ Caused by: java.lang.NoSuchFieldError: displayName
 - [X] Fabric 1.20.1
 - [X] Fabric 1.20.2
 - [X] Fabric 1.20.3 (Snapshot)
-- [] Forge 1.19.2
-- [] Forge 1.19.3: https://github.com/EliteMasterEric/PickHaxe/issues/23
-- [] Forge 1.19.4: https://github.com/EliteMasterEric/PickHaxe/issues/23
-- [] Prompt to clean when switching versions, and save last version
-- [] Option to auto-make
-
 
 
 ## [0.3.0] - 2023-07-10

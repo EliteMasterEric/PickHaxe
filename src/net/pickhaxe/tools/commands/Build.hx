@@ -588,6 +588,8 @@ class Build implements ICommand
       args.push('${defines.pickhaxe.mod.parentPackage}.${entryPoint.value}');
     }
 
+    // args = args.concat(['--macro', 'haxe.shade.Shade.applyCore("${shadeTarget}.haxe")']);
+
     CLI.print('Performing build...');
 
     CLI.print('(Build arguments: [${args.join(' ')}])', Verbose);

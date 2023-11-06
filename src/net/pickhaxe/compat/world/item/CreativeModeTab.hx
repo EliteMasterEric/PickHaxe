@@ -102,7 +102,8 @@ class CreativeModeTab_BuilderResult extends net.minecraft.world.item.CreativeMod
   public function new(resourceLocation:ResourceLocation,
     iconSupplier:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.IconSupplier,
     appendItemsConsumer:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.AppendItemsConsumer) {
-    super(net.minecraft.world.item.CreativeModeTab.TABS.length, 'itemGroup.${resourceLocation.getNamespace()}.${resourceLocation.getPath()}');
+    // net.minecraft.world.item.CreativeModeTab.TABS.length
+    super(-1, 'itemGroup.${resourceLocation.getNamespace()}.${resourceLocation.getPath()}');
     
     this.resourceLocation = resourceLocation;
     this.iconSupplier = iconSupplier;
