@@ -101,7 +101,7 @@ class CommonMod #if fabric implements ModInitializer #end
     #end
   }
 
-  #if minecraft_gteq_1_18_1
+  #if minecraft_gteq_1_18_2
   /**
    * This event allows for initializing new custom registries, using the RegistryBuilder class.
    * This function is called once.
@@ -193,7 +193,7 @@ class CommonMod #if fabric implements ModInitializer #end
   #if fabric
   public function onInitialize():Void
   {
-    // There is no event bus. Just call each of the functions in approximately the order that Forge would.
+    // There is no event bus on Fabric. Just call each of the functions in approximately the order that Forge would.
     onRegister();
     onCreativeModeTabRegister();
     onModInitialize();

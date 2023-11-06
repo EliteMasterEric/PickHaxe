@@ -67,7 +67,7 @@ class Block_ForgeRegistrar extends net.pickhaxe.compat.forge.ForgeRegistrar<Bloc
   public static function queueBlock(resourceLocation:ResourceLocation, item:Block_Minecraft):Block_Minecraft
   {
     // Chainable.
-    net.pickhaxe.core.PickHaxe.logInfo("Queued item: " + resourceLocation);
+    net.pickhaxe.core.PickHaxe.logInfo("Queued Block: " + resourceLocation);
     return instance.queue(resourceLocation, item);
   }
 

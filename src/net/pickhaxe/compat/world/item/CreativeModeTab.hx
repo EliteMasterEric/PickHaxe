@@ -159,6 +159,7 @@ class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeR
 
   public static function register(eventBus:net.minecraftforge.eventbus.api.IEventBus):Void
   {
+    net.pickhaxe.core.PickHaxe.logDebug('Registering CreativeModeTab_ForgeRegistrar lifecycle listeners...');
     // This is safe to run multiple times.
     eventBus.register(instance);
   }
@@ -184,6 +185,13 @@ class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeR
       registerEntry(registry.shift());
     }
     hasRegistered = true;
+  }
+  #elseif minecraft_lteq_1_19
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
+  public function onRegister(event:net.minecraftforge.event.RegistryEvent.Register<CreativeModeTab>)
+  {
+    super.onRegisterInner(event);
   }
   #end
 

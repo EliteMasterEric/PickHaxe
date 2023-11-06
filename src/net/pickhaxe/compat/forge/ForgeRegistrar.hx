@@ -49,7 +49,7 @@ class ForgeRegistrar<T>
   {
     if (hasRegistered)
     {
-      net.pickhaxe.core.PickHaxe.logError('Cannot register after the registrar has completed! ${resourceLocation}');
+      net.pickhaxe.core.PickHaxe.logError('ForgeRegistrar cannot register entry (${${resourceLocation}}) after the registrar has completed!');
       return value;
     }
     entriesToRegister.set(resourceLocation, value);
@@ -132,8 +132,9 @@ class ForgeRegistrar<T>
   function registerEntry(registry:net.minecraftforge.registries.IForgeRegistry<T>, entry:ForgeRegistrarEntry<T>):Void
   {
     net.pickhaxe.core.PickHaxe.logInfo("Registering entry " + entry.key);
-    registry.register(entry.value);
+    // TODO: Do I need to apply the entry ID first? Or last? Or does it depend?
     applyEntryId(entry.key, entry.value);
+    registry.register(entry.value);
   }
 
   /**
