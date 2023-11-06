@@ -101,6 +101,7 @@ class CommonMod #if fabric implements ModInitializer #end
     #end
   }
 
+  #if minecraft_gteq_1_18_1
   /**
    * This event allows for initializing new custom registries, using the RegistryBuilder class.
    * This function is called once.
@@ -111,6 +112,7 @@ class CommonMod #if fabric implements ModInitializer #end
   {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received NewRegistryEvent.');
   }
+  #end
 
   #if minecraft_gteq_1_19_3
   /**

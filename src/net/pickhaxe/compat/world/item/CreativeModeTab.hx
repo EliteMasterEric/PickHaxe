@@ -35,8 +35,7 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
     net.pickhaxe.core.PickHaxe.logInfo('Set language ID of Creative Mode Tab to "${this.langId}".');
     #end
     this.displayName = buildDisplayName(resourceLocation);
-    net.pickhaxe.core.PickHaxe.logDebug('Queuing CreativeModeTab ${resourceLocation.getNamespace()}:${resourceLocation.getPath()} for registration.');
-    #if (forge && minecraft_gt_1_19_3)
+    #if (forge && minecraft_gteq_1_19_3)
     CreativeModeTab_ForgeRegistrar.queue(resourceLocation,
       {
         tab: this,
@@ -166,6 +165,7 @@ class CreativeModeTab_ForgeRegistrar // extends net.pickhaxe.compat.forge.ForgeR
 
   public static function queue(resourceLocation:ResourceLocation, entry:CreativeModeTab_ForgeRegistrarEntry):CreativeModeTab_ForgeRegistrarEntry
   {
+    net.pickhaxe.core.PickHaxe.logDebug('Queuing CreativeModeTab ${resourceLocation.getNamespace()}:${resourceLocation.getPath()} for registration.');
     if (instance.hasRegistered)
     {
       net.pickhaxe.core.PickHaxe.logError('Could not register Creative Mode tab: Registration already occurred!');

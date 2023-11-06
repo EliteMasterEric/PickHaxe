@@ -189,7 +189,9 @@ class Make implements ICommand
     } else {
       if (loader == 'forge') {
         // Forge requires reobfuscation AND shadowing.
-        var targetTask:String = 'shadowSourcesJar'; // 'reobfShadowSourcesJar'
+        var targetTask:String = 'reobfSourcesJar';
+        // 'shadowSourcesJar';
+        // 'reobfShadowSourcesJar';
         trace(targetTask);
         result = gradleW.performTask([targetTask].concat(additionalArgs));
       } else if (loader == 'fabric') {

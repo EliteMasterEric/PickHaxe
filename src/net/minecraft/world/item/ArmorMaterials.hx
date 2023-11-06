@@ -20,7 +20,9 @@ final extern class ArmorMaterials extends java.lang.Enum<net.minecraft.world.ite
 
     public static var NETHERITE:net.minecraft.world.item.ArmorMaterials;
 
+    #if minecraft_gteq_1_19
     public static final CODEC:net.minecraft.util.StringRepresentable.StringRepresentable_EnumCodec<net.minecraft.world.item.ArmorMaterials>;
+    #end
 
     public function getDurabilityForType(type:net.minecraft.world.item.ArmorItem.ArmorItem_Type):Int;
 
