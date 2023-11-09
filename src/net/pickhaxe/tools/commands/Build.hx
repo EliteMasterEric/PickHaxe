@@ -19,20 +19,63 @@ import net.pickhaxe.tools.util.Template;
  */
 class Build implements ICommand
 {
-  var commandName:String = 'build';
+  final commandName:String = 'build';
 
-  var debug:Bool = false;
-  var skipGradle:Bool = false;
-  var forceGradle:Bool = false;
-  var attachGradle:Bool = false;
-  var noResources:Bool = false;
-  var noMapping:Bool = true; // Default to TRUE!
-  var genSources:Bool = false; // Default to genArchive.
-  var dumpType:String = null;
-  var clean:Bool = false;
+  /**
+   * Target mod loader. Mandatory.
+   */
   var loader:String;
+  /**
+   * Target MC version. Mandatory.
+   */
   var mcVersion:String;
-  var mappings:String;
+
+  /**
+   * Whether this build is a debug build.
+   */
+  var debug:Bool = false;
+
+  /**
+   * Whether to forcibly skip the Gradle dependency fetching step.
+   */
+  var skipGradle:Bool = false;
+
+  /**
+   * Whether to force the Gradle dependency fetching step.
+   */
+  var forceGradle:Bool = false;
+
+  /**
+   * Whether to attach to the Gradle process to capture output.
+   */
+  var attachGradle:Bool = false;
+
+  /**
+   * If enabled, no resource files will be included in the built JAR.
+   */
+  var noResources:Bool = false;
+
+  /**
+   * If enabled, generate .java files rather than a .jar file.
+   */
+  var genSources:Bool = false; // Default to genArchive.
+
+  /**
+   * Whether to use the `--dump` option, and what mode to use.
+   */
+  var dumpType:String = null;
+
+  /**
+   * Whether to perform `pickhaxe clean` before building.
+   */
+  var clean:Bool = false;
+
+  /**
+   * What mappings to build the project with.
+   * Defaults to `parchment`, an extension of the Mojang mappings.
+   * Use `--mappings` to override with `yarn` or `mcp`.
+   */
+  var mappings:String = 'parchment';
 
   public function new() {}
 
@@ -85,20 +128,8 @@ class Build implements ICommand
         },
         {
           short: null,
-          long: 'no-mapping',
-          blurb: 'Skip mapping build steps, producing Java source code directly',
-          value: null,
-        },
-        {
-          short: null,
-          long: 'enable-mapping',
-          blurb: 'Enable mapping build steps, producing source code using Intermediary mappings',
-          value: null,
-        },
-        {
-          short: null,
           long: 'mappings',
-          blurb: 'Force the mapping to use for the build.
+          blurb: 'Force the mapping to use for the gradle build.
                   Valid values include: "mojang", "parchment", "yarn", "mcp"
                   Defaults to Parchment.',
           value: '[mappings]',
@@ -106,13 +137,13 @@ class Build implements ICommand
         {
           short: null,
           long: 'gen-sources',
-          blurb: 'Produce .java files rather than a .jar file (Java target)',
+          blurb: 'Produce .java files rather than a .jar file (Java target). This turns off gen-archive.',
           value: null,
         },
         {
           short: null,
           long: 'gen-archive',
-          blurb: 'Produce a .jar file rather than a .java files (JVM target)',
+          blurb: 'Produce a .jar file rather than a .java files (JVM target). This is the default, and turns off gen-sources.',
           value: null,
         },
         {
@@ -130,6 +161,12 @@ class Build implements ICommand
           blurb: 'Clean the project before building (also forces Gradle dependency building steps)',
           value: null,
         },
+        {
+          short: null,
+          long: 'make',
+          blurb: 'Make the project after building',
+          value: null,
+        },
       ]
     };
   }
@@ -140,15 +177,16 @@ class Build implements ICommand
    */
   public function perform(args:Array<String>):Void
   {
+    // Attempt to pass command line arguments, and immediately exit if they are invalid.
     if (!parseArgs(args)) return;
 
     CLI.print('Building project for ${loader} ${mcVersion}...');
 
+    // Setup defines, based on the provided arguments and the contents of the project's `project.xml` file.
     var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(
       {
         loader: loader,
         mcVersion: mcVersion,
-        noMapping: noMapping,
         mappings: mappings,
         jvm: !genSources,
       });
@@ -216,10 +254,6 @@ class Build implements ICommand
             }
           case '--no-resources':
             noResources = true;
-          case '--no-mapping':
-            noMapping = true;
-          case '--enable-mapping':
-            noMapping = false;
           case '--gen-sources':
             genSources = true;
           case '--gen-archive':

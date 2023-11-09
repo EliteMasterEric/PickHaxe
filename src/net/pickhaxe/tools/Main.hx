@@ -1,16 +1,16 @@
 package net.pickhaxe.tools;
 
-import net.pickhaxe.tools.util.Error;
-import net.pickhaxe.tools.util.Error.PickHaxeException;
-import net.pickhaxe.tools.commands.Make;
-import net.pickhaxe.tools.process.Haxe;
+import net.pickhaxe.tools.commands.Template;
+import net.pickhaxe.tools.commands.Build;
 import net.pickhaxe.tools.commands.Clean;
 import net.pickhaxe.tools.commands.GradleW;
-import net.pickhaxe.tools.commands.Init;
-import net.pickhaxe.tools.commands.Setup;
-import net.pickhaxe.tools.commands.Build;
 import net.pickhaxe.tools.commands.Help;
 import net.pickhaxe.tools.commands.Init;
+import net.pickhaxe.tools.commands.Make;
+import net.pickhaxe.tools.commands.Setup;
+import net.pickhaxe.tools.process.Haxe;
+import net.pickhaxe.tools.util.Error;
+import net.pickhaxe.tools.util.Error.PickHaxeException;
 
 /**
  * The main class of the console application.
@@ -127,10 +127,10 @@ class Main
     }
     catch (pickhaxeError:PickHaxeException)
     {
-      CLI.print('An exception occurred within PickHaxe while performing this operation.');
+      CLI.print('[EXCEPTION ${pickhaxeError.getErrorCode()}] An error occurred within PickHaxe while performing this operation.');
 
       CLI.print('${pickhaxeError.message}');
-      CLI.print('${pickhaxeError.stack}');
+      CLI.print('${pickhaxeError.stack}', Verbose);
 
       pickhaxeError.exit();
     }
@@ -139,7 +139,7 @@ class Main
       CLI.print('An unknown exception occurred within PickHaxe while performing this operation.');
 
       CLI.print('${error.message}');
-      CLI.print('${error.stack}');
+      CLI.print('${error.stack}', Verbose);
 
       Error.exit(UNKNOWN);
     }
@@ -191,6 +191,8 @@ class Main
           new Setup().perform(args);
         case 'init':
           new Init().perform(args);
+        case 'template':
+          new Template().perform(args);
         case 'build':
           new Build().perform(args);
         case 'make':
@@ -205,10 +207,10 @@ class Main
     }
     catch (pickhaxeError:PickHaxeException)
     {
-      CLI.print('An exception occurred within PickHaxe while performing this operation.');
+      CLI.print('[EXCEPTION ${pickhaxeError.getErrorCode()}] An error occurred within PickHaxe while performing this operation.');
 
       CLI.print('${pickhaxeError.message}');
-      CLI.print('${pickhaxeError.stack}');
+      CLI.print('${pickhaxeError.stack}', Verbose);
 
       pickhaxeError.exit();
     }
@@ -217,7 +219,7 @@ class Main
       CLI.print('An unknown exception occurred within PickHaxe while performing this operation.');
 
       CLI.print('${error.message}');
-      CLI.print('${error.stack}');
+      CLI.print('${error.stack}', Verbose);
 
       Error.exit(UNKNOWN);
     }

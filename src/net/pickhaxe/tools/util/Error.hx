@@ -6,6 +6,7 @@ enum abstract Error(Int) from Int to Int {
 
   var NO_PROJECT_XML = 100;
   var UNKNOWN_LOADER = 101;
+  var UNKNOWN_TEMPLATE = 102;
 
   var GRADLE_ERROR = 200;
 
@@ -74,6 +75,27 @@ class UnknownLoaderException extends PickHaxeException {
       return 'No Minecraft mod loader specified, expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].';
     }
     return 'Unknown Minecraft mod loader "${loader}", expected one of [${Constants.MINECRAFT_LOADERS.join(', ')}].';
+  }
+}
+
+class UnknownTemplateException extends PickHaxeException {
+  var template:String;
+  var available:Array<String>;
+  public function new(template:String, available:Array<String>) {
+    this.template = template;
+    this.available = available;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.UNKNOWN_TEMPLATE;
+  }
+
+  public override function getErrorMessage():String {
+    if (template == null) {
+      return 'No PickHaxe mod template specified, expected one of [${available.join(', ')}].';
+    }
+    return 'Unknown PickHaxe mod template "${template}", expected one of [${available.join(', ')}].';
   }
 }
 

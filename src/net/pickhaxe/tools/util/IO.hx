@@ -65,8 +65,13 @@ class IO
    * Create a directory if it doesn't exist.
    * @param path The path to the directory to create.
    */
-  public static function makeDir(path:Path):Void
+  public static function makeDir(path:Path, ?recursive:Bool = true):Void
   {
+    if (recursive && !sys.FileSystem.exists(path.dir))
+    {
+      makeDir(new Path(path.dir), true);
+    }
+
     if (!sys.FileSystem.exists(path.toString()))
     {
       sys.FileSystem.createDirectory(path.toString());
@@ -91,6 +96,10 @@ class IO
   public static function writeFile(path:Path, contents:String):Void
   {
     File.saveContent(path.toString(), contents);
+  }
+
+  public static function writeFileBytes(path:Path, contents:haxe.io.Bytes):Void {
+    File.saveBytes(path.toString(), contents);
   }
 
   /**

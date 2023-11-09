@@ -25,7 +25,7 @@ class Constants
    */
   // public static final HAXE_VERSION:String = #if !macro haxe.macro.Compiler.getDefine('haxe') #else null #end;
   // lol whoops
-  public static final HAXE_VERSION:String = '4.3.0';
+  public static final HAXE_VERSION:String = '5.0.0';
 
   /**
    * The default Minecraft version to build for.
