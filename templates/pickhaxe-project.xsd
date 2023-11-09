@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.pickhaxe.net/project"
+  targetNamespace="http://www.pickhaxe.net/project"
+  elementFormDefault="qualified">
+
+  <xsd:element name="pickhaxe">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="mod">
+          <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:string" use="required" />
+            <xsd:attribute name="version" type="xsd:string" use="required" />
+            <xsd:attribute name="parentPackage" type="xsd:string" use="required" />
+            <xsd:attribute name="classPath" type="xsd:string" use="required" />
+            <xsd:attribute name="resourcePath" type="xsd:string" use="required" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="mod-contact">
+          <xsd:complexType>
+            <xsd:attribute name="homepage" type="xsd:string" use="required" />
+            <xsd:attribute name="email" type="xsd:string" use="required" />
+            <xsd:attribute name="issues" type="xsd:string" use="required" />
+            <xsd:attribute name="sources" type="xsd:string" use="required" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="mod-author">
+          <xsd:complexType>
+            <xsd:attribute name="name" type="xsd:string" use="required" />
+            <xsd:attribute name="email" type="xsd:string" use="required" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="mod-entry-point">
+          <xsd:complexType>
+            <xsd:attribute name="environment" type="xsd:string" use="required" />
+            <xsd:attribute name="value" type="xsd:string" use="required" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="mod-metadata">
+          <xsd:complexType>
+            <xsd:attribute name="name" type="xsd:string" use="required" />
+            <xsd:attribute name="description" type="xsd:string" use="required" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="mod-license">
+          <xsd:complexType>
+            <xsd:attribute name="value" type="xsd:string" use="required" />
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
