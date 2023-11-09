@@ -1,5 +1,11 @@
 {
   "haxe.configurations": [
     ["generated/build.hxml"]
+  ],
+  "xml.fileAssociations": [
+    {
+      "pattern": "**/project.xml",
+      "systemId": "https://raw.githubusercontent.com/EliteMasterEric/PickHaxe/develop/templates/pickhaxe-project.xsd"
+    }
   ]
 }
