@@ -41,17 +41,21 @@
 
   <xsd:element name="pickhaxe">
     <xsd:complexType>
-      <xsd:choice maxOccurs="unbounded">
-        <xsd:element name="mod" type="mod" />
-        <xsd:element name="mod-metadata" type="metadata" />
-        <xsd:element name="mod-license" type="license" minOccurs="0" maxOccurs="1" />
-
-        <xsd:element name="mod-contact" type="contact-info" minOccurs="0" maxOccurs="1" />
-
-        <xsd:element name="mod-author" type="author" minOccurs="0" maxOccurs="unbounded" />
-
+      <xsd:all>
+        <!-- Mandatory, can have only one. -->
+        <xsd:element name="mod" type="mod" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="mod-metadata" type="metadata" minOccurs="1" maxOccurs="1" />
+        
+        <!-- Mandatory, can have multiple. -->
         <xsd:element name="mod-entry-point" type="entry-point" minOccurs="1" maxOccurs="unbounded" />
-      </xsd:choice>
+
+        <!-- Optional, can have only one.-->
+        <xsd:element name="mod-license" type="license" minOccurs="0" maxOccurs="1" />
+        <xsd:element name="mod-contact" type="contact-info" minOccurs="0" maxOccurs="1" />
+        
+        <!-- Optional, can have multiple.-->
+        <xsd:element name="mod-author" type="author" minOccurs="0" maxOccurs="unbounded" />
+      </xsd:all>
     </xsd:complexType>
   </xsd:element>
 </xsd:schema>
