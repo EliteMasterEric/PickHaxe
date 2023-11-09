@@ -1,15 +1,21 @@
 package net.pickhaxe.tools.util;
 
+import tink.xml.ReaderError;
+
 enum abstract Error(Int) from Int to Int {
   var NO_ERROR = 0;
   var UNKNOWN = 1;
 
+  // Issues caused by the PickHaxe build tool.
   var NO_PROJECT_XML = 100;
-  var UNKNOWN_LOADER = 101;
-  var UNKNOWN_TEMPLATE = 102;
+  var INVALID_PROJECT_XML = 101;
+  var UNKNOWN_LOADER = 110;
+  var UNKNOWN_TEMPLATE = 111;
 
+  // Issues caused by Gradle.
   var GRADLE_ERROR = 200;
 
+  // Issues caused by Haxe.
   var HAXE_BUILD_ERROR = 300;
   var HAXE_VERSION_ERROR = 301;
 
@@ -56,6 +62,23 @@ class NoProjectXMLException extends PickHaxeException {
 
   public override function getErrorMessage():String {
     return "No project.xml file found in the current directory.";
+  }
+}
+
+class InvalidProjectXMLException extends PickHaxeException {
+  var readerError:ReaderError;
+  
+  public function new(readerError:ReaderError) {
+    super();
+    this.readerError = readerError;
+  }
+
+  public override function getErrorCode():Error {
+    return Error.INVALID_PROJECT_XML;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Could not parse the project.xml file found in the current directory.\n${this.readerError}';
   }
 }
 

@@ -141,12 +141,12 @@ class Builder
 
     var projectFile:PickHaxeProject = net.pickhaxe.tools.util.XML.readProjectFile(IO.workingDir().joinPaths('project.xml'));
 
-    CLI.print("Read project file.");
-
     if (projectFile == null)
     {
       throw new NoProjectXMLException();
     }
+
+    CLI.print("Read project file.");
 
     return switch (params.loader)
     {
@@ -365,18 +365,19 @@ class Builder
 
               entryPoints: projectFile.entryPoints,
 
-              license: projectFile.license.value,
+              // Default license
+              license: projectFile?.license?.value ?? 'All Rights Reserved',
 
               authorData: {
-                authorsString: '',
+                authorsString: '', // Unused by Fabric.
                 authors: authors,
                 contributors: contributors,
               },
 
-              homepage: projectFile.contact.homepage,
-              email: projectFile.contact.email,
-              issues: projectFile.contact.issues,
-              sources: projectFile.contact.sources,
+              homepage: projectFile?.contact?.homepage ?? null,
+              email: projectFile?.contact?.email ?? null,
+              issues: projectFile?.contact?.issues ?? null,
+              sources: projectFile?.contact?.sources ?? null,
             },
         }
     };
@@ -526,18 +527,18 @@ class Builder
 
               entryPoints: projectFile.entryPoints,
 
-              license: projectFile.license.value,
+              license: projectFile?.license?.value ?? 'All Rights Reserved',
 
               authorData: {
                 authorsString: authorsString,
-                authors: [],
-                contributors: [],
+                authors: [], // Unused by Forge.
+                contributors: [], // Unused by Forge.
               },
 
-              homepage: projectFile.contact.homepage,
-              email: projectFile.contact.email,
-              issues: projectFile.contact.issues,
-              sources: projectFile.contact.sources,
+              homepage: projectFile?.contact?.homepage ?? null,
+              email: projectFile?.contact?.email ?? null,
+              issues: projectFile?.contact?.issues ?? null,
+              sources: projectFile?.contact?.sources ?? null,
             },
         }
     };

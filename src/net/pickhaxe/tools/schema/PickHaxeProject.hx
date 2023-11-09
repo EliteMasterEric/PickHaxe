@@ -23,9 +23,9 @@ typedef PickHaxe =
 {
   @:tag('mod') var mod:Mod;
   @:tag('mod-metadata') var metadata:ModMetadata;
-  @:tag('mod-license') var license:ModLicense;
+  @:optional @:tag('mod-license') var license:Null<ModLicense>;
 
-  @:tag('mod-contact') var contact:ModContact;
+  @:optional @:tag('mod-contact') var contact:Null<ModContact>;
 
   @:list('mod-author') var authors:Array<ModAuthor>;
 

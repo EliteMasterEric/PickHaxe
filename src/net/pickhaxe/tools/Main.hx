@@ -129,7 +129,7 @@ class Main
     {
       CLI.print('[EXCEPTION ${pickhaxeError.getErrorCode()}] An error occurred within PickHaxe while performing this operation.');
 
-      CLI.print('${pickhaxeError.message}');
+      CLI.print('${pickhaxeError.getErrorMessage()}');
       CLI.print('${pickhaxeError.stack}', Verbose);
 
       pickhaxeError.exit();
@@ -209,7 +209,7 @@ class Main
     {
       CLI.print('[EXCEPTION ${pickhaxeError.getErrorCode()}] An error occurred within PickHaxe while performing this operation.');
 
-      CLI.print('${pickhaxeError.message}');
+      CLI.print('${pickhaxeError.getErrorMessage()}');
       CLI.print('${pickhaxeError.stack}', Verbose);
 
       pickhaxeError.exit();

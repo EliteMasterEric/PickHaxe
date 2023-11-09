@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.util;
 
+import net.pickhaxe.tools.util.Error.InvalidProjectXMLException;
 import net.pickhaxe.api.FabricMeta;
 import net.pickhaxe.api.Parchment;
 import haxe.io.Path;
@@ -33,8 +34,7 @@ class XML
       case Success(file):
         return file;
       case Failure(err):
-        CLI.print('Failed to parse file: ${path}');
-        CLI.print('${err}');
+        throw new InvalidProjectXMLException(err);
     }
     return null;
   }
