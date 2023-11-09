@@ -1,61 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+<!--
+  NOTE: This doesn't work because of an issue with the XML Schema validator.
+  https://github.com/redhat-developer/vscode-xml/issues/222
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  vc:minVersion="1.1"
   elementFormDefault="qualified">
 
-  <xsd:complexType name="mod">
-    <xsd:attribute name="id" type="xsd:string" use="required" />
-    <xsd:attribute name="version" type="xsd:string" use="required" />
-    <xsd:attribute name="parentPackage" type="xsd:string" use="required" />
-    <xsd:attribute name="classPath" type="xsd:string" use="required" />
-    <xsd:attribute name="resourcePath" type="xsd:string" use="required" />
-  </xsd:complexType>
+  <xs:complexType name="mod">
+    <xs:attribute name="id" type="xs:string" use="required" />
+    <xs:attribute name="version" type="xs:string" use="required" />
+    <xs:attribute name="parentPackage" type="xs:string" use="required" />
+    <xs:attribute name="classPath" type="xs:string" use="required" />
+    <xs:attribute name="resourcePath" type="xs:string" use="required" />
+  </xs:complexType>
 
-  <xsd:complexType name="metadata">
-    <xsd:attribute name="name" type="xsd:string" use="required" />
-    <xsd:attribute name="description" type="xsd:string" use="required" />
-  </xsd:complexType>
+  <xs:complexType name="metadata">
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="description" type="xs:string" use="required" />
+  </xs:complexType>
 
-  <xsd:complexType name="license">
-    <xsd:attribute name="value" type="xsd:string" use="required" />
-  </xsd:complexType>
+  <xs:complexType name="license">
+    <xs:attribute name="value" type="xs:string" use="required" />
+  </xs:complexType>
 
-  <xsd:complexType name="entry-point">
-    <xsd:attribute name="environment" type="xsd:string" use="required" />
-    <xsd:attribute name="value" type="xsd:string" use="required" />
-  </xsd:complexType>
+  <xs:complexType name="entry-point">
+    <xs:attribute name="environment" type="xs:string" use="required" />
+    <xs:attribute name="value" type="xs:string" use="required" />
+  </xs:complexType>
 
-  <xsd:complexType name="contact-info">
-    <xsd:attribute name="homepage" type="xsd:string" use="optional" />
-    <xsd:attribute name="email" type="xsd:string" use="optional" />
-    <xsd:attribute name="issues" type="xsd:string" use="optional" />
-    <xsd:attribute name="sources" type="xsd:string" use="optional" />
-  </xsd:complexType>
+  <xs:complexType name="contact-info">
+    <xs:attribute name="homepage" type="xs:string" use="optional" />
+    <xs:attribute name="email" type="xs:string" use="optional" />
+    <xs:attribute name="issues" type="xs:string" use="optional" />
+    <xs:attribute name="sources" type="xs:string" use="optional" />
+  </xs:complexType>
 
-  <xsd:complexType name="author">
-    <xsd:complexContent>
-      <xsd:extension base="contact-info">
-        <xsd:attribute name="name" type="xsd:string" use="required" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
+  <xs:complexType name="author">
+    <xs:complexContent>
+      <xs:extension base="contact-info">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-  <xsd:element name="pickhaxe">
-    <xsd:complexType>
-      <xsd:all>
-        <!-- Mandatory, can have only one. -->
-        <xsd:element name="mod" type="mod" minOccurs="1" maxOccurs="1" />
-        <xsd:element name="mod-metadata" type="metadata" minOccurs="1" maxOccurs="1" />
-        
-        <!-- Mandatory, can have multiple. -->
-        <xsd:element name="mod-entry-point" type="entry-point" minOccurs="1" maxOccurs="unbounded" />
-
-        <!-- Optional, can have only one.-->
-        <xsd:element name="mod-license" type="license" minOccurs="0" maxOccurs="1" />
-        <xsd:element name="mod-contact" type="contact-info" minOccurs="0" maxOccurs="1" />
-        
-        <!-- Optional, can have multiple.-->
-        <xsd:element name="mod-author" type="author" minOccurs="0" maxOccurs="unbounded" />
-      </xsd:all>
-    </xsd:complexType>
-  </xsd:element>
-</xsd:schema>
+  <xs:element name="pickhaxe">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="mod" type="mod" minOccurs="1" maxOccurs="1" />
+        <xs:element name="mod-metadata" type="metadata" minOccurs="1" maxOccurs="1" />
+        <xs:element name="mod-license" type="license" minOccurs="0" maxOccurs="1" />
+        <xs:element name="mod-contact" type="contact-info" minOccurs="0" maxOccurs="1" />
+        <xs:element name="mod-entry-point" type="entry-point" minOccurs="1" maxOccurs="unbounded"/>
+        <xs:element name="mod-author" type="author" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
