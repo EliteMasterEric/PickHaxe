@@ -38,6 +38,7 @@ class CommonMod #if fabric implements ModInitializer #end
    */
   public function new()
   {
+    PickHaxe.init();
     #if forge
     forge_registerListeners();
     #end
@@ -137,14 +138,13 @@ class CommonMod #if fabric implements ModInitializer #end
   #if minecraft_gteq_1_19
   /**
    * This event allows for registering objects into the registries.
-   * This function is called MULTIPLE times, once for each registry. Be sure to filter the event by registry using `handle()`.
+   * This function is called MULTIPLE times, once for each registry. A flag is set to prevent duplicate registrations.
    * @param event The event object.
    */
   @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function forge_onRegister(event:net.minecraftforge.registries.RegisterEvent):Void
   {
     net.pickhaxe.core.PickHaxe.logDebug('CommonMod received RegisterEvent.');
-
     if (!hasRegistered)
     {
       hasRegistered = true;
@@ -158,17 +158,20 @@ class CommonMod #if fabric implements ModInitializer #end
   }
   #else
   /**
-   * We add our event handling to the Block registry event, since it is the first registry to be populated.
-   * Blocks, then Items, then all other registries alphabetically.
+   * This event allows for registering objects into the registries.
+   * We subscribe to the FIRST event that is fired, which is the Block registry.
+   * @param event The event object.
    */
   @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
-  public function forge_onRegisterBlock(event:net.minecraftforge.event.RegistryEvent.Register<net.minecraft.world.level.block.Block>):Void
+  public function forge_onRegister(event:net.minecraftforge.event.RegistryEvent.Register<net.minecraft.world.level.block.Block>):Void
   {
-    net.pickhaxe.core.PickHaxe.logDebug('CommonMod received RegistryEvent.Register<Block>.');
-
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod received RegistryEvent.Register<Block>');
     if (!hasRegistered)
     {
       hasRegistered = true;
+
+      // Handle registration of the creative mode tab here.
+      forge_onCreativeModeTabRegister();
 
       onRegister();
     }

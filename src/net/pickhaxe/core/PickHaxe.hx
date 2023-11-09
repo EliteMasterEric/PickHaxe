@@ -12,6 +12,16 @@ class PickHaxe
   static final LOGGER:org.apache.logging.log4j.Logger = org.apache.logging.log4j.LogManager.getLogger('pickhaxe');
   #end
 
+  public static function init():Void
+  {
+    haxe.Log.trace = performTrace;
+  }
+
+  static function performTrace(v:Dynamic, ?infos:PosInfos):Void {
+    var str = haxe.Log.formatOutput(v, infos);
+    logDebug(str);
+  }
+
   public static function logInfo(message:String):Void
   {
     LOGGER.info(message);

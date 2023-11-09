@@ -12,9 +12,9 @@ typedef ForgeRegistrarEntry<T> =
 };
 
 #if minecraft_lteq_1_18_2
-class ForgeRegistrar<T:net.minecraftforge.registries.IForgeRegistryEntry>
+abstract class ForgeRegistrar<T:net.minecraftforge.registries.IForgeRegistryEntry>
 #else
-class ForgeRegistrar<T>
+abstract class ForgeRegistrar<T>
 #end
 {
   var entriesToRegister:Map<ResourceLocation, T>;
@@ -102,20 +102,9 @@ class ForgeRegistrar<T>
    * The registries will be visited in alphabetic order of their name, except blocks and items,
    * which will be visited FIRST and SECOND respectively.
    */
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
-  public function onRegister(event:net.minecraftforge.event.RegistryEvent.Register<T>)
-  {
-    net.pickhaxe.core.PickHaxe.logDebug('ForgeRegistrar received RegistryEvent');
-
-    if (targetRegistryKey == null)
-    {
-      net.pickhaxe.core.PickHaxe.logError("ForgeRegistrar has no target registry!");
-      return;
-    }
-
-    onRegisterEntries(event.getRegistry());
-  }
-
+  // @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
+  public abstract function onRegister(event:net.minecraftforge.event.RegistryEvent.Register<T>):Void;
+  
   /**
    * Called whenever the registry this registrar is for is ready for entries.
    */
