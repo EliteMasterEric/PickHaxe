@@ -61,6 +61,18 @@ class IO
     return false;
   }
 
+  public static function dirStartingWithExists(path:Path):Bool
+  {
+    var dir:Path = new Path(path.dir);
+    var folder:String = path.file;
+    var files:Array<String> = readDirectory(dir, false, true);
+    for (f in files)
+    {
+      if (f.startsWith(folder)) return true;
+    }
+    return false;
+  }
+
   /**
    * Create a directory if it doesn't exist.
    * @param path The path to the directory to create.
@@ -100,6 +112,10 @@ class IO
 
   public static function writeFileBytes(path:Path, contents:haxe.io.Bytes):Void {
     File.saveBytes(path.toString(), contents);
+  }
+
+  public static function moveFile(sourcePath:Path, targetPath:Path) {
+    sys.FileSystem.rename(sourcePath.toString(), targetPath.toString());
   }
 
   /**
@@ -210,6 +226,8 @@ class IO
    */
   public static function deleteDirectory(path:Path):Void
   {
+    if (!exists(path)) return;
+
     var previousWorkingDir:Path = workingDir();
     Sys.setCwd(path.toString());
 

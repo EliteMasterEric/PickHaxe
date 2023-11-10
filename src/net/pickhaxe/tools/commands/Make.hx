@@ -129,6 +129,8 @@ class Make implements ICommand
               CLI.print('Error: No mappings specified.');
               return false;
             }
+          case '--make':
+            // Ignore.
           case '--clean':
             // Ignore.
           default:

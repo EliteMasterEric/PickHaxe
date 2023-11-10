@@ -1,5 +1,6 @@
 package net.pickhaxe.tools;
 
+import net.pickhaxe.tools.commands.RunClient;
 import net.pickhaxe.tools.commands.Template;
 import net.pickhaxe.tools.commands.Build;
 import net.pickhaxe.tools.commands.Clean;
@@ -197,6 +198,8 @@ class Main
           new Build().perform(args);
         case 'make':
           new Make().perform(args);
+        case 'runClient':
+          new RunClient().perform(args);
         case 'clean':
           new Clean().perform(args);
         case 'gradlew':
@@ -219,7 +222,7 @@ class Main
       CLI.print('An unknown exception occurred within PickHaxe while performing this operation.');
 
       CLI.print('${error.message}');
-      CLI.print('${error.stack}', Verbose);
+      CLI.print('${error.stack}');
 
       Error.exit(UNKNOWN);
     }

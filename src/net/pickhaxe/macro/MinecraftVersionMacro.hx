@@ -8,6 +8,8 @@ import net.pickhaxe.tools.util.IO;
 /**
  * Generates a set of compile defines based on the Minecraft version,
  * because `#if` only supports string comparisons.
+ * 
+ * Examples: `#if minecraft_gteq_1_20_2` or `#if minecraft_lt_1_19`
  */
 class MinecraftVersionMacro
 {
@@ -28,6 +30,8 @@ class MinecraftVersionMacro
    */
   static function defineCurrentVersion(minecraftVersion:String):Void
   {
+    // Context.info('- CURRENT: ${minecraftVersion}', Context.currentPos());
+
     MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}');
     // MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}', 'false');
 
@@ -51,6 +55,8 @@ class MinecraftVersionMacro
    */
   static function definePreviousVersion(minecraftVersion:String):Void
   {
+    // Context.info('- PREVIOUS: ${minecraftVersion}', Context.currentPos());
+
     // MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}', 'false');
     MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}');
 
@@ -71,6 +77,8 @@ class MinecraftVersionMacro
    */
   static function defineNextVersion(minecraftVersion:String):Void
   {
+    Context.info('- NEXT: ${minecraftVersion}', Context.currentPos());
+    
     // MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}', 'false');
     MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}');
 

@@ -67,6 +67,8 @@ class GradleW extends CLIProcess
       '-Dpickhaxe.haxe.version=${defines.pickhaxe.haxe.version}',
       '-Dpickhaxe.haxe.jvm=${defines.pickhaxe.haxe.jvm}',
       '-Dpickhaxe.java.version=${defines.pickhaxe.java.version}',
+      '-Dpickhaxe.gradle.version=${defines.pickhaxe.gradle.version}',
+      '-Dpickhaxe.gradle.plugins.forgegradle=${defines.pickhaxe.gradle.plugins.forgegradle}',
       '-Dpickhaxe.minecraft.version=${defines.pickhaxe.minecraft.version}',
       '-Dpickhaxe.minecraft.resourcePackFormat=${defines.pickhaxe.minecraft.resourcePackFormat}',
       '-Dpickhaxe.minecraft.dataPackFormat=${defines.pickhaxe.minecraft.dataPackFormat}',
