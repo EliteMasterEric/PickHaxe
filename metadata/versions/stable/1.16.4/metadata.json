@@ -6,6 +6,7 @@
 
   "forgeGradleVersion": "7.5.1",
   "fabricGradleVersion": "8.0.1",
+  "forgeGradlePluginVersion": "5.1.+",
 
   "forgeVersion": "35.1.37",
   "fmlVersion": "35"

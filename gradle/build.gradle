@@ -1,13 +1,17 @@
-
 //
 // NOTICE: This Gradle build script is COMPLETELY CUSTOM and necessary for PickHaxe to run.
-//         If you need to modify this file, I can 
+//         It automatically gets replaced EVERY BUILD.
+//         If you need a feature, please open an issue on GitHub.
 // 
 
 buildscript {
   println "Java: ${System.getProperty('java.version')}, JVM: ${System.getProperty('java.vm.version')} (${System.getProperty('java.vendor')}), Arch: ${System.getProperty('os.arch')}"
 
   println "PickHaxe: ${System.getProperty('pickhaxe.version')}, Loader: ${System.getProperty('pickhaxe.loader.current')}"
+
+  println "Task: ${System.getProperty('pickhaxe.task')}"
+
+  ext.FORGEGRADLE_VERSION = System.getProperty('pickhaxe.gradle.plugins.forgegradle')
 } 
 
 // Reference all Gradle plugins, with versions.
@@ -15,9 +19,9 @@ plugins {
   //
   // Forge
   //
-  id 'net.minecraftforge.gradle' version '5.1.+' apply false
-  id 'net.minecraftforge.gradle.mcp' version '5.1.+' apply false
-  id 'net.minecraftforge.gradle.patcher' version '5.1.+' apply false
+  id 'net.minecraftforge.gradle' version "${FORGEGRADLE_VERSION}" apply false
+  id 'net.minecraftforge.gradle.mcp' version "${FORGEGRADLE_VERSION}" apply false
+  id 'net.minecraftforge.gradle.patcher' version "${FORGEGRADLE_VERSION}" apply false
   id 'org.parchmentmc.librarian.forgegradle' version '1.+' apply false
 
   // 
@@ -31,7 +35,7 @@ plugins {
   id 'maven-publish'
 
   // For Gradle 7+
-  id 'com.github.johnrengelman.shadow' version '7.1.2'
+  // id 'com.github.johnrengelman.shadow' version '7.1.2'
   // For Gradle 8+
   // id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
