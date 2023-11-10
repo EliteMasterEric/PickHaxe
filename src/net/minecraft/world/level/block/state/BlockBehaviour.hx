@@ -108,10 +108,10 @@ abstract extern class BlockBehaviour
   public function onProjectileHit(level:net.minecraft.world.level.Level, state:net.minecraft.world.level.block.state.BlockState, hit:net.minecraft.world.phys.BlockHitResult, projectile:net.minecraft.world.entity.projectile.Projectile):Void;
   public function asItem():net.minecraft.world.item.Item;
 
-  #if minecraft_lteq_1_19_4
+  #if minecraft_gteq_1_20
+  // public function defaultMapColor():net.minecraft.world.level.material.MapColor;
+  #elseif minecraft_lteq_1_19_4
   public function defaultMaterialColor():net.minecraft.world.level.material.MaterialColor;
-  #else
-  public function defaultMapColor():net.minecraft.world.level.material.MapColor;
   #end
   public function defaultDestroyTime():Single;
 }
@@ -129,9 +129,9 @@ extern class BlockBehaviour_Properties
   #end
   public static function copy(blockBehaviour:net.minecraft.world.level.block.state.BlockBehaviour):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   #if minecraft_gteq_1_20
-  public overload function mapColor(dyeColor:net.minecraft.world.item.DyeColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public overload function mapColor(mapColor:net.minecraft.world.level.material.MapColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public overload function mapColor(func:java.util.function.Function<net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.material.MapColor>):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  // public overload function mapColor(dyeColor:net.minecraft.world.item.DyeColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  // public overload function mapColor(mapColor:net.minecraft.world.level.material.MapColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  // public overload function mapColor(func:java.util.function.Function<net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.material.MapColor>):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   #end
   /**
    * `noCollission` is a typo.
@@ -230,7 +230,7 @@ abstract extern class BlockBehaviour_BlockStateBase extends net.minecraft.world.
   public function getLightEmission():Int;
   public function isAir():Bool;
   #if minecraft_gteq_1_20
-  public function getMapColor(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):net.minecraft.world.level.material.MapColor;
+  // public function getMapColor(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):net.minecraft.world.level.material.MapColor;
   #else
   public function getMapColor(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):net.minecraft.world.level.material.MaterialColor;
   #end

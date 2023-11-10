@@ -17,7 +17,7 @@ class PickHaxe
     haxe.Log.trace = performTrace;
   }
 
-  static function performTrace(v:Dynamic, ?infos:PosInfos):Void {
+  static function performTrace(v:Dynamic, ?infos:haxe.PosInfos):Void {
     var str = haxe.Log.formatOutput(v, infos);
     logDebug(str);
   }
