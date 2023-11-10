@@ -119,6 +119,30 @@ if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
         break;
     }
 
+    runs {
+      client {
+          taskName 'runClient'
+          workingDirectory project.file('../run/client')
+
+          // The main launch class for Forge (Dev)
+          main 'cpw.mods.bootstraplauncher.BootstrapLauncher'
+
+          // Some recommended debug properties.
+          property 'forge.logging.markers', 'REGISTRIES'
+          property 'forge.logging.console.level', 'debug'
+          property 'forge.enabledGameTestNamespaces', 'examplemod'
+          
+          client true
+
+          // arg
+          // jvmArg
+
+          //mods.register(System.getProperty('pickhaxe.mod.id')).configure {
+          //  source sourceSets.main
+          //}
+      }
+    }
+
     accessTransformer = file('resources/META-INF/accesstransformer.cfg')
   }
 }
@@ -143,6 +167,15 @@ dependencies {
   switch(System.getProperty('pickhaxe.loader.current')) {
     case 'forge':
       minecraft "net.minecraftforge:forge:${System.getProperty('pickhaxe.minecraft.version')}-${System.getProperty('pickhaxe.loader.forge.apiVersion')}"
+
+      if (System.getProperty('pickhaxe.task').equals('runClient')) {
+        // Add JARs to the classpath for the runClient task.
+
+        // Run configurations use the dev JAR.
+        // You can use fg.deobf() to deobfuscate an obfuscated JAR before including.
+        println "../build/${System.getProperty('pickhaxe.loader.current')}/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar"
+        runtimeOnly files("../build/${System.getProperty('pickhaxe.loader.current')}/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
+      }
       break;
     case 'fabric':
       // To change the versions see the gradle.properties file
@@ -188,12 +221,12 @@ sourceSets {
   // Haxe generates Java source in a different spot.
   main.java.srcDirs = ['java/src']
   // LOL we can just reuse the resources folder.
-  main.resources.srcDirs = ['resources']
+  // main.resources.srcDirs = ['resources']
 }
 
 task copyDependencies(type: Copy) {
   from configurations.compileClasspath
-  into "$buildDir/minecraft"
+  into "$buildDir/minecraft/${System.getProperty('pickhaxe.loader.current')}/${System.getProperty('pickhaxe.minecraft.version')}/"
 }
 copyDependencies.group = 'PickHaxe'
 copyDependencies.description = 'Copies all runtime dependencies to a place where they can be easily referenced by Haxe.'
@@ -313,6 +346,11 @@ if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
   }
 
   jar.finalizedBy('reobfJar')
+
+  // Disable additional resource processing for the runClient task.
+  processResources.onlyIf { 
+    !System.getProperty('pickhaxe.task').equals('runClient')
+  }
 }
 
 // Run the copyBuildArtifacts task after the build task.
