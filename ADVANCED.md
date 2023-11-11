@@ -55,6 +55,16 @@ MCP: A set of mappings made by the MCP team, one of the oldest mapping teams.
 - Built Forge JARs use READABLE class names? Obfuscated method names? What about field names?
   - Original enum field names?
 
+## Migration
+
+```
+# Migrate from Yarn to MojMaps
+./gradlew.bat migrateMappings --mappings "net.minecraft:mappings:1.20.2"
+
+# Then add this to build.gradle
+mappings loom.officialMojangMappings()
+```
+
 ## Additional Links
 
 Fabric Intermediaries: Maps sourcenames->unique mappings common to all versions but not readable by humans

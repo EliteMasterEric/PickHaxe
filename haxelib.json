@@ -6,7 +6,7 @@
   "classPath": "src",
   "description": "A Haxe framework to build Minecraft mods. Fabric, Forge, and more.",
   "contributors": ["MasterEric"],
-  "releasenote": "Working JVM target (replaces Java target) for better code generation.",
+  "releasenote": "template and runClient commands, working Forge and Fabric, and many bugfixes.",
   "version": "0.4.0",
   "dependencies": {
     "thx.semver": "",
