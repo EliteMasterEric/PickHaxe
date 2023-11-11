@@ -112,7 +112,8 @@ typedef AuthorData = {
   contributors:Array<net.pickhaxe.schema.FabricMod.Person>,
 }
 
-typedef BuildParams =
+typedef 
+BuildParams =
 {
   loader:String,
   mcVersion:String,
@@ -597,7 +598,7 @@ class Builder
     result.append(DEFINE, defines.pickhaxe.loader.current);
 
     // Add a define for the current Minecraft version (#if minecraft == 1.19.3, #if minecraft >= 1.12.2)
-    // result.append(DEFINE, 'minecraft=${defines.pickhaxe.minecraft.version}');
+    result.append(DEFINE, 'minecraft=${defines.pickhaxe.minecraft.version}');
 
     return result;
   }
