@@ -19,20 +19,63 @@ import net.pickhaxe.tools.util.Template;
  */
 class Build implements ICommand
 {
-  var commandName:String = 'build';
+  final commandName:String = 'build';
 
-  var debug:Bool = false;
-  var skipGradle:Bool = false;
-  var forceGradle:Bool = false;
-  var attachGradle:Bool = false;
-  var noResources:Bool = false;
-  var noMapping:Bool = true; // Default to TRUE!
-  var genSources:Bool = true; // Default to TRUE!
-  var dumpType:String = null;
-  var clean:Bool = false;
+  /**
+   * Target mod loader. Mandatory.
+   */
   var loader:String;
+  /**
+   * Target MC version. Mandatory.
+   */
   var mcVersion:String;
-  var mappings:String;
+
+  /**
+   * Whether this build is a debug build.
+   */
+  var debug:Bool = false;
+
+  /**
+   * Whether to forcibly skip the Gradle dependency fetching step.
+   */
+  var skipGradle:Bool = false;
+
+  /**
+   * Whether to force the Gradle dependency fetching step.
+   */
+  var forceGradle:Bool = false;
+
+  /**
+   * Whether to attach to the Gradle process to capture output.
+   */
+  var attachGradle:Bool = false;
+
+  /**
+   * If enabled, no resource files will be included in the built JAR.
+   */
+  var noResources:Bool = false;
+
+  /**
+   * If enabled, generate .java files rather than a .jar file.
+   */
+  var genSources:Bool = false; // Default to genArchive.
+
+  /**
+   * Whether to use the `--dump` option, and what mode to use.
+   */
+  var dumpType:String = null;
+
+  /**
+   * Whether to perform `pickhaxe clean` before building.
+   */
+  var clean:Bool = false;
+
+  /**
+   * What mappings to build the project with.
+   * Defaults to `parchment`, an extension of the Mojang mappings.
+   * Use `--mappings` to override with `yarn` or `mcp`.
+   */
+  var mappings:String = 'parchment';
 
   public function new() {}
 
@@ -85,20 +128,8 @@ class Build implements ICommand
         },
         {
           short: null,
-          long: 'no-mapping',
-          blurb: 'Skip mapping build steps, producing Java source code directly',
-          value: null,
-        },
-        {
-          short: null,
-          long: 'enable-mapping',
-          blurb: 'Enable mapping build steps, producing source code using Intermediary mappings',
-          value: null,
-        },
-        {
-          short: null,
           long: 'mappings',
-          blurb: 'Force the mapping to use for the build.
+          blurb: 'Force the mapping to use for the gradle build.
                   Valid values include: "mojang", "parchment", "yarn", "mcp"
                   Defaults to Parchment.',
           value: '[mappings]',
@@ -106,13 +137,13 @@ class Build implements ICommand
         {
           short: null,
           long: 'gen-sources',
-          blurb: 'Produce .java files rather than a .jar file',
+          blurb: 'Produce .java files rather than a .jar file (Java target). This turns off gen-archive.',
           value: null,
         },
         {
           short: null,
           long: 'gen-archive',
-          blurb: 'Produce a .jar file rather than a .java files',
+          blurb: 'Produce a .jar file rather than a .java files (JVM target). This is the default, and turns off gen-sources.',
           value: null,
         },
         {
@@ -130,6 +161,12 @@ class Build implements ICommand
           blurb: 'Clean the project before building (also forces Gradle dependency building steps)',
           value: null,
         },
+        {
+          short: null,
+          long: 'make',
+          blurb: 'Make the project after building',
+          value: null,
+        },
       ]
     };
   }
@@ -140,24 +177,23 @@ class Build implements ICommand
    */
   public function perform(args:Array<String>):Void
   {
+    // Attempt to pass command line arguments, and immediately exit if they are invalid.
     if (!parseArgs(args)) return;
 
     CLI.print('Building project for ${loader} ${mcVersion}...');
 
+    // Setup defines, based on the provided arguments and the contents of the project's `project.xml` file.
     var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(
       {
         loader: loader,
         mcVersion: mcVersion,
-        noMapping: noMapping,
         mappings: mappings,
+        jvm: !genSources,
       });
 
     var result:Bool = performGradleSetup(defines);
 
     if (!result) return;
-
-    // Do this AFTER performGradleSetup so they don't get deleted, ehe.
-    performMakeMetaINF(defines);
 
     // Move back to the parent of the working dir.
     Sys.setCwd(IO.workingDir().dir);
@@ -218,10 +254,6 @@ class Build implements ICommand
             }
           case '--no-resources':
             noResources = true;
-          case '--no-mapping':
-            noMapping = true;
-          case '--enable-mapping':
-            noMapping = false;
           case '--gen-sources':
             genSources = true;
           case '--gen-archive':
@@ -296,6 +328,7 @@ class Build implements ICommand
 
     // Create the `generated` folder and all subfolders.
     IO.makeDir(IO.workingDir().joinPaths('generated'));
+
     var gradleDirs:Array<String> = IO.readDirectory(IO.libraryDir().joinPaths('gradle'), false, true);
     for (gradleDir in gradleDirs)
     {
@@ -330,6 +363,10 @@ class Build implements ICommand
     {
       // Remove the old Minecraft dependencies
     }
+
+    // Create mod manifest and access widener files.
+    // Do this AFTER Gradle cleanup so they don't get deleted.
+    performMakeMetaINF(defines);
 
     // Move into `generated` folder.
     Sys.setCwd(IO.workingDir().joinPaths('generated').toString());
@@ -399,17 +436,17 @@ class Build implements ICommand
     {
       case 'fabric':
         CLI.print('Creating meta-inf folder for fabric...');
-        IO.makeDir(IO.workingDir().joinPaths('resources/META-INF'));
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
 
-        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('resources/fabric.mod.json'));
-        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
+        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('generated/resources/fabric.mod.json'));
+        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('generated/resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
       case 'forge':
         CLI.print('Creating meta-inf folder for forge...');
-        IO.makeDir(IO.workingDir().joinPaths('resources/META-INF'));
+        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
 
-        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('resources/pack.mcmeta'));
-        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('resources/META-INF/mods.toml'));
-        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('resources/META-INF/accesstransformer.cfg'));
+        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('generated/resources/pack.mcmeta'));
+        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('generated/resources/META-INF/mods.toml'));
+        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('generated/resources/META-INF/accesstransformer.cfg'));
       default:
         CLI.print('WARNING: Unknown loader Forge...');
     }
@@ -478,8 +515,9 @@ class Build implements ICommand
     {
       if (jarExtern.endsWith('.jar'))
       {
-        // args = args.concat(['--java-lib-extern', './generated/build/minecraft/${jarExtern}']);
-        args = args.concat(['--java-lib', './generated/build/minecraft/${jarExtern}']);
+        // If `extern`, library is not exported into the `lib/` folder.
+        args = args.concat(['--java-lib-extern', './generated/build/minecraft/${jarExtern}']);
+        // args = args.concat(['--java-lib', './generated/build/minecraft/${jarExtern}']);
       }
     }
 
@@ -487,14 +525,18 @@ class Build implements ICommand
     if (jvm)
     {
       CLI.print('Compiling to Java ${defines.pickhaxe.java.version}...');
+      // --c-arg: Add Java compilation args
       args = args.concat(['--c-arg', '-source']);
       args = args.concat(['--c-arg', '${defines.pickhaxe.java.version}']);
       args = args.concat(['--c-arg', '-target']);
       args = args.concat(['--c-arg', '${defines.pickhaxe.java.version}']);
+      // haxe.noNativeLibsCache: Native libraries are cached internally during build process.
+      // args = args.concat(['--define', 'haxe.noNativeLibsCache']);
+      // TODO: How to 
 
       args = args.concat([
         '--jvm',
-        './build/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${defines.pickhaxe.mod.id}-${defines.pickhaxe.mod.version}.jar'
+        './build/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${defines.pickhaxe.mod.id}-${defines.pickhaxe.mod.version}-dev.jar'
       ]);
     }
     else
@@ -523,7 +565,8 @@ class Build implements ICommand
         // Do nothing.
     }
 
-    args = args.concat(['--define', 'java-ver=17']);
+    // TODO: java-ver only supports 5-7
+    //args = args.concat(['--define', 'java-ver=17']);
 
     // We don't need an entry point for this.
     args = args.concat(['--define', 'no-root']);
@@ -532,13 +575,19 @@ class Build implements ICommand
     {
       if (jvm)
       {
-        // Tell Haxe to include these files in the JAR.
-        // args = args.concat(['--resource', 'generated/resources/fabric.mod.json@fabric.mod.json']);
+        CLI.print('Adding resources...');
 
-        var resources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/resources'));
-
-        for (resource in resources)
+        var baseResources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'));
+        for (resource in baseResources)
         {
+          CLI.print('Adding resource:' + 'resources/${resource}@${resource}');
+          args = args.concat(['--resource', 'resources/${resource}@${resource}']);
+        }
+
+        var generatedResources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/resources'));
+        for (resource in generatedResources)
+        {
+          CLI.print('Adding resource:' + 'generated/resources/${resource}@${resource}');
           args = args.concat(['--resource', 'generated/resources/${resource}@${resource}']);
         }
       }
@@ -573,7 +622,17 @@ class Build implements ICommand
       args.push('${defines.pickhaxe.mod.parentPackage}.${entryPoint.value}');
     }
 
+    // args = args.concat(['--macro', 'haxe.shade.Shade.applyCore("${shadeTarget}.haxe")']);
+
+    CLI.print('Performing build...');
+
+    CLI.print('(Build arguments: [${args.join(' ')}])', Verbose);
+
     var exitCode:String = Haxe.instance.performBuild(args);
+
+    CLI.print('Build complete.');
+
+    CLI.print('(Exit code: ${exitCode})', Verbose);
 
     // CLI.print(exitCode);
   }

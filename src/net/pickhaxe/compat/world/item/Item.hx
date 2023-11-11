@@ -44,6 +44,7 @@ class Item_ForgeRegistrar extends net.pickhaxe.compat.forge.ForgeRegistrar<Item_
 
   public static function register(eventBus:net.minecraftforge.eventbus.api.IEventBus):Void
   {
+    net.pickhaxe.core.PickHaxe.logDebug('Registering Item_ForgeRegistrar lifecycle listeners...');
     // This is safe to run multiple times.
     eventBus.register(instance);
   }
@@ -51,11 +52,16 @@ class Item_ForgeRegistrar extends net.pickhaxe.compat.forge.ForgeRegistrar<Item_
   public static function queueItem(resourceLocation:ResourceLocation, item:Item_Minecraft):Item_Minecraft
   {
     // Chainable.
-    net.pickhaxe.core.PickHaxe.logInfo("Queued item: " + resourceLocation);
+    net.pickhaxe.core.PickHaxe.logInfo("Queued Item: " + resourceLocation);
     return instance.queue(resourceLocation, item);
   }
 
   #if minecraft_lt_1_19
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
+  public function onRegister(event:net.minecraftforge.event.RegistryEvent.Register<Item_Minecraft>):Void {
+    onRegisterEntries(event.getRegistry());
+  }
+
   override function applyEntryId(key:ResourceLocation, value:Item_Minecraft) {
     value.setRegistryName(key);
   }

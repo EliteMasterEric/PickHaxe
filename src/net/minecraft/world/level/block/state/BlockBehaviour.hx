@@ -56,7 +56,9 @@ abstract extern class BlockBehaviour
    * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed blockstate.@deprecated call via ,{@link net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#mirror}, whenever possible. Implementing/overriding is fine.
    */
   public function mirror(state:net.minecraft.world.level.block.state.BlockState, mirror:net.minecraft.world.level.block.Mirror):net.minecraft.world.level.block.state.BlockState;
+  #if minecraft_gteq_1_16_2
   public overload function canBeReplaced(state:net.minecraft.world.level.block.state.BlockState, useContext:net.minecraft.world.item.context.BlockPlaceContext):Bool;
+  #end
   public overload function canBeReplaced(state:net.minecraft.world.level.block.state.BlockState, fluid:net.minecraft.world.level.material.Fluid):Bool;
   public function getDrops(state:net.minecraft.world.level.block.state.BlockState, builder:net.minecraft.world.level.storage.loot.LootContext.LootContext_Builder):java.util.List<net.minecraft.world.item.ItemStack>;
   /**
@@ -106,7 +108,11 @@ abstract extern class BlockBehaviour
   public function onProjectileHit(level:net.minecraft.world.level.Level, state:net.minecraft.world.level.block.state.BlockState, hit:net.minecraft.world.phys.BlockHitResult, projectile:net.minecraft.world.entity.projectile.Projectile):Void;
   public function asItem():net.minecraft.world.item.Item;
 
+  #if minecraft_lteq_1_19_4
   public function defaultMaterialColor():net.minecraft.world.level.material.MaterialColor;
+  #else
+  public function defaultMapColor():net.minecraft.world.level.material.MapColor;
+  #end
   public function defaultDestroyTime():Single;
 }
 
@@ -114,11 +120,22 @@ abstract extern class BlockBehaviour
 @:native("net.minecraft.world.level.block.state.BlockBehaviour$Properties")
 extern class BlockBehaviour_Properties
 {
+  public static overload function of():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #if minecraft_lteq_1_19_4
   public static overload function of(material:net.minecraft.world.level.material.Material):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public static overload function of(material:net.minecraft.world.level.material.Material, color:net.minecraft.world.item.DyeColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public static overload function of(material:net.minecraft.world.level.material.Material, materialColor:net.minecraft.world.level.material.MaterialColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public static overload function of(material:net.minecraft.world.level.material.Material, materialColor:java.util.function.Function<net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.material.MaterialColor>):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #end
   public static function copy(blockBehaviour:net.minecraft.world.level.block.state.BlockBehaviour):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #if minecraft_gteq_1_20
+  public overload function mapColor(dyeColor:net.minecraft.world.item.DyeColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public overload function mapColor(mapColor:net.minecraft.world.level.material.MapColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public overload function mapColor(func:java.util.function.Function<net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.material.MapColor>):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #end
+  /**
+   * `noCollission` is a typo.
+   */
   public function noCollission():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function noOcclusion():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function friction(friction:Single):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
@@ -132,7 +149,14 @@ extern class BlockBehaviour_Properties
   public function randomTicks():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function dynamicShape():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function noLootTable():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #if minecraft_gteq_1_20
   public function dropsLike(block:net.minecraft.world.level.block.Block):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function ignitedByLava():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function liquid():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function forceSolidOn():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function forceSolidOff():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function pushReaction(pushReaction:net.minecraft.world.level.material.PushReaction):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #end
   public function air():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function isValidSpawn(isValidSpawn:net.minecraft.world.level.block.state.BlockBehaviour.StateArgumentPredicate<net.minecraft.world.entity.EntityType<Dynamic>>):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function isRedstoneConductor(isRedstoneConductor:net.minecraft.world.level.block.state.BlockBehaviour.StatePredicate):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
@@ -141,13 +165,19 @@ extern class BlockBehaviour_Properties
   public function hasPostProcess(hasPostProcess:net.minecraft.world.level.block.state.BlockBehaviour.StatePredicate):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function emissiveRendering(emissiveRendering:net.minecraft.world.level.block.state.BlockBehaviour.StatePredicate):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function requiresCorrectToolForDrops():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #if minecraft_lteq_1_19_4
   public function color(materialColor:net.minecraft.world.level.material.MaterialColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #end
   public function destroyTime(destroyTime:Single):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function explosionResistance(explosionResistance:Single):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function offsetType(offsetType:net.minecraft.world.level.block.state.BlockBehaviour.OffsetType):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function noParticlesOnBreak():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   #if minecraft_gteq_1_19_3
   public function requiredFeatures(requiredFeatures:Array<net.minecraft.world.flag.FeatureFlag>):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  #end
+  #if minecraft_gteq_1_19_4
+  public function instrument(noteBlockInstrument:net.minecraft.world.level.block.state.properties.NoteBlockInstrument):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function replaceable():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   #end
 }
 typedef Properties = BlockBehaviour_Properties;
@@ -187,7 +217,9 @@ abstract extern class BlockBehaviour_BlockStateBase extends net.minecraft.world.
   #if minecraft_gteq_1_18_2
   public function getBlockHolder():net.minecraft.core.Holder<net.minecraft.world.level.block.Block>;
   #end
+  #if minecraft_lteq_1_19_4
   public function getMaterial():net.minecraft.world.level.material.Material;
+  #end
   public function isValidSpawn(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos, entityType:net.minecraft.world.entity.EntityType<Dynamic>):Bool;
   public function propagatesSkylightDown(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):Bool;
   public function getLightBlock(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):Int;
@@ -197,7 +229,11 @@ abstract extern class BlockBehaviour_BlockStateBase extends net.minecraft.world.
   public function useShapeForLightOcclusion():Bool;
   public function getLightEmission():Int;
   public function isAir():Bool;
+  #if minecraft_gteq_1_20
+  public function getMapColor(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):net.minecraft.world.level.material.MapColor;
+  #else
   public function getMapColor(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):net.minecraft.world.level.material.MaterialColor;
+  #end
   public function rotate(rotation:net.minecraft.world.level.block.Rotation):net.minecraft.world.level.block.state.BlockState;
   public function mirror(mirror:net.minecraft.world.level.block.Mirror):net.minecraft.world.level.block.state.BlockState;
   public function getRenderShape():net.minecraft.world.level.block.RenderShape;
@@ -245,7 +281,9 @@ abstract extern class BlockBehaviour_BlockStateBase extends net.minecraft.world.
   public function isViewBlocking(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):Bool;
   public function updateShape(direction:net.minecraft.core.Direction, queried:net.minecraft.world.level.block.state.BlockState, level:net.minecraft.world.level.LevelAccessor, currentPos:net.minecraft.core.BlockPos, offsetPos:net.minecraft.core.BlockPos):net.minecraft.world.level.block.state.BlockState;
   public function isPathfindable(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos, type:net.minecraft.world.level.pathfinder.PathComputationType):Bool;
+  #if minecraft_gteq_1_16_2
   public overload function canBeReplaced(useContext:net.minecraft.world.item.context.BlockPlaceContext):Bool;
+  #end
   public overload function canBeReplaced(fluid:net.minecraft.world.level.material.Fluid):Bool;
   public overload function canBeReplaced():Bool;
   public function canSurvive(level:net.minecraft.world.level.LevelReader, pos:net.minecraft.core.BlockPos):Bool;
@@ -268,7 +306,9 @@ abstract extern class BlockBehaviour_BlockStateBase extends net.minecraft.world.
   public function getSoundType():net.minecraft.world.level.block.SoundType;
   public function onProjectileHit(level:net.minecraft.world.level.Level, state:net.minecraft.world.level.block.state.BlockState, hit:net.minecraft.world.phys.BlockHitResult, projectile:net.minecraft.world.entity.projectile.Projectile):Void;
   public overload function isFaceSturdy(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos, direction:net.minecraft.core.Direction):Bool;
+  #if minecraft_gteq_1_16_2
   public overload function isFaceSturdy(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos, face:net.minecraft.core.Direction, supportType:net.minecraft.world.level.block.SupportType):Bool;
+  #end
   public function isCollisionShapeFullBlock(level:net.minecraft.world.level.BlockGetter, pos:net.minecraft.core.BlockPos):Bool;
 
   public function requiresCorrectToolForDrops():Bool;
@@ -281,7 +321,9 @@ typedef BlockStateBase = BlockBehaviour_BlockStateBase;
 final extern class BlockBehaviour_BlockStateBase_Cache
 {
   public function new(blockState:net.minecraft.world.level.block.state.BlockState);
+  #if minecraft_gteq_1_16_2
   public function isFaceSturdy(direction:net.minecraft.core.Direction, supportType:net.minecraft.world.level.block.SupportType):Bool;
+  #end
 }
 typedef Cache = BlockBehaviour_BlockStateBase_Cache;
 

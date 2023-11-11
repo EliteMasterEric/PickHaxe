@@ -3,7 +3,82 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.0] - 2023-05-??
+## Upcoming
+- [] Caused by: java.lang.NoSuchFieldError: displayName
+	at net.pickhaxe.compat.world.item.CreativeModeTab$CreativeModeTab_Impl_.setId(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/compat/world/item/CreativeModeTab.hx:66)
+	at net.pickhaxe.compat.world.item.CreativeModeTab$CreativeModeTab_Impl_.register(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/compat/world/item/CreativeModeTab.hx:30)
+	at com.elitemastereric.madeinhaxe.items.ModItems.registerCreativeTab(./src/com/elitemastereric/madeinhaxe/items/ModItems.hx:38)
+	at com.elitemastereric.madeinhaxe.MadeInHaxeMod.onCreativeModeTabRegister(./src/com/elitemastereric/madeinhaxe/MadeInHaxeMod.hx:13)
+	at net.pickhaxe.core.CommonMod.onInitialize(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/core/CommonMod.hx:196)
+	at net.fabricmc.loader.impl.FabricLoaderImpl.invokeEntrypoints(FabricLoaderImpl.java:383)
+- [] 	Caused by 1: java.lang.NoClassDefFoundError: net/minecraftforge/event/RegistryEvent/Register
+		at java.lang.Class.getDeclaredMethods0(Native Method) ~[?:?] {}
+		at java.lang.Class.privateGetDeclaredMethods(Class.java:3402) ~[?:?] {}
+		at java.lang.Class.privateGetPublicMethods(Class.java:3427) ~[?:?] {}
+		at java.lang.Class.privateGetPublicMethods(Class.java:3433) ~[?:?] {}
+		at java.lang.Class.getMethods(Class.java:2019) ~[?:?] {}
+		at net.minecraftforge.eventbus.EventBus.registerObject(EventBus.java:92) ~[eventbus-5.0.3.jar%2336!/:?] {}
+		at net.minecraftforge.eventbus.EventBus.register(EventBus.java:120) ~[eventbus-5.0.3.jar%2336!/:?] {}
+		at net.pickhaxe.core.CommonMod.forge_registerListeners(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/core/CommonMod.hx:95) ~[obsidianarmor-0.4.0.jar%2353!/:?] {re:classloading}
+- [] Forge (multiple mods): https://github.com/HaxeFoundation/haxe/issues/11361
+- [] Prompt to clean when switching versions, and save last version so we know when to do that
+- [] Add command line argument for shading
+- [] Option to auto-make when building
+
+## [0.4.0]
+## Added
+- Updated JVM target to be functional, and to be the default mode (to allow for improved code generation from Haxe).
+  - In this mode, Pickhaxe will now generate an unmapped "dev" JAR rather than a set of Java source files.
+- Fixes to mod metadata now add `authors` and `contributors`
+## Changed
+- Haxe dependency updated to require `5.0.0-alpha` (unless they end up releasing a 4.3.3).
+  - Easiest way to handle this is to modify `.vscode/settings.json` and change `terminal.integrated.env.windows` to add
+## Fixed
+- Updates and bug fixes to fix Fabric 1.16.0-1.20.2, as well as Fabric on snapshot 23w44a.
+- Fixed an issue where mod icons were not displaying. Make sure the icon is located at `resources/assets/<modid>_icon.png` so it works.
+## To Fix
+- [] Fabric 1.16: Untested
+- [] Fabric 1.16.1: java.lang.NoSuchFieldError: displayName
+- [X] Fabric 1.16.2
+- [X] Fabric 1.16.3
+- [X] Fabric 1.16.4
+- [X] Fabric 1.16.5
+- [X] Fabric 1.17
+- [X] Fabric 1.17.1
+- [X] Fabric 1.18
+- [X] Fabric 1.18.1
+- [X] Fabric 1.18.2
+- [X] Fabric 1.19
+- [X] Fabric 1.19.1
+- [X] Fabric 1.19.2
+- [X] Fabric 1.19.3
+- [X] Fabric 1.19.4
+- [X] Fabric 1.20
+- [X] Fabric 1.20.1
+- [X] Fabric 1.20.2
+- [X] Fabric 1.20.3 (Snapshot)
+- [] Forge 1.16: Untested
+- [] Forge 1.16.1: Untested
+- [] Forge 1.16.2: Untested
+- [] Forge 1.16.3: Untested
+- [] Forge 1.16.4: Untested
+- [] Forge 1.16.5: Untested
+- [] Forge 1.17: Untested
+- [] Forge 1.17.1: ForgeGradle issues
+- [] Forge 1.18: Untested
+- [] Forge 1.18.1: Untested
+- [] Forge 1.18.2: java.lang.NoClassDefFoundError: net/minecraftforge/event/RegistryEvent/Register
+- [X] Forge 1.19
+- [X] Forge 1.19.1
+- [X] Forge 1.19.2
+- [X] Forge 1.19.3
+- [X] Forge 1.19.4
+- [] Forge 1.20: ForgeGradle issues
+- [] Forge 1.20.1
+- [] Forge 1.20.2
+
+
+## [0.3.0] - 2023-07-10
 ## Added
 - Implemented basic support for these versions:
   - `1.18.2` `fabric`
@@ -23,11 +98,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fixed an issue where the `init` command said dashes were valid in mod IDs.
 - `pickhaxe build` now properly ends if one of the Gradle tasks fails.
 - Fixed various build issues.
-## To Fix
-- [] Broken mod icons on Fabric
-- [] Add working autocomplete to sample/template
-- [] Add proper support for contact information/author name
-- [] Allow non-standard keys in author information
 
 
 ## [0.2.0] - 2023-04-08

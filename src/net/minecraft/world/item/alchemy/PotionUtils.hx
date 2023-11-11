@@ -1,16 +1,12 @@
 package net.minecraft.world.item.alchemy;
 
 @:native("net.minecraft.world.item.alchemy.PotionUtils")
-@:mapping("net.minecraft.class_1844")
 extern class PotionUtils
 {
   public function new();
-  @:mapping("field_30943")
-  public static final TAG_CUSTOM_POTION_EFFECTS:String;
-  @:mapping("field_30944")
-  public static final TAG_CUSTOM_POTION_COLOR:String;
-  @:mapping("field_30945")
-  public static final TAG_POTION:String;
+    public static final TAG_CUSTOM_POTION_EFFECTS:String;
+    public static final TAG_CUSTOM_POTION_COLOR:String;
+    public static final TAG_POTION:String;
 
   /**
    * Creates a list of `MobEffectInstance` from data on the passed `ItemStack` `CompoundTag`.@param : stack The passed ,{@code ItemStack}

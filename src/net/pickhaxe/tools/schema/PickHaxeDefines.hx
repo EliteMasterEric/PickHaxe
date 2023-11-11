@@ -31,7 +31,7 @@ typedef PickHaxeDefinesPickHaxe =
   version:String,
   haxe:
   {
-    libraries:Array<HaxelibEntry>, version:String,
+    libraries:Array<HaxelibEntry>, version:String, jvm:String
   },
   gradle:
   {
@@ -81,12 +81,38 @@ typedef PickHaxeDefinesMod =
   description:String,
   entryPoints:Array<PickHaxeProject.ModEntryPoint>,
   license:String,
+
+  authorData:AuthorData,
+
+  homepage:String,
+  email:String,
+  issues:String,
+  sources:String,
+}
+
+typedef AuthorData = {
+  /**
+   * A comma separated list of author names with no contact info.
+   * Used by Forge.
+   */
+  authorsString:String,
+  /**
+   * An array of authors (either strings or objects with name and contact info).
+   * Used by Fabric.
+   */
+  authors:Array<net.pickhaxe.schema.FabricMod.Person>,
+  /**
+   * An array of contributors (either strings or objects with name and contact info).
+   * Used by Fabric.
+   */
+  contributors:Array<net.pickhaxe.schema.FabricMod.Person>,
 }
 
 typedef BuildParams =
 {
   loader:String,
   mcVersion:String,
+  jvm:Bool,
   ?noMapping:Bool,
   ?mappings:String,
 }
@@ -115,12 +141,12 @@ class Builder
 
     var projectFile:PickHaxeProject = net.pickhaxe.tools.util.XML.readProjectFile(IO.workingDir().joinPaths('project.xml'));
 
-    CLI.print("Read project file.");
-
     if (projectFile == null)
     {
       throw new NoProjectXMLException();
     }
+
+    CLI.print("Read project file.");
 
     return switch (params.loader)
     {
@@ -240,6 +266,26 @@ class Builder
     var fabricAPIVersion:String = FabricMeta.getApiVersionForMinecraft(params.mcVersion);
     if (fabricAPIVersion == null) throw 'Could not load Fabric API version from API for version ${params.mcVersion}';
 
+    var authors:Array<net.pickhaxe.schema.FabricMod.Person> = [for (author in projectFile.authors) Right({
+      name: author.name,
+      contact: {
+        homepage: author.homepage,
+        email: author.email,
+        issues: author.issues,
+        sources: author.sources,
+      },
+    })];
+
+    var contributors:Array<net.pickhaxe.schema.FabricMod.Person> = [for (contributor in projectFile.contributors) Right({
+      name: contributor.name,
+      contact: {
+        homepage: contributor.homepage,
+        email: contributor.email,
+        issues: contributor.issues,
+        sources: contributor.sources,
+      },
+    })];
+
     return {
       pickhaxe:
         {
@@ -249,6 +295,7 @@ class Builder
             {
               libraries: projectFile.haxelibs,
               version: Constants.HAXE_VERSION,
+              jvm: params.jvm ? 'true' : 'false',
             },
 
           java:
@@ -318,7 +365,19 @@ class Builder
 
               entryPoints: projectFile.entryPoints,
 
-              license: projectFile.license.value,
+              // Default license
+              license: projectFile?.license?.value ?? 'All Rights Reserved',
+
+              authorData: {
+                authorsString: '', // Unused by Fabric.
+                authors: authors,
+                contributors: contributors,
+              },
+
+              homepage: projectFile?.contact?.homepage ?? null,
+              email: projectFile?.contact?.email ?? null,
+              issues: projectFile?.contact?.issues ?? null,
+              sources: projectFile?.contact?.sources ?? null,
             },
         }
     };
@@ -375,6 +434,22 @@ class Builder
       }
     }
 
+    var authorsStringParts:Array<String> = [];
+
+    for (author in projectFile.authors)
+    {
+      var authorName:String = author.name;
+      if (authorName != null) authorsStringParts.push(authorName);
+    }
+  
+    for (contributor in projectFile.contributors)
+    {
+      var contributorName:String = contributor.name;
+      if (contributorName != null) authorsStringParts.push(contributorName);
+    }
+  
+    var authorsString:String = authorsStringParts.join(', ');
+
     return {
       pickhaxe:
         {
@@ -384,6 +459,7 @@ class Builder
             {
               libraries: projectFile.haxelibs,
               version: Constants.HAXE_VERSION,
+              jvm: params.jvm ? 'true' : 'false',
             },
 
           java:
@@ -451,7 +527,18 @@ class Builder
 
               entryPoints: projectFile.entryPoints,
 
-              license: projectFile.license.value,
+              license: projectFile?.license?.value ?? 'All Rights Reserved',
+
+              authorData: {
+                authorsString: authorsString,
+                authors: [], // Unused by Forge.
+                contributors: [], // Unused by Forge.
+              },
+
+              homepage: projectFile?.contact?.homepage ?? null,
+              email: projectFile?.contact?.email ?? null,
+              issues: projectFile?.contact?.issues ?? null,
+              sources: projectFile?.contact?.sources ?? null,
             },
         }
     };
@@ -463,6 +550,7 @@ class Builder
 
     // result = result.concat(DEFINE, 'pickhaxe.version=' + defines.pickhaxe.version); // Use `pickhaxe` instead.
     // result.append(DEFINE, 'pickhaxe.gradle.version=${defines.pickhaxe.gradle.version}'); // Use `haxe` instead.
+    result.append(DEFINE, 'pickhaxe.haxe.jvm=${defines.pickhaxe.haxe.jvm}');
     result.append(DEFINE, 'pickhaxe.gradle.version=${defines.pickhaxe.gradle.version}');
     result.append(DEFINE, 'pickhaxe.java.version=${defines.pickhaxe.java.version}');
     result.append(DEFINE, 'pickhaxe.loader.current=${defines.pickhaxe.loader.current}');

@@ -156,7 +156,7 @@ class ModCoreMacro
   {
     // @:strict(net.minecraftforge.fml.common.Mod({ author:"author", currentRevision: 2 }))
 
-    MacroUtil.addClassMetadata('meta', [macro net.minecraftforge.fml.common.Mod($v{params.modId})]);
+    MacroUtil.addClassMetadata('meta', [macro net.minecraftforge.fml.common.Mod(value = $v{params.modId})]);
   }
   #end
 

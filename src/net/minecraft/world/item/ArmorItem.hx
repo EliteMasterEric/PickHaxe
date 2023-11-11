@@ -3,11 +3,9 @@ package net.minecraft.world.item;
 import net.minecraft.world.entity.EquipmentSlot;
 
 @:native("net.minecraft.world.item.ArmorItem")
-@:mapping("net.minecraft.class_1738")
 extern class ArmorItem extends net.minecraft.world.item.Item implements net.minecraft.world.item.Equipable
 {
-  @:mapping("field_7879")
-  public static final DISPENSE_ITEM_BEHAVIOR:net.minecraft.core.dispenser.DispenseItemBehavior;
+    public static final DISPENSE_ITEM_BEHAVIOR:net.minecraft.core.dispenser.DispenseItemBehavior;
 
   #if minecraft_gteq_1_19_4
   /**
@@ -45,23 +43,18 @@ extern class ArmorItem extends net.minecraft.world.item.Item implements net.mine
 #if minecraft_gteq_1_19_4
 // Use the native ArmorItem_Type enum
 @:native("net.minecraft.world.item.ArmorItem$Type")
-@:mapping("net.minecraft.class_1738$class_8051")
 final extern class ArmorItem_Type extends java.lang.Enum<net.minecraft.world.item.ArmorItem.ArmorItem_Type>
 {
   public static function values():Array<net.minecraft.world.item.ArmorItem.ArmorItem_Type>;
   public static function valueOf(name:String):net.minecraft.world.item.ArmorItem.ArmorItem_Type;
 
-  @:mapping("field_41934")
-  public static var HELMET:net.minecraft.world.item.ArmorItem.ArmorItem_Type;
+    public static var HELMET:net.minecraft.world.item.ArmorItem.ArmorItem_Type;
 
-  @:mapping("field_41935")
-  public static var CHESTPLATE:net.minecraft.world.item.ArmorItem.ArmorItem_Type;
+    public static var CHESTPLATE:net.minecraft.world.item.ArmorItem.ArmorItem_Type;
 
-  @:mapping("field_41936")
-  public static var LEGGINGS:net.minecraft.world.item.ArmorItem.ArmorItem_Type;
+    public static var LEGGINGS:net.minecraft.world.item.ArmorItem.ArmorItem_Type;
 
-  @:mapping("field_41937")
-  public static var BOOTS:net.minecraft.world.item.ArmorItem.ArmorItem_Type;
+    public static var BOOTS:net.minecraft.world.item.ArmorItem.ArmorItem_Type;
 
     public function getSlot():EquipmentSlot;
 

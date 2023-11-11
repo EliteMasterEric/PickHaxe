@@ -12,9 +12,9 @@ typedef ForgeRegistrarEntry<T> =
 };
 
 #if minecraft_lteq_1_18_2
-class ForgeRegistrar<T:net.minecraftforge.registries.IForgeRegistryEntry>
+abstract class ForgeRegistrar<T:net.minecraftforge.registries.IForgeRegistryEntry>
 #else
-class ForgeRegistrar<T>
+abstract class ForgeRegistrar<T>
 #end
 {
   var entriesToRegister:Map<ResourceLocation, T>;
@@ -49,7 +49,7 @@ class ForgeRegistrar<T>
   {
     if (hasRegistered)
     {
-      net.pickhaxe.core.PickHaxe.logError('Cannot register after the registrar has completed! ${resourceLocation}');
+      net.pickhaxe.core.PickHaxe.logError('ForgeRegistrar cannot register entry (${${resourceLocation}}) after the registrar has completed!');
       return value;
     }
     entriesToRegister.set(resourceLocation, value);
@@ -62,7 +62,7 @@ class ForgeRegistrar<T>
   /**
    * Called whenever ANY registry is ready for entries.
    */
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
+  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function onRegister(event:net.minecraftforge.registries.RegisterEvent)
   {
     net.pickhaxe.core.PickHaxe.logDebug('ForgeRegistrar received RegisterEvent');
@@ -102,20 +102,9 @@ class ForgeRegistrar<T>
    * The registries will be visited in alphabetic order of their name, except blocks and items,
    * which will be visited FIRST and SECOND respectively.
    */
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent)
-  public function onRegister(event:net.minecraftforge.event.RegistryEvent.Register<T>)
-  {
-    net.pickhaxe.core.PickHaxe.logDebug('ForgeRegistrar received RegistryEvent');
-
-    if (targetRegistryKey == null)
-    {
-      net.pickhaxe.core.PickHaxe.logError("ForgeRegistrar has no target registry!");
-      return;
-    }
-
-    onRegisterEntries(event.getRegistry());
-  }
-
+  // @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
+  public abstract function onRegister(event:net.minecraftforge.event.RegistryEvent.Register<T>):Void;
+  
   /**
    * Called whenever the registry this registrar is for is ready for entries.
    */
@@ -132,8 +121,9 @@ class ForgeRegistrar<T>
   function registerEntry(registry:net.minecraftforge.registries.IForgeRegistry<T>, entry:ForgeRegistrarEntry<T>):Void
   {
     net.pickhaxe.core.PickHaxe.logInfo("Registering entry " + entry.key);
-    registry.register(entry.value);
+    // TODO: Do I need to apply the entry ID first? Or last? Or does it depend?
     applyEntryId(entry.key, entry.value);
+    registry.register(entry.value);
   }
 
   /**

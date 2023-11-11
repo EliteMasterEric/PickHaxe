@@ -1,0 +1,12 @@
+{
+  "type": "stable",
+  "version": "1.20.1",
+
+  "javaVersion": "17",
+
+  "forgeGradleVersion": "8.1.1",
+  "fabricGradleVersion": "8.3",
+
+  "forgeVersion": "48.0.33",
+  "fmlVersion": "47"
+}

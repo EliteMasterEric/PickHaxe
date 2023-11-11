@@ -24,7 +24,7 @@ class GradleW extends CLIProcess
    */
   public function performTask(args:Array<String>, ?detached:Bool = true):Bool
   {
-    var finalArgs:Array<String> = buildArguments().concat(args);
+    var finalArgs:Array<String> = buildArguments(args[0]).concat(args);
 
     var output = getProcessOutput(finalArgs, detached);
     
@@ -51,7 +51,7 @@ class GradleW extends CLIProcess
     return performTask(['genSources'], detached);
   }
 
-  function buildArguments():Array<String>
+  function buildArguments(taskName:String):Array<String>
   {
     return [
       // Part of GradleW
@@ -62,8 +62,10 @@ class GradleW extends CLIProcess
       '--stacktrace',
       '--no-daemon',
 
+      '-Dpickhaxe.task=${taskName}',
       '-Dpickhaxe.version=${defines.pickhaxe.version}',
       '-Dpickhaxe.haxe.version=${defines.pickhaxe.haxe.version}',
+      '-Dpickhaxe.haxe.jvm=${defines.pickhaxe.haxe.jvm}',
       '-Dpickhaxe.java.version=${defines.pickhaxe.java.version}',
       '-Dpickhaxe.minecraft.version=${defines.pickhaxe.minecraft.version}',
       '-Dpickhaxe.minecraft.resourcePackFormat=${defines.pickhaxe.minecraft.resourcePackFormat}',

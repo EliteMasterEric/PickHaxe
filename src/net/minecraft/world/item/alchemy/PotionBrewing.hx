@@ -1,12 +1,10 @@
 package net.minecraft.world.item.alchemy;
 
 @:native("net.minecraft.world.item.alchemy.PotionBrewing")
-@:mapping("net.minecraft.class_1845")
 extern class PotionBrewing
 {
   public function new();
-  @:mapping("field_30942")
-  public static final BREWING_TIME_SECONDS:Int;
+    public static final BREWING_TIME_SECONDS:Int;
 
     public static function isIngredient(input:net.minecraft.world.item.ItemStack):Bool;
 
@@ -24,7 +22,6 @@ extern class PotionBrewing
 
 @:native("net.minecraft.world.item.alchemy.PotionBrewing$Mix")
 @:realPath("net.minecraft.world.item.alchemy.PotionBrewing_Mix")
-@:mapping("net.minecraft.class_1845$class_1846")
 extern class PotionBrewing_Mix<T>
 {
   public function new(object:T, ingredient:net.minecraft.world.item.crafting.Ingredient, object2:T);

@@ -1,7 +1,6 @@
 package net.minecraft.world.entity;
 
 @:native("net.minecraft.world.entity.EquipmentSlot")
-@:mapping("net.minecraft.class_1304")
 final extern class EquipmentSlot extends java.lang.Enum<net.minecraft.world.entity.EquipmentSlot>
 {
   public static function values():java.NativeArray<net.minecraft.world.entity.EquipmentSlot>;
@@ -34,7 +33,6 @@ final extern class EquipmentSlot extends java.lang.Enum<net.minecraft.world.enti
 }
 
 @:native("net.minecraft.world.entity.EquipmentSlot$Type")
-@:mapping("net.minecraft.class_1304$class_1305")
 final extern class EquipmentSlot_Type extends java.lang.Enum<net.minecraft.world.entity.EquipmentSlot.EquipmentSlot_Type>
 {
   public static function values():java.NativeArray<net.minecraft.world.entity.EquipmentSlot.EquipmentSlot_Type>;

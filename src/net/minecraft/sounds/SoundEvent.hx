@@ -1,7 +1,6 @@
 package net.minecraft.sounds;
 
 @:native("net.minecraft.sounds.SoundEvent")
-@:mapping("net.minecraft.class_3414")
 extern class SoundEvent
 {
   public static final DIRECT_CODEC:com.mojang.serialization.Codec<net.minecraft.sounds.SoundEvent>;

@@ -16,6 +16,8 @@ plugins {
   // Forge
   //
   id 'net.minecraftforge.gradle' version '5.1.+' apply false
+  id 'net.minecraftforge.gradle.mcp' version '5.1.+' apply false
+  id 'net.minecraftforge.gradle.patcher' version '5.1.+' apply false
   id 'org.parchmentmc.librarian.forgegradle' version '1.+' apply false
 
   // 
@@ -39,6 +41,7 @@ switch(System.getProperty('pickhaxe.loader.current')) {
   case 'forge':
     apply plugin: 'net.minecraftforge.gradle'
     apply plugin: 'org.parchmentmc.librarian.forgegradle'
+    apply plugin: 'com.github.johnrengelman.shadow'
     break
   case 'fabric':
     apply plugin: 'fabric-loom'
@@ -239,6 +242,58 @@ shadowJar {
   }
 }
 
+if (System.getProperty('pickhaxe.loader.current').equals('fabric') && System.getProperty('pickhaxe.haxe.jvm').equals('true')) {
+  remapJar {
+    input = file("../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
+    archiveFileName = "../../../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
+  }
+} else if (System.getProperty('pickhaxe.loader.current').equals('forge') && System.getProperty('pickhaxe.haxe.jvm').equals('true')
+  && (System.getProperty('pickhaxe.task').equals('reobfSourcesJar') || System.getProperty('pickhaxe.task').equals('reobfShadowSourcesJar')|| System.getProperty('pickhaxe.task').equals('shadowSourcesJar'))) {
+  task sourcesJar(type: Jar) {
+    from zipTree("../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
+  }
+
+  task shadowSourcesJar(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+    dependsOn sourcesJar
+
+    archiveClassifier = 'shadow'
+    configurations = [project.configurations.shade]
+    
+    // Shadow the listed packages.
+    relocate ('net.pickhaxe', "${project.group}.shadow.net.pickhaxe") {
+      exclude "${project.group}"
+    }
+    relocate ('haxe', "${project.group}.shadow.haxe") {
+      exclude "${project.group}"
+    }
+  }
+
+  reobf {
+    sourcesJar {
+      finalizedBy('copyReobfSourcesJar')
+    } 
+    shadowSourcesJar {
+      finalizedBy('copyReobfShadowSourcesJar')
+    } 
+  }
+
+  task copyReobfSourcesJar(type: Copy) {
+    from("$buildDir/reobfSourcesJar") {
+      rename "output.jar", "${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
+    }
+    exclude '**/*.txt'
+    into "../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/"
+  }
+
+  task copyReobfShadowSourcesJar(type: Copy) {
+    from("$buildDir/reobfShadowSourcesJar") {
+      rename "output.jar", "${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
+    }
+    exclude '**/*.txt'
+    into "../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/"
+  }
+}
+
 if (System.getProperty('pickhaxe.loader.current').equals('fabric')) {
   loom {
     accessWidenerPath = file("resources/META-INF/${System.getProperty('pickhaxe.mod.id')}.accesswidener")
@@ -250,7 +305,7 @@ if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
   assemble.dependsOn shadowJar
 
   reobf {
-      shadowJar {}
+    shadowJar {}
   }
 
   jar.finalizedBy('reobfJar')

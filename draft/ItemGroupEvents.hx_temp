@@ -1,5 +1,16 @@
 package net.fabricmc.fabric.api.itemgroup.v1;
 
+import net.fabricmc.fabric.api.event.Event;
+
+@:native("net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents")
+extern class ItemGroupEvents {
+  public static extern final MODIFY_ENTRIES_ALL:Event<ModifyEntriesAll>;
+}
+
+
+
+package net.fabricmc.fabric.api.itemgroup.v1;
+
 @:native("net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents")
 extern class ItemGroupEvents
 {

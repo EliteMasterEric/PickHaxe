@@ -5,8 +5,8 @@
   "javaVersion": "17",
 
   "forgeGradleVersion": "8.1.1",
-  "fabricGradleVersion": "8.0.1",
+  "fabricGradleVersion": "8.1.1",
 
-  "forgeVersion": "47.1.0",
+  "forgeVersion": "47.2.1",
   "fmlVersion": "47"
 }

@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 @:native("net.minecraft.world.item.Items")
-@:mapping("net.minecraft.class_1802")
 extern class Items
 {
   public function new();

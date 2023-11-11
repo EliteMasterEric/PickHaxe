@@ -7,7 +7,6 @@ package net.minecraft.resources;
  *  @param : T The type of the resource represented by this ,{@code ResourceKey},, or the type of the registry if it is a registry key.@see net.minecraft.resources.ResourceLocation
  */
 @:native("net.minecraft.resources.ResourceKey")
-@:mapping("net.minecraft.class_5321")
 extern class ResourceKey<T>
 {
   public static function codec<T>(registryKey:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<T>>):com.mojang.serialization.Codec<net.minecraft.resources.ResourceKey<T>>;
@@ -38,17 +37,14 @@ extern class ResourceKey<T>
 
 @:native("net.minecraft.resources.ResourceKey$InternKey")
 @:realPath("net.minecraft.resources.ResourceKey_InternKey")
-@:mapping("net.minecraft.class_5321$class_7892")
 final extern class ResourceKey_InternKey extends java.lang.Record
 {
   public function new(registry:net.minecraft.resources.ResourceLocation, location:net.minecraft.resources.ResourceLocation);
   public final function toString():String;
   public final function hashCode():Int;
   public final function equals(o:Dynamic):Bool;
-  @:mapping("comp_1149")
-  public function registry():net.minecraft.resources.ResourceLocation;
-  @:mapping("comp_1150")
-  public function location():net.minecraft.resources.ResourceLocation;
+    public function registry():net.minecraft.resources.ResourceLocation;
+    public function location():net.minecraft.resources.ResourceLocation;
 }
 
 typedef InternKey = ResourceKey_InternKey;

@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 @:native("net.minecraft.world.item.ArmorMaterial")
-@:mapping("net.minecraft.class_1741")
 extern interface ArmorMaterial
 {
     public function getDurabilityForType(var1:net.minecraft.world.item.ArmorItem.ArmorItem_Type):Int;

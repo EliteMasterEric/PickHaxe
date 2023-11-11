@@ -2,11 +2,9 @@ package net.minecraft.world.flag;
 
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.world.flag.FeatureFlagSet")
-@:mapping("net.minecraft.class_7699")
 final extern class FeatureFlagSet
 {
-  @:mapping("field_40172")
-  public static final MAX_CONTAINER_SIZE:Int;
+    public static final MAX_CONTAINER_SIZE:Int;
 
     static function create(universe:net.minecraft.world.flag.FeatureFlagUniverse,
     flags:java.util.Collection<net.minecraft.world.flag.FeatureFlag>):net.minecraft.world.flag.FeatureFlagSet;

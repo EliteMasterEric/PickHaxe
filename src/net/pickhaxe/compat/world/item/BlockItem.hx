@@ -27,7 +27,7 @@ abstract BlockItem(BlockItem_Minecraft) from BlockItem_Minecraft to BlockItem_Mi
     #if fabric
     net.pickhaxe.compat.core.Registries.ITEMS.register(resourceLocation, this);
     #elseif forge
-    net.pickhaxe.compat.world.item.ITem.Item_ForgeRegistrar.queueItem(resourceLocation, this);
+    net.pickhaxe.compat.world.item.Item.Item_ForgeRegistrar.queueItem(resourceLocation, this);
     #end
 
     // Chainable.

@@ -1,11 +1,9 @@
 package net.minecraft.util;
 
 @:native("net.minecraft.util.StringRepresentable")
-@:mapping("net.minecraft.class_3542")
 extern interface StringRepresentable
 {
-  @:mapping("field_38377")
-  public static final PRE_BUILT_MAP_THRESHOLD:Int;
+    public static final PRE_BUILT_MAP_THRESHOLD:Int;
   public function getSerializedName():String;
   public static function fromEnum<E:java.lang.Enum<E>>(elementsSupplier:java.util.function.Supplier<java.NativeArray<E>>):net.minecraft.util.StringRepresentable_EnumCodec<E>;
   public static function fromEnumWithMapping<E:java.lang.Enum<E>>(supplier:java.util.function.Supplier<java.NativeArray<E>>,
@@ -14,7 +12,6 @@ extern interface StringRepresentable
 }
 
 @:native("net.minecraft.util.StringRepresentable$EnumCodec")
-@:mapping("net.minecraft.class_3542$class_7292")
 extern class StringRepresentable_EnumCodec<E:EnumValue & StringRepresentable> implements com.mojang.serialization.Codec<E>
 {
   function new(pThis:java.NativeArray<E>, enums:java.util.function.Function<String, E>):Void;
@@ -105,7 +102,7 @@ extern class StringRepresentable_EnumCodec<E:EnumValue & StringRepresentable> im
 
   function withLifecycle(pThis:com.mojang.serialization.Lifecycle):com.mojang.serialization.Codec<E>;
 
-  function promotePartial(pThis:java.util.function.Consumer<String>):com.mojang.serialization.Codec<E>;
+  // function promotePartial(pThis:java.util.function.Consumer<String>):com.mojang.serialization.Codec<E>;
 
   function fieldOf(pThis:String):com.mojang.serialization.MapCodec<E>;
 }

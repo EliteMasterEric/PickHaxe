@@ -2,6 +2,7 @@ package net.pickhaxe.compat.core;
 
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 #if (forge)
@@ -51,6 +52,20 @@ class Registries
     return net.minecraft.core.Registry.ITEM;
     #end
   }
+
+  #if minecraft_gteq_1_20
+  public static var CREATIVE_MODE_TABS(get, null):Registry<CreativeModeTab>;
+
+  static inline function get_CREATIVE_MODE_TABS():Registry<CreativeModeTab>
+  {
+    #if minecraft_gteq_1_19_3
+    return net.minecraft.core.registries.BuiltInRegistries.CREATIVE_MODE_TAB;
+    #else
+    return net.minecraft.core.Registry.CREATIVE_MODE_TAB;
+    #end
+  }
+  #end
+
   #elseif forge
   public static var BLOCKS(get, null):IForgeRegistry<Block>;
 
@@ -72,5 +87,7 @@ class Registries
   {
     return net.minecraftforge.registries.ForgeRegistries.ITEMS;
   }
+  
+  // Exclude CREATIVE_MODE_TABS from Forge.
   #end
 }

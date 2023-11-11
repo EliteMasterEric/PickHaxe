@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 @:native("net.minecraft.world.item.Tier")
-@:mapping("net.minecraft.class_1832")
 extern interface Tier
 {
   public function getUses():Int;

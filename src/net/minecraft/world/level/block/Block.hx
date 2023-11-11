@@ -4,43 +4,27 @@ package net.minecraft.world.level.block;
  * Interface `FabricBlock` injected by mod fabric-block-api-v1
  */
 @:native("net.minecraft.world.level.block.Block")
-@:mapping("net.minecraft.class_2248")
 extern class Block
   extends net.minecraft.world.level.block.state.BlockBehaviour
   implements net.minecraft.world.level.ItemLike
   #if (fabric && minecraft_gteq_1_19_2) implements net.fabricmc.fabric.api.block.v1.FabricBlock #end
 {
-  @:mapping("field_10651")
-  public static final BLOCK_STATE_REGISTRY:net.minecraft.core.IdMapper<net.minecraft.world.level.block.state.BlockState>;
+    public static final BLOCK_STATE_REGISTRY:net.minecraft.core.IdMapper<net.minecraft.world.level.block.state.BlockState>;
 
-  @:mapping("field_31027")
-  public static final UPDATE_NEIGHBORS:Int;
-  @:mapping("field_31028")
-  public static final UPDATE_CLIENTS:Int;
-  @:mapping("field_31029")
-  public static final UPDATE_INVISIBLE:Int;
-  @:mapping("field_31030")
-  public static final UPDATE_IMMEDIATE:Int;
-  @:mapping("field_31031")
-  public static final UPDATE_KNOWN_SHAPE:Int;
-  @:mapping("field_31032")
-  public static final UPDATE_SUPPRESS_DROPS:Int;
-  @:mapping("field_31033")
-  public static final UPDATE_MOVE_BY_PISTON:Int;
-  @:mapping("field_31034")
-  public static final UPDATE_SUPPRESS_LIGHT:Int;
-  @:mapping("field_31035")
-  public static final UPDATE_NONE:Int;
-  @:mapping("field_31036")
-  public static final UPDATE_ALL:Int;
-  @:mapping("field_31022")
-  public static final UPDATE_ALL_IMMEDIATE:Int;
-  @:mapping("field_31023")
-  public static final INDESTRUCTIBLE:Float;
-  @:mapping("field_31024")
-  public static final INSTANT:Float;
-  @:mapping("field_31025")
-  public static final UPDATE_LIMIT:Int;
+    public static final UPDATE_NEIGHBORS:Int;
+    public static final UPDATE_CLIENTS:Int;
+    public static final UPDATE_INVISIBLE:Int;
+    public static final UPDATE_IMMEDIATE:Int;
+    public static final UPDATE_KNOWN_SHAPE:Int;
+    public static final UPDATE_SUPPRESS_DROPS:Int;
+    public static final UPDATE_MOVE_BY_PISTON:Int;
+    public static final UPDATE_SUPPRESS_LIGHT:Int;
+    public static final UPDATE_NONE:Int;
+    public static final UPDATE_ALL:Int;
+    public static final UPDATE_ALL_IMMEDIATE:Int;
+    public static final INDESTRUCTIBLE:Float;
+    public static final INSTANT:Float;
+    public static final UPDATE_LIMIT:Int;
 
   public static function getId(state:Null<net.minecraft.world.level.block.state.BlockState>):Int;
   public static function stateById(id:Int):net.minecraft.world.level.block.state.BlockState;
@@ -147,7 +131,10 @@ extern class Block
 
   public function stepOn(level:net.minecraft.world.level.Level, pos:net.minecraft.core.BlockPos, state:net.minecraft.world.level.block.state.BlockState,
     entity:net.minecraft.world.entity.Entity):Void;
-  public function getStateForPlacement(context:net.minecraft.world.item.context.BlockPlaceContext):Null<net.minecraft.world.level.block.state.BlockState>;
+    
+    #if minecraft_gteq_1_16_2
+    public function getStateForPlacement(context:net.minecraft.world.item.context.BlockPlaceContext):Null<net.minecraft.world.level.block.state.BlockState>;
+    #end
 
   /**
    * Called after a player has successfully harvested this block. This method will only be called if the player has used the correct tool and drops should be spawned.
@@ -228,7 +215,6 @@ extern class Block
 
 @:native("net.minecraft.world.level.block.Block$BlockStatePairKey")
 @:realPath("net.minecraft.world.level.block.Block_BlockStatePairKey")
-@:mapping("net.minecraft.class_2248$class_2249")
 final extern class Block_BlockStatePairKey
 {
   public function new(blockState:net.minecraft.world.level.block.state.BlockState, blockState2:net.minecraft.world.level.block.state.BlockState,

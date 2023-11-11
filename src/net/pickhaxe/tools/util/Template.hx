@@ -1,12 +1,13 @@
 package net.pickhaxe.tools.util;
 
-import net.pickhaxe.schema.FabricMod;
-import net.pickhaxe.tools.schema.PickHaxeProject.ModEntryPoint;
 import haxe.io.Path;
+import net.pickhaxe.schema.FabricMod;
+import net.pickhaxe.schema.FabricMod.EntrypointItem;
 import net.pickhaxe.tools.commands.Init.ModInitParameters;
 import net.pickhaxe.tools.schema.PickHaxeDefines;
+import net.pickhaxe.tools.schema.PickHaxeProject.ModEntryPoint;
 import net.pickhaxe.tools.util.IO;
-import net.pickhaxe.schema.FabricMod.EntrypointItem;
+import net.pickhaxe.tools.serialize.FabricModJSON;
 
 class Template
 {
@@ -17,8 +18,8 @@ class Template
       .replace('#{pickhaxe.mod.parentPackage}', modParams.parentPackage)
       .replace('#{pickhaxe.mod.name}', modParams.modName)
       .replace('#{pickhaxe.mod.description}', modParams.modDescription)
-      .replace('#{pickhaxe.mod.entryPoint.init.environment}', modParams.modEnvironment)
-      .replace('#{pickhaxe.mod.entryPoint.init.value}', modParams.entryClass)
+      .replace('#{pickhaxe.mod.entryPoint.environment}', modParams.modEnvironment)
+      .replace('#{pickhaxe.mod.entryPoint.class}', modParams.entryClass)
       .replace('#{pickhaxe.mod.license}', "All Rights Reserved"); // Default to All Rights Reserved
   }
 
@@ -29,6 +30,8 @@ class Template
     result = result.replace('#{pickhaxe.gradle.version}', defines.pickhaxe.gradle.version);
     result = result.replace('#{pickhaxe.java.version}', defines.pickhaxe.java.version);
     result = result.replace('#{pickhaxe.loader.current}', defines.pickhaxe.loader.current);
+    result = result.replace('#{pickhaxe.minecraft.version}', defines.pickhaxe.minecraft.version);
+    result = result.replace('#{pickhaxe.haxe.version}', defines.pickhaxe.haxe.version);
 
     result = result.replace('#{pickhaxe.mod.classPath}', defines.pickhaxe.mod.classPath);
     result = result.replace('#{pickhaxe.mod.description}', defines.pickhaxe.mod.description);
@@ -36,9 +39,17 @@ class Template
     result = result.replace('#{pickhaxe.mod.name}', defines.pickhaxe.mod.name);
     result = result.replace('#{pickhaxe.mod.parentPackage}', defines.pickhaxe.mod.parentPackage);
     result = result.replace('#{pickhaxe.mod.version}', defines.pickhaxe.mod.version);
+    result = result.replace('#{pickhaxe.mod.license}', defines.pickhaxe.mod.license);
+
+    result = result.replace('#{pickhaxe.mod.homepage}', defines.pickhaxe.mod.homepage);
+    result = result.replace('#{pickhaxe.mod.email}', defines.pickhaxe.mod.email);
+    result = result.replace('#{pickhaxe.mod.issues}', defines.pickhaxe.mod.issues);
+    result = result.replace('#{pickhaxe.mod.sources}', defines.pickhaxe.mod.sources);
+
+    result = result.replace('#{pickhaxe.mod.authors}', defines.pickhaxe.mod.authorData.authorsString);
+
     result = result.replace('#{pickhaxe.mappings.enabled}', '${defines.pickhaxe.mappings.enabled}');
     result = result.replace('#{pickhaxe.mappings.current}', defines.pickhaxe.mappings.current);
-    result = result.replace('#{pickhaxe.minecraft.version}', defines.pickhaxe.minecraft.version);
     result = result.replace('#{pickhaxe.minecraft.resourcePackFormat}', '${defines.pickhaxe.minecraft.resourcePackFormat}');
     result = result.replace('#{pickhaxe.minecraft.dataPackFormat}', '${defines.pickhaxe.minecraft.dataPackFormat}');
 
@@ -83,6 +94,21 @@ class Template
         name: defines.pickhaxe.mod.name,
         description: defines.pickhaxe.mod.description,
 
+        contact: {
+          homepage: defines.pickhaxe.mod.homepage,
+          issues: defines.pickhaxe.mod.issues,
+          sources: defines.pickhaxe.mod.sources,
+          email: defines.pickhaxe.mod.email
+          // irc: defines.pickhaxe.mod.irc
+        },
+
+        authors: defines.pickhaxe.mod.authorData.authors,
+        contributors: defines.pickhaxe.mod.authorData.contributors,
+        
+        license: Left(defines.pickhaxe.mod.license),
+
+        icon: Left('assets/${defines.pickhaxe.mod.id}_icon.png'),
+
         accessWidener: 'META-INF/${defines.pickhaxe.mod.id}.accesswidener',
 
         // TODO: Add support for client-only and server-only mods.
@@ -94,7 +120,7 @@ class Template
             server: serverEntrypoints ?? []
           }
       };
-    return JSON.toJSON(fabricModData);
+    return FabricModJSON.toJSON(fabricModData);
   }
 
   public static function writeForgeManifest(defines:PickHaxeDefines, outputPath:Path):Void

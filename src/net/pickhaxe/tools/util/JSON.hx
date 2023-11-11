@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.util;
 
+import net.pickhaxe.schema.FabricMod;
 import haxe.io.Path;
 import sys.io.File;
 import net.pickhaxe.schema.FabricMod.EntrypointItem;
@@ -37,41 +38,6 @@ class JSON
    */
   public static function toJSON(obj:Dynamic):String
   {
-    return HaxeJson.stringify(obj, replacer, '  ');
-  }
-
-  /**
-   * Customize how certain types are serialized when converting to JSON.
-   */
-  static function replacer(key:String, value:Dynamic):Dynamic
-  {
-    switch (value)
-    {
-      case Std.isOfType(_, EntrypointItem) => true:
-        switch (value)
-        {
-          case EntrypointItem.Left(value):
-            return value;
-          case EntrypointItem.Right(value):
-            return value;
-        }
-      case Std.isOfType(_, Array) => true:
-        if (value.length == 0)
-        {
-          return [];
-          // return null; This doesn't actually work.
-        }
-        return value.map(function(item:Dynamic):Dynamic {
-          return replacer(key, item);
-        });
-      default:
-        // Fallthrough.
-    }
-
-    return switch (key)
-    {
-      default:
-        value;
-    }
+    return HaxeJson.stringify(obj, null, '  ');
   }
 }

@@ -74,6 +74,7 @@ class Help implements ICommand
       'help' => new Help(),
       'setup' => new Setup(),
       'init' => new Init(),
+      'template' => new Template(),
       'build' => new Build(),
       'clean' => new Clean(),
       'gradlew' => new GradleW(),
@@ -88,7 +89,7 @@ class Help implements ICommand
   public static inline function getCommandNames():Array<String>
   {
     // Necessary because Map isn't ordered.
-    return ['help', 'setup', 'init', 'build', 'make', 'clean', 'gradlew'];
+    return ['help', 'setup', 'init', 'template', 'build', 'make', 'clean', 'gradlew'];
   }
 
   /**
@@ -307,8 +308,8 @@ typedef CommandInfo =
  */
 typedef CommandOption =
 {
-  short:Null<String>,
-  long:Null<String>,
-  blurb:String,
-  value:Null<String>
+  var blurb:String;
+  var ?short:String;
+  var ?long:String;
+  var ?value:String;
 };

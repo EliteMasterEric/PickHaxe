@@ -18,7 +18,7 @@ class Init implements ICommand
   {
     return {
       blurb: 'Initialize a new project',
-      description: 'Initializes a new PickHaxe project in the current directory.',
+      description: 'Initializes a new blank PickHaxe project in the current directory.',
       args: [],
       options: [
         {

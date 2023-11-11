@@ -2,7 +2,6 @@ package net.minecraft.core;
 
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.core.DefaultedRegistry")
-@:mapping("net.minecraft.class_7922")
 extern interface DefaultedRegistry<T> extends net.minecraft.core.Registry<T>
 {
   @:badMapping("unresolvedMethodOverride")
@@ -14,6 +13,5 @@ extern interface DefaultedRegistry<T> extends net.minecraft.core.Registry<T>
 }
 #else
 @:native("net.minecraft.core.DefaultedRegistry")
-@:mapping("net.minecraft.class_7922")
 extern class DefaultedRegistry<T> extends net.minecraft.core.MappedRegistry<T> {}
 #end

@@ -1,7 +1,6 @@
 package net.minecraft.network.chat;
 
 @:native("net.minecraft.network.chat.Component")
-@:mapping("net.minecraft.class_2561")
 extern interface Component
 {
   /**
@@ -44,11 +43,9 @@ extern interface Component
   public overload function toFlatList(style2:net.minecraft.network.chat.Style):java.util.List<net.minecraft.network.chat.Component>;
   public function contains(other:net.minecraft.network.chat.Component):Bool;
   @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component#nullToEmpty(String)")
-  public static function nullToEmpty(text:Null<String>):net.minecraft.network.chat.Component;
+    public static function nullToEmpty(text:Null<String>):net.minecraft.network.chat.Component;
   @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component#literal(String)")
-  public static function literal(text:String):net.minecraft.network.chat.MutableComponent;
+    public static function literal(text:String):net.minecraft.network.chat.MutableComponent;
 
   #if minecraft_gteq_1_19
   public static overload function translatable(key:String):net.minecraft.network.chat.MutableComponent;
@@ -73,7 +70,6 @@ extern interface Component
 
 @:native("net.minecraft.network.chat.Component$Serializer")
 @:realPath("net.minecraft.network.chat.Component_Serializer")
-@:mapping("net.minecraft.class_2561$class_2562")
 extern class Component_Serializer implements com.google.gson.JsonDeserializer<net.minecraft.network.chat.MutableComponent>
     implements com.google.gson.JsonSerializer<net.minecraft.network.chat.Component>
 {
@@ -89,12 +85,10 @@ extern class Component_Serializer implements com.google.gson.JsonDeserializer<ne
   public static function toStableJson(component:net.minecraft.network.chat.Component):String;
   public static function toJsonTree(component:net.minecraft.network.chat.Component):com.google.gson.JsonElement;
   @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component$Serializer#fromJson(String)")
-  public static overload function fromJson(json:String):Null<net.minecraft.network.chat.MutableComponent>;
+    public static overload function fromJson(json:String):Null<net.minecraft.network.chat.MutableComponent>;
   public static overload function fromJson(json:com.google.gson.JsonElement):Null<net.minecraft.network.chat.MutableComponent>;
   @:badMapping("unknownMethodMapping")
-  @:mapping("net.minecraft.network.chat.Component$Serializer#fromJsonLenient(String)")
-  public static function fromJsonLenient(json:String):Null<net.minecraft.network.chat.MutableComponent>;
+    public static function fromJsonLenient(json:String):Null<net.minecraft.network.chat.MutableComponent>;
   public static overload function fromJson(reader:com.mojang.brigadier.StringReader):net.minecraft.network.chat.MutableComponent;
 }
 
