@@ -4,78 +4,68 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Upcoming
-- [] Caused by: java.lang.NoSuchFieldError: displayName
-	at net.pickhaxe.compat.world.item.CreativeModeTab$CreativeModeTab_Impl_.setId(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/compat/world/item/CreativeModeTab.hx:66)
-	at net.pickhaxe.compat.world.item.CreativeModeTab$CreativeModeTab_Impl_.register(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/compat/world/item/CreativeModeTab.hx:30)
-	at com.elitemastereric.madeinhaxe.items.ModItems.registerCreativeTab(./src/com/elitemastereric/madeinhaxe/items/ModItems.hx:38)
-	at com.elitemastereric.madeinhaxe.MadeInHaxeMod.onCreativeModeTabRegister(./src/com/elitemastereric/madeinhaxe/MadeInHaxeMod.hx:13)
-	at net.pickhaxe.core.CommonMod.onInitialize(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/core/CommonMod.hx:196)
-	at net.fabricmc.loader.impl.FabricLoaderImpl.invokeEntrypoints(FabricLoaderImpl.java:383)
-- [] 	Caused by 1: java.lang.NoClassDefFoundError: net/minecraftforge/event/RegistryEvent/Register
-		at java.lang.Class.getDeclaredMethods0(Native Method) ~[?:?] {}
-		at java.lang.Class.privateGetDeclaredMethods(Class.java:3402) ~[?:?] {}
-		at java.lang.Class.privateGetPublicMethods(Class.java:3427) ~[?:?] {}
-		at java.lang.Class.privateGetPublicMethods(Class.java:3433) ~[?:?] {}
-		at java.lang.Class.getMethods(Class.java:2019) ~[?:?] {}
-		at net.minecraftforge.eventbus.EventBus.registerObject(EventBus.java:92) ~[eventbus-5.0.3.jar%2336!/:?] {}
-		at net.minecraftforge.eventbus.EventBus.register(EventBus.java:120) ~[eventbus-5.0.3.jar%2336!/:?] {}
-		at net.pickhaxe.core.CommonMod.forge_registerListeners(E:\Programming\Game Modding\Minecraft Modding\PickHaxe\pickhaxe\src\net/pickhaxe/core/CommonMod.hx:95) ~[obsidianarmor-0.4.0.jar%2353!/:?] {re:classloading}
-- [] Forge (multiple mods): https://github.com/HaxeFoundation/haxe/issues/11361
-- [] Prompt to clean when switching versions, and save last version so we know when to do that
-- [] Add command line argument for shading
-- [] Option to auto-make when building
+### Enhancements
+- Support more versions of Forge
+- Support for Legacy Fabric
+- Support for Quilt
+- Support for NeoForge
+- Update documentation
+- Add feature in tooling that checks metadata and warns you if a specific loader/version commmbination is unsupported
+- Add more Bare samples for MadeInHaxe
+- Add more sample projects
+- Add more compat features
+- Dogfood PickHaxe (make some real mods)
+### Known Issues
+- Multiple PickHaxe mods for Forge will conflict: https://github.com/HaxeFoundation/haxe/issues/11361
+- Functional interfaces need to be fully qualified (i.e. if you're passing a function as an argument, add typing to all the arguments or it will break at runtime).
+- `pickhaxe runClient` doesn't work on Fabric (need to figure out a fix)
+### Versions to Fix
+- [] Fabric 1.16.5 (Bare): Just need to write it
+- [] Forge 1.19.4 (Bare): Just need to write it
+- [] Forge 1.20.2 (Bare): Just need to write it
+- [] Forge 1.16.5 (Bare): Something Gradle-related?
+- [] Forge 1.16.5: Something Gradle-related?
+- [] Forge 1.17.1: Something Gradle-related?
+- [] NeoForge 1.20.2: Haven't looked into it, will need Gradle work
+- [] Quilt 1.18.2: Haven't looked into it, will need Gradle work
+- [] Quilt 1.19.4: Haven't looked into it, will need Gradle work
+- [] Quilt 1.20.2: Haven't looked into it, will need Gradle work
 
-## [0.4.0]
+
+## [0.4.0] - 2023-11-10
+This version was a long time in the making, in part due to issues with the Haxe compiler itself; now, most of those are resolved. Fabric 1.16.5-1.20.2 (+ snapshots!) as well as Forge 1.18.2-1.20.2 are now fully supported and have working builds, and the tools for developing for both have greatly improved.
 ## Added
 - Updated JVM target to be functional, and to be the default mode (to allow for improved code generation from Haxe).
   - In this mode, Pickhaxe will now generate an unmapped "dev" JAR rather than a set of Java source files.
-- Fixes to mod metadata now add `authors` and `contributors`
+- Added the `pickhaxe runClient` commmand.
+  - Specify a Minecraft mod loader and game version, and the game will 
+- Added the `pickhaxe template` command.
+  - This acts as an alternative to the `pickhaxe init` command, allowing you to download a sample project and get started with PickHaxe immediately.
+  - Use `pickhaxe template --list` to peruse the list of official sample projects and `pickhaxe template <id>` to download one.
+- Added the `--shading` and `--no-shading` arguments to the Build command.
+  - These are used to enable and disable Shading, which is a tool to relocate core classes which would otherwise have shared classpaths. Without Shading, two PickHaxe mods for Forge would conflict with each other.
+- Added the `--make` argument to the Build command.
+  - This will automatically call `pickhaxe make` with your chosen settings.
+- PickHaxe project files now have the `mod-authors` and `mod-contributors` tags.
+- Calling `trace` in Haxe now properly uses `slf4j` to output a debug log.
 ## Changed
-- Haxe dependency updated to require `5.0.0-alpha` (unless they end up releasing a 4.3.3).
+- PickHaxe is now dependant on Haxe `5.0.0-alpha`. This is due to a long list of recent fixes made to the JVM target that enable PickHaxe to function.
   - Easiest way to handle this is to modify `.vscode/settings.json` and change `terminal.integrated.env.windows` to add
+- The `pickhaxe build` command has been improved; it now cleanly handles multiple versions of Minecraft, and runs way faster on repeat builds for the same version.
+- The `pickhaxe init` command now includes the `.vscode/settings.json` and `.gitignore` files.
+- Call stacks for error messages now only display with `--verbose` turned on.
+- Error messages for the PickHaxe tool now display an error code (`[EXCEPTION ###]`) to assist with diagnosis, and for the most part better convey the issue.
 ## Fixed
-- Updates and bug fixes to fix Fabric 1.16.0-1.20.2, as well as Fabric on snapshot 23w44a.
+- A large range of fixes to ensure projects generate functioning builds for Fabric and Forge.
+  - I am summarizing this in one line but really this is what took months of work, on-and-off.
 - Fixed an issue where mod icons were not displaying. Make sure the icon is located at `resources/assets/<modid>_icon.png` so it works.
-## To Fix
-- [] Fabric 1.16: Untested
-- [] Fabric 1.16.1: java.lang.NoSuchFieldError: displayName
-- [X] Fabric 1.16.2
-- [X] Fabric 1.16.3
-- [X] Fabric 1.16.4
-- [X] Fabric 1.16.5
-- [X] Fabric 1.17
-- [X] Fabric 1.17.1
-- [X] Fabric 1.18
-- [X] Fabric 1.18.1
-- [X] Fabric 1.18.2
-- [X] Fabric 1.19
-- [X] Fabric 1.19.1
-- [X] Fabric 1.19.2
-- [X] Fabric 1.19.3
-- [X] Fabric 1.19.4
-- [X] Fabric 1.20
-- [X] Fabric 1.20.1
-- [X] Fabric 1.20.2
-- [X] Fabric 1.20.3 (Snapshot)
-- [] Forge 1.16: Untested
-- [] Forge 1.16.1: Untested
-- [] Forge 1.16.2: Untested
-- [] Forge 1.16.3: Untested
-- [] Forge 1.16.4: Untested
-- [] Forge 1.16.5: Untested
-- [] Forge 1.17: Untested
-- [] Forge 1.17.1: ForgeGradle issues
-- [] Forge 1.18: Untested
-- [] Forge 1.18.1: Untested
-- [] Forge 1.18.2: java.lang.NoClassDefFoundError: net/minecraftforge/event/RegistryEvent/Register
-- [X] Forge 1.19
-- [X] Forge 1.19.1
-- [X] Forge 1.19.2
-- [X] Forge 1.19.3
-- [X] Forge 1.19.4
-- [] Forge 1.20: ForgeGradle issues
-- [] Forge 1.20.1
-- [] Forge 1.20.2
+- Fixed an issue where certain metadata wasn't getting put into the mod manifest.
+- Fixed a bug where the wrong Parchment version would be used when using `build --make`.
+- Fixed an issue where builds would fail if optional tags were not included in `project.xml`.
+## Removed
+- Removed the mapping macros, which were never used (Gradle is now used to obfuscate output instead).
+## Known Issues
+- Any time you use a functional interface (i.e. you pass a function as an argument to another function), all parameters must be properly typed or Java will crash.
 
 
 ## [0.3.0] - 2023-07-10
@@ -180,4 +170,3 @@ Initial release.
 - Implemented basic support for Fabric 1.19.4
 - Added Made in Haxe sample project.
 - Added Obsidian Armor sample project.
-

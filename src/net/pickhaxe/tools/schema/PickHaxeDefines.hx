@@ -36,6 +36,10 @@ typedef PickHaxeDefinesPickHaxe =
   gradle:
   {
     version:String,
+    plugins:
+    {
+      forgegradle:String,
+    }
   },
   java:
   {
@@ -307,7 +311,10 @@ class Builder
           // If Forge doesn't work with Gradle 8, we'll need to add to the metadata.json.
           gradle:
             {
-              version: versionMetadata.fabricGradleVersion
+              version: versionMetadata.fabricGradleVersion,
+              plugins: {
+                forgegradle: versionMetadata.forgeGradlePluginVersion,
+              }
             },
 
           minecraft:
@@ -469,7 +476,10 @@ class Builder
 
           gradle:
             {
-              version: versionMetadata.forgeGradleVersion
+              version: versionMetadata.forgeGradleVersion,
+              plugins: {
+                forgegradle: versionMetadata.forgeGradlePluginVersion,
+              }
             },
 
           minecraft:
@@ -587,7 +597,7 @@ class Builder
     result.append(DEFINE, defines.pickhaxe.loader.current);
 
     // Add a define for the current Minecraft version (#if minecraft == 1.19.3, #if minecraft >= 1.12.2)
-    result.append(DEFINE, 'minecraft=${defines.pickhaxe.minecraft.version}');
+    // result.append(DEFINE, 'minecraft=${defines.pickhaxe.minecraft.version}');
 
     return result;
   }

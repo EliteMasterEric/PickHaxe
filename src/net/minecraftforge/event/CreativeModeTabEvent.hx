@@ -1,6 +1,6 @@
 package net.minecraftforge.event;
 
-#if minecraft_gteq_1_19_3
+#if (minecraft_gteq_1_19_3 && minecraft_lt_1_20)
 @:native("net.minecraftforge.event.CreativeModeTabEvent")
 extern class CreativeModeTabEvent extends net.minecraftforge.eventbus.api.Event implements net.minecraftforge.fml.event.IModBusEvent
 {

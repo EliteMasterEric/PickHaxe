@@ -16,6 +16,8 @@ typedef PickHaxeVersionMetadata =
   fabricGradleVersion:String,
   forgeGradleVersion:String,
 
+  forgeGradlePluginVersion:String,
+
   forgeVersion:String,
   fmlVersion:String
 }

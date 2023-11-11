@@ -10,17 +10,27 @@ import net.pickhaxe.tools.schema.PickHaxeDefines.Builder as PickHaxeDefinesBuild
 import net.pickhaxe.tools.util.JSON;
 
 /**
- * Command for running a specific gradle task. Useful for debugging.
+ * Command for running the Minecraft client with the project's mod installed.
  */
-class Make implements ICommand
+class RunClient implements ICommand
 {
-  var commandName:String = 'make';
+  final commandName:String = 'runClient';
 
   var loader:String;
   var mcVersion:String;
-  var mappings:String;
+  var mappings:String = 'parchment';
+  /**
+   * If enabled, generate .java files rather than a .jar file.
+   */
   var genSources:Bool = false; // Default to genArchive.
 
+  var shouldBuild:Bool = true;
+
+  var shouldClean:Bool = false;
+
+  /**
+   * Unrecognized arguments are passed to Gradle.
+   */
   var additionalArgs:Array<String>;
 
   public function new() {}
@@ -32,8 +42,8 @@ class Make implements ICommand
   public function getCommandInfo():CommandInfo
   {
     return {
-      blurb: 'Uses Gradle to build a mod.',
-      description: 'Uses Gradle to remap a JAR (or Java sources) produced with the `build` command into a valid Minecraft mod.',
+      blurb: 'Uses Gradle to launch Minecraft.',
+      description: 'Uses Gradle to launch a development build of Minecraft with your mod installed.',
       args: ['[loader]', '[version]'],
       options: [
         {
@@ -44,8 +54,20 @@ class Make implements ICommand
         },
         {
           short: null,
+          long: 'build',
+          blurb: 'Build the game first before running. Defaults to true.',
+          value: null,
+        },
+        {
+          short: null,
+          long: 'no-build',
+          blurb: 'Do not build the game first before running. Inverse of --build',
+          value: null,
+        },
+        {
+          short: null,
           long: 'mappings',
-          blurb: 'Force the mapping to use for the gradle build.
+          blurb: 'During pre-run build, force the mapping to use for the gradle build.
                   Valid values include: "mojang", "parchment", "yarn", "mcp"
                   Defaults to Parchment.',
           value: '[mappings]',
@@ -53,15 +75,21 @@ class Make implements ICommand
         {
           short: null,
           long: 'gen-sources',
-          blurb: 'Compile generated .java files (Java target). This disables gen-archive.',
+          blurb: 'During pre-run build, .java files rather than a .jar file (Java target). This turns off gen-archive.',
           value: null,
         },
         {
           short: null,
           long: 'gen-archive',
-          blurb: 'Map a pre-compiled generated .jar file (JVM target). This is the default, and disables gen-sources.',
+          blurb: 'During pre-run build, a .jar file rather than a .java files (JVM target). This is the default, and turns off gen-sources.',
           value: null,
-        }
+        },
+        {
+          short: null,
+          long: '--clean',
+          blurb: 'During pre-run build, perform a clean before building.',
+          value: null,
+        },
       ]
     };
   }
@@ -74,26 +102,25 @@ class Make implements ICommand
   {
     if (!parseArgs(args)) return;
 
-    CLI.print('Performing make (gradle build) for ${loader} ${mcVersion}...');
-
     var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(
-      {
-        loader: loader,
-        mcVersion: mcVersion,
-        mappings: mappings,
-        jvm: !genSources,
-      });
+    {
+      loader: loader,
+      mcVersion: mcVersion,
+      mappings: mappings,
+      jvm: !genSources,
+    });
+
+    if (shouldBuild) {
+      CLI.print('Performing pre-runClient build...');
+      new Build().perform([loader, mcVersion,
+        '--mappings', mappings,
+        shouldClean ? '--clean' : null,
+        genSources ? '--gen-sources' : '--gen-archive'].filter(function (x) return x != null));
+    }
+
+    CLI.print('Performing runClient...');
 
     var result:Bool = performGradleTask(defines);
-
-    if (result)
-    {
-      CLI.print('Project make successful.');
-    }
-    else
-    {
-      CLI.print('Project make resulted in FAILURE.');
-    }
   }
 
   function parseArgs(args:Array<String>):Bool
@@ -113,26 +140,16 @@ class Make implements ICommand
             return false;
           case '--help': // Gets processed elsewhere.
             return false;
+          case '--build':
+            shouldBuild = true;
+          case '--no-build':
+            shouldBuild = false;
           case '--gen-sources':
             genSources = true;
           case '--gen-archive':
             genSources = false;
-          case '--mappings':
-            var nextArg:String = args[i + 1];
-            if (nextArg != null && !nextArg.startsWith('-'))
-            {
-              mappings = nextArg;
-              i++;
-            }
-            else
-            {
-              CLI.print('Error: No mappings specified.');
-              return false;
-            }
-          case '--make':
-            // Ignore.
           case '--clean':
-            // Ignore.
+            shouldClean = true;
           default:
             additionalArgs.push(arg);
         }
@@ -185,24 +202,12 @@ class Make implements ICommand
     var gradleW:GradleWProcess = new GradleWProcess(defines);
 
     var result:Bool = false;
-    if (genSources) {
-      trace('build');
-      result = gradleW.performTask(["build"].concat(additionalArgs));
-    } else {
-      if (loader == 'forge') {
-        // Forge requires reobfuscation AND shadowing.
-        var targetTask:String = 'reobfSourcesJar';
-        // 'shadowSourcesJar';
-        // 'reobfShadowSourcesJar';
-        trace(targetTask);
-        result = gradleW.performTask([targetTask].concat(additionalArgs));
-      } else if (loader == 'fabric') {
-        trace('remapJar');
-        result = gradleW.performTask(["remapJar"].concat(additionalArgs));
-      } else {
-        trace('[WARNING] Unknown loader (${loader}) for make task.');
-      }
-    }
+
+    // Okay, trust me this one is neccessary.
+    // We don't put anything in here, we just need it to exist.
+    IO.makeDir(IO.workingDir().joinPaths('build/resources/main/'));
+
+    result = gradleW.performTask(["runClient"].concat(additionalArgs));
 
     // Move back to the parent of the workding dir.
     Sys.setCwd(IO.workingDir().dir);

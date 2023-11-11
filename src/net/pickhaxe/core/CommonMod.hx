@@ -97,7 +97,7 @@ class CommonMod #if fabric implements ModInitializer #end
 
     net.pickhaxe.compat.world.item.Item.Item_ForgeRegistrar.register(forge_getEventBus());
 
-    #if minecraft_gteq_1_19_3
+    #if (minecraft_gteq_1_19_3 && minecraft_lt_1_20)
     net.pickhaxe.compat.world.item.CreativeModeTab.CreativeModeTab_ForgeRegistrar.register(forge_getEventBus());
     #end
   }
@@ -115,7 +115,7 @@ class CommonMod #if fabric implements ModInitializer #end
   }
   #end
 
-  #if minecraft_gteq_1_19_3
+  #if (minecraft_gteq_1_19_3 && minecraft_lt_1_20)
   /**
    * This event is called when new creative mode tabs may be registered.
    * PickHaxe's CreativeModeTab.register() function MUST be called from this event, it will not work if it is called statically.
@@ -149,7 +149,11 @@ class CommonMod #if fabric implements ModInitializer #end
     {
       hasRegistered = true;
 
-      #if minecraft_lteq_1_19_2
+      #if minecraft_gteq_1_20
+      forge_onCreativeModeTabRegister();
+      #elseif minecraft_gteq_1_19_3
+      // Do this elsewhere.
+      #elseif minecraft_lteq_1_19_2
       forge_onCreativeModeTabRegister();
       #end
 

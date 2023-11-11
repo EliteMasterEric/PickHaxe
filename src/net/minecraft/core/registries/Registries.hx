@@ -77,7 +77,9 @@ extern class Registries
   public static final DIMENSION_TYPE:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.dimension.DimensionType>>;
   public static final FLAT_LEVEL_GENERATOR_PRESET:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorPreset>>;
   public static final NOISE_SETTINGS:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.levelgen.NoiseGeneratorSettings>>;
+  #if minecraft_lteq_1_19_4
   public static final NOISE:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters>>;
+  #end
   public static final PLACED_FEATURE:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.levelgen.placement.PlacedFeature>>;
   public static final STRUCTURE:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.levelgen.structure.Structure>>;
   public static final PROCESSOR_LIST:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList>>;
@@ -89,6 +91,9 @@ extern class Registries
   public static final MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterList>>;
   public static final DIMENSION:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.Level>>;
   public static final LEVEL_STEM:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.dimension.LevelStem>>;
+  #if minecraft_gteq_1_20
+  public static final CREATIVE_MODE_TAB:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.item.CreativeModeTab>>;
+  #end
   public static function levelStemToLevel(levelStem:net.minecraft.resources.ResourceKey<net.minecraft.world.level.dimension.LevelStem>):net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>;
   public static function levelToLevelStem(level:net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>):net.minecraft.resources.ResourceKey<net.minecraft.world.level.dimension.LevelStem>;
 }

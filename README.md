@@ -4,11 +4,16 @@
 
 PickHaxe is a flexible, powerful Haxe framework to supercharge your Minecraft mod development. Build your mods in a high-level strictly-typed language and export to the Minecraft version and modding API of your choice.
 
-Getting started is simple. Install Haxe and PickHaxe, then create a new mod project and get developing. When you're ready to test, PickHaxe will compile your mod for the mod loader of your choice, for the Minecraft version of your choice.
-
-PickHaxe currently supports exporting mods to Minecraft 1.19, with plans to gradually expand to other versions over time. PickHaxe currently supports exporting mods to Fabric and Forge.
+Getting started is simple. Install Haxe and PickHaxe, then create a new mod project (or download a sample project) and get developing. When you're ready to test, PickHaxe will compile your mod for any of several several versions of Minecraft on multiple different mod loaders. PickHaxe currently supports Fabric 1.16.5-1.20.2, as well as Forge 1.18.2-1.20.2, and all your code can be shared in a single project!
 
 # Usage
+
+Download PickHaxe via [haxelib](https://lib.haxe.org/p/PickHaxe/):
+
+```
+haxelib install pickhaxe
+haxelib run pickhaxe help
+```
 
 Please see the [tutorial](https://github.com/EliteMasterEric/PickHaxe/wiki/Tutorial%253A-Your-First-Mod) on the wiki for more information on basic usage.
 

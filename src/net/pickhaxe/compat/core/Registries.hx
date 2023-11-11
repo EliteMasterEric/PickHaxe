@@ -88,6 +88,14 @@ class Registries
     return net.minecraftforge.registries.ForgeRegistries.ITEMS;
   }
   
-  // Exclude CREATIVE_MODE_TABS from Forge.
+  #if minecraft_gteq_1_20
+  public static var CREATIVE_MODE_TABS(get, null):Registry<CreativeModeTab>;
+
+  static inline function get_CREATIVE_MODE_TABS():Registry<CreativeModeTab>
+  {
+    // No ForgeRegistry for CreativeModeTabs.
+    return net.minecraft.core.registries.BuiltInRegistries.CREATIVE_MODE_TAB;
+  }
+  #end
   #end
 }

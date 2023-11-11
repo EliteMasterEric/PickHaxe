@@ -8,6 +8,7 @@ import net.pickhaxe.tools.commands.Help.CommandInfo;
  */
 class Init implements ICommand
 {
+
   public function new() {}
 
   /**
@@ -121,14 +122,14 @@ class Init implements ICommand
    * Build a sample project from the given parameters.
    * @param modParams The parameters to use.
    */
-  function createSampleProject(modParams:ModInitParameters):Void
-  {
-    // Make the class path.
-    var classPath:String = modParams.parentPackage.split('.').join('/');
+  function createSampleProject(modParams:ModInitParameters):Void {
+    var projectTemplateDir = IO.libraryDir().joinPaths('templates/project');
 
-    var classTemplate:String = IO.readFile(IO.libraryDir().joinPaths('templates/project/ModEntryPoint.hx'));
+    var classTemplate:String = IO.readFile(projectTemplateDir.joinPaths('ModEntryPoint.hx'));
 
     CLI.print('Writing to classpath...', Verbose);
+    // Make the class path.
+    var classPath:String = modParams.parentPackage.split('.').join('/');
     IO.makeDir(IO.workingDir().joinPaths('src', classPath));
     var classResult:String = Template.applyModInitParams(classTemplate, modParams);
     CLI.print(classResult, Verbose);
@@ -137,7 +138,20 @@ class Init implements ICommand
     CLI.print('Writing to resourcepath...', Verbose);
     IO.makeDir(IO.workingDir().joinPaths('resources', 'assets', modParams.modId));
     IO.makeDir(IO.workingDir().joinPaths('resources', 'data', modParams.modId));
+
+    CLI.print('Writing other project files...', Verbose);
+
+    var templateFilesToCopy:Array<String> = [
+      '.vscode/settings.json',
+      '.gitignore'
+    ];
+
+    for (templateFile in templateFilesToCopy) {
+      IO.makeDir(new haxe.io.Path(IO.workingDir().joinPaths(templateFile).dir));
+      IO.copyFile(projectTemplateDir.joinPaths(templateFile), IO.workingDir().joinPaths(templateFile));
+    }
   }
+  
 
   /**
    * A mod ID must be at least 2 characters long,

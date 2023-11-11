@@ -13,7 +13,7 @@ class Parchment
 
   public static function fetchParchmentVersion(mcVersion:String):String
   {
-    if (mavenMetadataCache != null) return mavenMetadataCache.versioning.versions[0];
+    if (mavenMetadataCache != null) return mavenMetadataCache.versioning.release;
 
     var mavenMetadata:MavenMetadata = XML.readParchmentMavenMetadata(mcVersion);
 

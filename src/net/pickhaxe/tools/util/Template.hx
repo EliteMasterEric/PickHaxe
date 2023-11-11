@@ -41,11 +41,11 @@ class Template
     result = result.replace('#{pickhaxe.mod.version}', defines.pickhaxe.mod.version);
     result = result.replace('#{pickhaxe.mod.license}', defines.pickhaxe.mod.license);
 
-    result = result.replace('#{pickhaxe.mod.homepage}', defines.pickhaxe.mod.homepage);
-    result = result.replace('#{pickhaxe.mod.email}', defines.pickhaxe.mod.email);
-    result = result.replace('#{pickhaxe.mod.issues}', defines.pickhaxe.mod.issues);
-    result = result.replace('#{pickhaxe.mod.sources}', defines.pickhaxe.mod.sources);
-
+    result = result.replace('#{pickhaxe.mod.homepage}', defines.pickhaxe.mod.homepage ?? '');
+    result = result.replace('#{pickhaxe.mod.email}', defines.pickhaxe.mod.email ?? '');
+    result = result.replace('#{pickhaxe.mod.issues}', defines.pickhaxe.mod.issues ?? '');
+    result = result.replace('#{pickhaxe.mod.sources}', defines.pickhaxe.mod.sources ?? '');
+    
     result = result.replace('#{pickhaxe.mod.authors}', defines.pickhaxe.mod.authorData.authorsString);
 
     result = result.replace('#{pickhaxe.mappings.enabled}', '${defines.pickhaxe.mappings.enabled}');

@@ -76,9 +76,10 @@ class Help implements ICommand
       'init' => new Init(),
       'template' => new Template(),
       'build' => new Build(),
+      'make' => new Make(),
+      'runClient' => new RunClient(),
       'clean' => new Clean(),
       'gradlew' => new GradleW(),
-      'make' => new Make(),
     ];
   }
 
@@ -89,7 +90,7 @@ class Help implements ICommand
   public static inline function getCommandNames():Array<String>
   {
     // Necessary because Map isn't ordered.
-    return ['help', 'setup', 'init', 'template', 'build', 'make', 'clean', 'gradlew'];
+    return getCommands().keys().array();
   }
 
   /**

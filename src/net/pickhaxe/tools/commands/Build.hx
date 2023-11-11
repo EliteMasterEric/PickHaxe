@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.commands;
 
+import net.pickhaxe.tools.process.Robocopy;
 import haxe.io.Path;
 import net.pickhaxe.api.FabricMeta;
 import net.pickhaxe.schema.FabricMod;
@@ -56,6 +57,11 @@ class Build implements ICommand
   var noResources:Bool = false;
 
   /**
+   * If enabled, rename core classes to avoid conflicts.
+   */
+  var performShading:Bool = false;
+
+  /**
    * If enabled, generate .java files rather than a .jar file.
    */
   var genSources:Bool = false; // Default to genArchive.
@@ -64,6 +70,11 @@ class Build implements ICommand
    * Whether to use the `--dump` option, and what mode to use.
    */
   var dumpType:String = null;
+
+  /**
+   * Whether to perform `pickhaxe make` after building.
+   */
+  var shouldMake:Bool = false;
 
   /**
    * Whether to perform `pickhaxe clean` before building.
@@ -124,6 +135,19 @@ class Build implements ICommand
           short: null,
           long: 'no-resources',
           blurb: 'Skip resource building steps',
+          value: null,
+        },
+        {
+          short: null,
+          long: 'shading',
+          blurb: 'Rename core classes to avoid conflicts.',
+          value: null,
+        },
+
+        {
+          short: null,
+          long: 'no-shading',
+          blurb: 'Disable renaming core classes.',
           value: null,
         },
         {
@@ -199,6 +223,11 @@ class Build implements ICommand
     Sys.setCwd(IO.workingDir().dir);
 
     performHaxeBuild(defines, !genSources);
+
+    if (shouldMake) {
+      CLI.print('Continuing to make...');
+      new Make().perform(args);
+    }
   }
 
   function parseArgs(args:Array<String>):Bool
@@ -252,12 +281,18 @@ class Build implements ICommand
               CLI.print('Error: No mappings specified.');
               return false;
             }
+          case '--shading':
+            performShading = true;
+          case '--no-shading':
+            performShading = false;
           case '--no-resources':
             noResources = true;
           case '--gen-sources':
             genSources = true;
           case '--gen-archive':
             genSources = false;
+          case '--make':
+            shouldMake = true;
           case '--clean':
             clean = true;
             forceGradle = true;
@@ -320,10 +355,11 @@ class Build implements ICommand
   function performGradleSetup(defines:PickHaxeDefines):Bool
   {
     // If we are doing a clean build, delete the `generated` folder.
-    if (clean && IO.exists(IO.workingDir().joinPaths('generated')))
+    if (clean)
     {
-      CLI.print("Cleaning project... (this may take a while)", Verbose);
-      IO.deleteDirectory(IO.workingDir().joinPaths('generated'));
+      CLI.print("Cleaning project... (this may take a while)");
+      // Chain command together ehe.
+      new Clean().perform([]);
     }
 
     // Create the `generated` folder and all subfolders.
@@ -334,16 +370,22 @@ class Build implements ICommand
     {
       IO.makeDir(IO.workingDir().joinPaths('generated/${gradleDir}'));
     }
-    IO.makeDir(IO.workingDir().joinPaths('generated/build/minecraft'));
 
+    // Create the location for Minecraft dependencies.
+    var mainDepsFolder:Path = IO.workingDir().joinPaths('generated/build/minecraft/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/');
+    IO.makeDir(mainDepsFolder);
+      
     // Copy Gradle files to the `generated` folder.
     var gradleFiles:Array<String> = IO.readDirectoryRecursive(IO.libraryDir().joinPaths('gradle'), true, false);
     CLI.print('Copying ${gradleFiles.length} Gradle files...');
+    // ALWAYS REPLACE THESE EVERY TIME
+    // It infuriates me how many times I've had things break because my build.gradle was outdated.
+    var FORCE_COPY = ['build.gradle'];
     for (gradleFile in gradleFiles)
     {
       if (gradleFile.startsWith('.gradle')) continue;
 
-      if (!IO.exists(IO.workingDir().joinPaths('generated/${gradleFile}')) || forceGradle)
+      if (!IO.exists(IO.workingDir().joinPaths('generated/${gradleFile}')) || FORCE_COPY.contains(gradleFile) || forceGradle)
       {
         IO.copyFile(IO.libraryDir().joinPaths('gradle/${gradleFile}'), IO.workingDir().joinPaths('generated/${gradleFile}'));
       }
@@ -353,15 +395,10 @@ class Build implements ICommand
 
     if (shouldPerformGradle
       && !forceGradle
-      && IO.fileStartingWithExists(IO.workingDir().joinPaths('generated/build/minecraft/minecraft-merged')))
+      && IO.exists(mainDepsFolder.joinPaths('minecraft.jar')))
     {
       // We already have minecraft with mappings, so assume we don't need to run gradle.
       shouldPerformGradle = false;
-    }
-
-    if (shouldPerformGradle && IO.fileStartingWithExists(IO.workingDir().joinPaths('generated/build/minecraft/minecraft-merged')))
-    {
-      // Remove the old Minecraft dependencies
     }
 
     // Create mod manifest and access widener files.
@@ -397,32 +434,55 @@ class Build implements ICommand
           throw new GradleException('Failed to generate sources.');
         }
 
+        for (file in IO.readDirectoryRecursive(mainDepsFolder, true, false)) {
+          if (file.startsWith('minecraft-merged-project-root-')) {
+            CLI.print('Removing the Minecraft.jar (we are copying it from elsewhere)...');
+            IO.deleteFile(mainDepsFolder.joinPaths(file));
+          }
+        }
+
         CLI.print('Moving sources...');
 
-        var loomCache:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven'), true, false);
-        for (loomCacheFile in loomCache)
-        {
-          var targetFile:Path = IO.workingDir().joinPaths('.gradle/loom-cache/minecraftMaven', loomCacheFile);
+        var mavenCachePath:Path = IO.workingDir().joinPaths(
+          '.gradle/loom-cache/minecraftMaven/',
+          'net/minecraft/minecraft-merged-project-root/'
+        );
 
-          if (!IO.exists(targetFile)) {
-            trace('WARNING: Could not copy minecraft build JAR. Potential path length issue?');
-            continue;
-          }
+        for (loomCacheFolder in IO.readDirectory(mavenCachePath, false, true)) {
+          var fullLoomCacheFolder:Path = mavenCachePath.joinPaths(loomCacheFolder);
+          var targetCacheFolder:Path = IO.workingDir().joinPaths('build/minecraft', '${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}');
+          
+          if (loomCacheFolder.startsWith('${defines.pickhaxe.minecraft.version}')) {
+            // Move the minecraft and minecraft-sources JARs.
+            var loomCacheFiles:Array<String> = IO.readDirectoryRecursive(fullLoomCacheFolder, true, false);
 
-          if (targetFile.toString().endsWith('-sources.jar'))
-          {
-            IO.copyFile(targetFile, IO.workingDir().joinPaths('build/minecraft/minecraft-sources.jar'));
-          }
-          else if (targetFile.toString().endsWith('.jar'))
-          {
-            IO.copyFile(targetFile, IO.workingDir().joinPaths('build/minecraft/minecraft.jar'));
+            var loomCacheJARFiles:Array<String> = loomCacheFiles.filter(function (file:String) {
+              return file.endsWith('.jar');
+            });
+
+            Robocopy.instance.copyFiles(fullLoomCacheFolder.toString(), targetCacheFolder.toString(), loomCacheJARFiles);
+
+            // Rename the files once they've been moved.
+            for (jarFile in loomCacheJARFiles) {
+              var fullLocalJARPath = targetCacheFolder.joinPaths(jarFile);
+              var targetJARPath = if (jarFile.endsWith('-sources.jar')) {
+                targetCacheFolder.joinPaths('minecraft-sources.jar');
+              } else {
+                targetCacheFolder.joinPaths('minecraft.jar');
+              };
+              IO.moveFile(fullLocalJARPath, targetJARPath);
+            }
           }
         }
       }
       else
       {
         // The copyDependencies task already generates and moves the sources in Forge.
-        // Note that the sources are in `forge-<version>.jar` rather than `minecraft.jar`
+        
+        // We just need to move `minecraft.jar`.
+
+        CLI.print('Moving sources...');
+
         return true;
       }
     }
@@ -432,6 +492,9 @@ class Build implements ICommand
   }
 
   function performMakeMetaINF(defines:PickHaxeDefines):Void {
+    // This needs to be replaced every time, as it is different for each mod loader and version.
+    IO.deleteDirectory(IO.workingDir().joinPaths('generated/resources/'));
+
     switch (loader)
     {
       case 'fabric':
@@ -488,35 +551,18 @@ class Build implements ICommand
     // Pass options to the native Java compiler.
     // Any values passed here will be passed to `javac` when generating a JAR.
 
-    // Include compilation and mapping macros.
-    // Download and parse mappings.
-    args = args.concat(['--macro', "net.pickhaxe.macro.MappingMacro.initialize()"]);
+    // Include compilation macros.
     // Add `minecraft_eq_<version>` defines.
     args = args.concat(['--macro', "net.pickhaxe.macro.MinecraftVersionMacro.initialize()"]);
-    // Map the `net.minecraft` package.
-    args = args.concat([
-      '--macro',
-      "addGlobalMetadata('net.minecraft', '@:build(net.pickhaxe.macro.MappingMacro.build())', true, true, false)"
-    ]);
-    // Map the `net.fabricmc` package.
-    args = args.concat([
-      '--macro',
-      "addGlobalMetadata('net.fabricmc', '@:build(net.pickhaxe.macro.MappingMacro.build())', true, true, false)"
-    ]);
-    // Map the `net.minecraftforge` package.
-    args = args.concat([
-      '--macro',
-      "addGlobalMetadata('net.minecraftforge', '@:build(net.pickhaxe.macro.MappingMacro.build())', true, true, false)"
-    ]);
 
     // Include necessary Java libraries as externs.
-    var jarExterns:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/build/minecraft'), true, false);
+    var jarExterns:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/build/minecraft/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}'), true, false);
     for (jarExtern in jarExterns)
     {
       if (jarExtern.endsWith('.jar'))
       {
         // If `extern`, library is not exported into the `lib/` folder.
-        args = args.concat(['--java-lib-extern', './generated/build/minecraft/${jarExtern}']);
+        args = args.concat(['--java-lib-extern', './generated/build/minecraft/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${jarExtern}']);
         // args = args.concat(['--java-lib', './generated/build/minecraft/${jarExtern}']);
       }
     }
@@ -622,7 +668,11 @@ class Build implements ICommand
       args.push('${defines.pickhaxe.mod.parentPackage}.${entryPoint.value}');
     }
 
-    // args = args.concat(['--macro', 'haxe.shade.Shade.applyCore("${shadeTarget}.haxe")']);
+    if (performShading) {
+      CLI.print('Enabling package shading...');
+      var shadeTarget:String = '${defines.pickhaxe.mod.parentPackage}.shade';
+      args = args.concat(['--macro', 'haxe.shade.Shade.applyCore("${shadeTarget}.haxe")']);
+    }
 
     CLI.print('Performing build...');
 

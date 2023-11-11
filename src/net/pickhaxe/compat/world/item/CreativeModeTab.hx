@@ -20,22 +20,30 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
    */
   public function register(resourceLocation:ResourceLocation, ?before:Array<ResourceLocation>, ?after:Array<ResourceLocation>):CreativeModeTab
   {
-    #if (fabric && minecraft_gteq_1_20)
+    #if fabric
+    
+    #if minecraft_gteq_1_20
+    this.displayName = buildDisplayName(resourceLocation);
     net.pickhaxe.compat.core.Registries.CREATIVE_MODE_TABS.register(resourceLocation, this);
-    #elseif (fabric && minecraft_gteq_1_19_3)
+    #elseif minecraft_gteq_1_19_3
     abstract.setId(resourceLocation); // Fabric sets the displayName for us based on the ID.
     this.displayName = buildDisplayName(resourceLocation);
     net.fabricmc.fabric.impl.itemgroup.ItemGroupHelper.appendItemGroup(this);
-    #elseif fabric
+    #else
     abstract.setId(resourceLocation);
     // Creative Mode tabs do not need to be explicitly registered after they are built.
+    #end
+
     #elseif forge
-    #if (forge && minecraft_lteq_1_19_2)
+
+    #if minecraft_lteq_1_19_2
     this.langId = '${resourceLocation.getNamespace()}.${resourceLocation.getPath()}';
     net.pickhaxe.core.PickHaxe.logInfo('Set language ID of Creative Mode Tab to "${this.langId}".');
     #end
     this.displayName = buildDisplayName(resourceLocation);
-    #if (forge && minecraft_gteq_1_19_3)
+    #if minecraft_gteq_1_20
+    net.pickhaxe.compat.core.Registries.CREATIVE_MODE_TABS.register(resourceLocation, this);
+    #elseif minecraft_gteq_1_19_3
     CreativeModeTab_ForgeRegistrar.queue(resourceLocation,
       {
         tab: this,
@@ -43,6 +51,7 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
         after: after
       });
     #end
+
     #else
     net.pickhaxe.core.PickHaxe.logError('Could not register Creative Mode tab: Unknown loader (${Environment.LOADER}) detected.');
     #end
@@ -127,7 +136,7 @@ class CreativeModeTab_BuilderResult extends net.minecraft.world.item.CreativeMod
 
 // In 1.19.3, we need to defer registration until the appropriate event is fired.
 // In 1.19.2 and below, the CreativeModeTab constructor performs registration for us.
-#if (forge && minecraft_gteq_1_19_3)
+#if (forge && minecraft_gteq_1_19_3 && minecraft_lt_1_20)
 typedef CreativeModeTab_ForgeRegistrarEntry =
 {
   tab:CreativeModeTab,
