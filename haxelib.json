@@ -6,8 +6,8 @@
   "classPath": "src",
   "description": "A Haxe framework to build Minecraft mods. Fabric, Forge, and more.",
   "contributors": ["MasterEric"],
-  "releasenote": "template and runClient commands, working Forge and Fabric, and many bugfixes.",
-  "version": "0.4.0",
+  "releasenote": "Remove Shadow gradle plugin to fix build errors.",
+  "version": "0.4.1",
   "dependencies": {
     "thx.semver": "",
     "json2object": "",

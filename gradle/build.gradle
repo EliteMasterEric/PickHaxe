@@ -33,11 +33,6 @@ plugins {
   // Common
   //
   id 'maven-publish'
-
-  // For Gradle 7+
-  // id 'com.github.johnrengelman.shadow' version '7.1.2'
-  // For Gradle 8+
-  // id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
 // Select the Gradle plugin based on the loader.
@@ -45,7 +40,6 @@ switch(System.getProperty('pickhaxe.loader.current')) {
   case 'forge':
     apply plugin: 'net.minecraftforge.gradle'
     apply plugin: 'org.parchmentmc.librarian.forgegradle'
-    apply plugin: 'com.github.johnrengelman.shadow'
     break
   case 'fabric':
     apply plugin: 'fabric-loom'
@@ -262,23 +256,6 @@ tasks.jar {
   }
 }
 
-shadowJar {
-  archiveClassifier = ''
-  configurations = [project.configurations.shade]
-
-  // Shadow the listed packages.
-  relocate ('net.pickhaxe', "${project.group}.shadow.net.pickhaxe") {
-    exclude "${project.group}"
-  }
-  relocate ('haxe', "${project.group}.shadow.haxe") {
-    exclude "${project.group}"
-  }
-
-  if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
-    finalizedBy 'reobfShadowJar'
-  }
-}
-
 if (System.getProperty('pickhaxe.loader.current').equals('fabric') && System.getProperty('pickhaxe.haxe.jvm').equals('true')) {
   remapJar {
     input = file("../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
@@ -290,40 +267,14 @@ if (System.getProperty('pickhaxe.loader.current').equals('fabric') && System.get
     from zipTree("../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
   }
 
-  task shadowSourcesJar(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
-    dependsOn sourcesJar
-
-    archiveClassifier = 'shadow'
-    configurations = [project.configurations.shade]
-    
-    // Shadow the listed packages.
-    relocate ('net.pickhaxe', "${project.group}.shadow.net.pickhaxe") {
-      exclude "${project.group}"
-    }
-    relocate ('haxe', "${project.group}.shadow.haxe") {
-      exclude "${project.group}"
-    }
-  }
-
   reobf {
     sourcesJar {
       finalizedBy('copyReobfSourcesJar')
-    } 
-    shadowSourcesJar {
-      finalizedBy('copyReobfShadowSourcesJar')
-    } 
+    }
   }
 
   task copyReobfSourcesJar(type: Copy) {
     from("$buildDir/reobfSourcesJar") {
-      rename "output.jar", "${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
-    }
-    exclude '**/*.txt'
-    into "../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/"
-  }
-
-  task copyReobfShadowSourcesJar(type: Copy) {
-    from("$buildDir/reobfShadowSourcesJar") {
       rename "output.jar", "${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
     }
     exclude '**/*.txt'
@@ -339,12 +290,6 @@ if (System.getProperty('pickhaxe.loader.current').equals('fabric')) {
 
 
 if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
-  assemble.dependsOn shadowJar
-
-  reobf {
-    shadowJar {}
-  }
-
   jar.finalizedBy('reobfJar')
 
   // Disable additional resource processing for the runClient task.
