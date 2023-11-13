@@ -8,6 +8,11 @@
   "contributors": ["MasterEric"],
   "releasenote": "Fix two critical build errors.",
   "version": "0.4.1",
+  "documentation": {
+    "url": "https://github.com/EliteMasterEric/PickHaxe/wiki",
+    "metadata": "metadata/custom-metadata.json",
+    "defines": "metadata/custom-defines.json"
+  },
   "dependencies": {
     "thx.semver": "",
     "json2object": "",
