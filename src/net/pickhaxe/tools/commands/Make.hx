@@ -6,7 +6,6 @@ import net.pickhaxe.tools.commands.Help.CommandInfo;
 import net.pickhaxe.tools.process.GradleW as GradleWProcess;
 import net.pickhaxe.tools.process.Haxe;
 import net.pickhaxe.tools.schema.PickHaxeDefines;
-import net.pickhaxe.tools.schema.PickHaxeDefines.Builder as PickHaxeDefinesBuilder;
 import net.pickhaxe.tools.util.JSON;
 
 /**
@@ -76,7 +75,7 @@ class Make implements ICommand
 
     CLI.print('Performing make (gradle build) for ${loader} ${mcVersion}...');
 
-    var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(
+    var defines:PickHaxeDefines = PickHaxeDefines.build(
       {
         loader: loader,
         mcVersion: mcVersion,

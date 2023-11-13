@@ -102,7 +102,7 @@ class RunClient implements ICommand
   {
     if (!parseArgs(args)) return;
 
-    var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(
+    var defines:PickHaxeDefines = PickHaxeDefines.build(
     {
       loader: loader,
       mcVersion: mcVersion,

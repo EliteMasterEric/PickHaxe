@@ -1,5 +1,6 @@
 package net.pickhaxe.macro.util;
 
+import haxe.macro.MacroStringTools;
 #if macro
 import haxe.macro.Compiler;
 import net.pickhaxe.tools.util.CLI;
@@ -51,7 +52,7 @@ class MacroUtil
   {
     var target:haxe.macro.Type.ClassType = Context.getLocalClass().get();
 
-    if (hasMetadata(target.meta, input))
+    if (hasMetadata(target.meta, ':${input}'))
     {
       Context.error('Class already has @:$input metadata', MacroApi.pos());
     }
@@ -59,6 +60,118 @@ class MacroUtil
     {
       target.meta.add(':$input', exprs ?? [], MacroApi.pos());
     }
+  }
+
+  public static function getClassName():String
+  {
+    return Context.getLocalClass().get().name;
+  }
+
+  /**
+   * Convert a fully qualified identifier, like `net.minecraft.client.renderer.entity.player.PlayerRenderer`,
+   * into a Field expression.
+   */
+  public static function makeQualifiedIdentifierExpr(name:String):Expr
+  {
+    return MacroStringTools.toFieldExpr(name.split('.'), MacroApi.pos());
+  }
+
+  public static function setCurrentSuperClass(input:SuperClass):Void
+  {
+    var target:haxe.macro.Type.ClassType = Context.getLocalClass().get();
+    target.superClass = input;
+  }
+
+  public static function superClassToString(input:SuperClass):String
+  {
+    if (input == null)
+    {
+      return 'null';
+    }
+    var t = input.t.get();
+    var params = input.params;
+    var name = t.pack.join('.') + '.' + t.name;
+    if (params.length > 0)
+    {
+      name += '<' + params.map(function(p) return p.toString()).join(', ') + '>';
+    }
+    return name;
+  }
+
+  public static function constructorToString(input:Null<haxe.macro.Type.Ref<haxe.macro.Type.ClassField>>, typeParameters:Array<haxe.macro.Type.TypeParameter>,
+      concreteParams:Array<haxe.macro.Type>):String
+  {
+    if (input == null) return 'null';
+
+    var inputType:haxe.macro.Type = input.get().type;
+    var appliedType = inputType.applyTypeParameters(typeParameters, concreteParams);
+
+    var result = 'public function ${input.get().name}(';
+
+    switch (appliedType)
+    {
+      case TFun(args, ret):
+        var formattedArgs = [];
+        for (arg in args)
+        {
+          formattedArgs.push('${arg.name}:${arg.t.toString()}');
+        }
+        result += formattedArgs.join(', ');
+        result += ') { ';
+
+        result += 'super(';
+        var formattedSuperArgs = [];
+        for (arg in args)
+        {
+          formattedSuperArgs.push(arg.name);
+        }
+        result += formattedSuperArgs.join(', ');
+        result += '); }';
+
+        return result;
+      default:
+        Context.error('Invalid constructor: ${input}', MacroApi.pos());
+    }
+    return '';
+  }
+
+  /**
+   * Create a new constructor function for a class by copying the super constructor.
+   */
+  public static function copySuperConstructor(input:Null<haxe.macro.Type.Ref<haxe.macro.Type.ClassField>>,
+      typeParameters:Array<haxe.macro.Type.TypeParameter>, concreteParams:Array<haxe.macro.Type>):Field
+  {
+    if (input == null) return null;
+
+    var inputType:haxe.macro.Type = input.get().type;
+    var appliedType = inputType.applyTypeParameters(typeParameters, concreteParams);
+
+    switch (appliedType)
+    {
+      case TFun(args, ret):
+        var constArgs:Array<haxe.macro.Expr.FunctionArg> = [
+          for (arg in args)
+            {name: arg.name, opt: arg.opt, type: Context.toComplexType(arg.t)}
+        ];
+        var superConstArgs = [for (arg in constArgs) macro $i{arg.name}];
+        return {
+          name: 'new',
+          access: [APublic],
+          pos: Context.currentPos(),
+          kind: FFun(
+            {
+              args: constArgs,
+              expr: macro
+              {
+                // Call the super constructor
+                super($a{superConstArgs});
+              }
+            })
+        }
+      default:
+        Context.error('Invalid constructor: ${input}', MacroApi.pos());
+    }
+    return null;
   }
 
   /**
@@ -161,8 +274,59 @@ class MacroUtil
       case EConst(CIdent('false')):
         false;
       default:
-        throw 'Invalid boolean expression: ${expr}';
+        throw 'Invalid Bool expression: ${expr}';
     }
+  }
+
+  /**
+   * Parses a macro expression as an integer.
+   * 
+   * @param expr The expression to parse.
+   * @return The integer value of the expression.
+   */
+  public static function parseExprAsInt(expr:Expr):Int
+  {
+    return switch (expr.expr)
+    {
+      case EConst(CInt(intStr)):
+        Std.parseInt(intStr);
+      default:
+        throw 'Invalid Int expression: ${expr}';
+    }
+  }
+
+  /**
+   * Parses a macro expression as a float.
+   * 
+   * @param expr The expression to parse.
+   * @return The float value of the expression.
+   */
+  public static function parseExprAsFloat(expr:Expr):Float
+  {
+    return switch (expr.expr)
+    {
+      case EConst(CFloat(floattStr)):
+        Std.parseFloat(floattStr);
+      default:
+        throw 'Invalid Float expression: ${expr}';
+    }
+  }
+
+  /**
+   * Convert an EField(EField(EField(EConst(CIdent(name)))) into a string.
+   */
+  public static function recurseField(exprDef:ExprDef):String
+  {
+    switch (exprDef)
+    {
+      case EConst(CIdent(name)):
+        return name;
+      case EField(expr, field, kind):
+        return recurseField(expr.expr) + '.' + field;
+      default:
+        Context.error('Invalid @:mixin annotation, expected EField! (${exprDef})', Context.currentPos());
+    }
+    return '';
   }
 
   /**
@@ -178,7 +342,66 @@ class MacroUtil
       case EConst(CString(str)):
         str;
       default:
-        throw 'Invalid string expression: ${expr}';
+        throw 'Invalid String expression: ${expr}';
+    }
+  }
+
+  /**
+   * Parses a macro expression as an enum value.
+   * 
+   * @param expr The expression to parse.
+   * @param values The enum values to check against.
+   * @return The string value of the expression.
+   */
+  public static function parseExprAsEnum<T>(expr:Expr, values:Map<String, T>):T
+  {
+    if (values.size() == 0)
+    {
+      throw 'Could not evaluate Enum, no values to compare: ${expr}';
+    }
+
+    switch (expr.expr)
+    {
+      case EConst(CIdent(name)):
+        var value:Null<T> = values.get(name);
+
+        if (value == null)
+          Context.error('Could not interpret value: ${name}', MacroApi.pos());
+
+        return value;
+      case EConst(CString(name)):
+        var value:Null<T> = values.get(name);
+
+        if (value == null)
+          Context.error('Could not interpret value: ${name}', MacroApi.pos());
+
+        return value;
+      default:
+        throw 'Invalid LocalCapture expression: ${expr}';
+    }
+  }
+
+  /**
+   * Parses a macro expression as a string, or a string array, depending on what it is.
+   * 
+   * @param expr The expression to parse.
+   * @return The value of the expression.
+   */
+  public static function parseExprAsStringOrStringArray(expr:Expr):haxe.ds.Either<String, Array<String>>
+  {
+    switch (expr.expr)
+    {
+      case EConst(CString(str)):
+        return Left(str);
+      case EArrayDecl(exprArray):
+        var result:Array<String> = [];
+        for (expr in exprArray)
+        {
+          result.push(parseExprAsString(expr));
+        }
+        return Right(result);
+      default:
+        throw 'Invalid String/Array<String> expression: ${expr}';
     }
   }
 
@@ -206,4 +429,6 @@ class MacroUtil
     return Metadatas.getValues(meta.get(), name);
   }
 }
+
+typedef SuperClass = Null<{t:haxe.macro.Type.Ref<haxe.macro.Type.ClassType>, params:Array<haxe.macro.Type>}>;
 #end

@@ -30,32 +30,11 @@ class MCVersion
    * @param version The version to check.
    * @return True if the version is stable.
    */
-  public static function isVersionStable(version:String):Bool
+  public static function getVersionType(version:String):Null<MinecraftVersionType>
   {
     var versionData:MinecraftVersion = Mojang.fetchMinecraftVersion(version);
-    return versionData != null && versionData.type == Release;
-  }
-
-  /**
-   * Return true if the string is a valid, snapshot Minecraft version.
-   * @param version The version to check.
-   * @return True if the version is a snapshot.
-   */
-  public static function isVersionSnapshot(version:String):Bool
-  {
-    var versionData:MinecraftVersion = Mojang.fetchMinecraftVersion(version);
-    return versionData != null && versionData.type == Snapshot;
-  }
-
-  /**
-   * Return true if the string is a valid, beta Minecraft version.
-   * @param version The version to check.
-   * @return True if the version is an old beta.
-   */
-  public static function isVersionBeta(version:String):Bool
-  {
-    var versionData:MinecraftVersion = Mojang.fetchMinecraftVersion(version);
-    return versionData != null && versionData.type == OldBeta;
+    if (versionData == null) return null;
+    return versionData.type;
   }
 
   /**
@@ -85,7 +64,7 @@ class MCVersion
   public static function getLatestStableVersion():String {
     var latestVersion:String = Mojang.getByIndex(0).id;
     while (isVersionValid(latestVersion)) {
-      if (!isVersionStable(latestVersion)) {
+      if (getVersionType(latestVersion) != Release) {
         latestVersion = getPreviousVersion(latestVersion);
       } else {
         return latestVersion;

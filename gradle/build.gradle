@@ -12,6 +12,8 @@ buildscript {
   println "Task: ${System.getProperty('pickhaxe.task')}"
 
   ext.FORGEGRADLE_VERSION = System.getProperty('pickhaxe.gradle.plugins.forgegradle')
+
+  ext.ADDITIONAL_MAVEN_URLS = System.getProperty('pickhaxe.gradle.maven.urls').split('~')
 } 
 
 // Reference all Gradle plugins, with versions.
@@ -150,6 +152,11 @@ repositories {
   maven { url = 'https://maven.minecraftforge.net' }
   // ParchmentMC Mappings
   maven { url = 'https://maven.parchmentmc.org' }
+
+  for (String mavenUrl : System.getProperty('pickhaxe.gradle.maven.urls').split('~')) {
+    System.out.println("Additional Maven URL: " + mavenUrl);
+    maven { url = "${mavenUrl}" }
+  }
 }
 
 configurations {
@@ -158,6 +165,79 @@ configurations {
 }
 
 dependencies {
+  // Dependencies are passed as a ~ separated list of Maven artifacts.
+  // If the artifact starts with a ` then it is considered a JAR-in-JAR dependency.
+
+  for (String depString : System.getProperty('pickhaxe.gradle.maven.implementation').split('~')) {
+    if (depString.equals('')) continue;
+    System.out.println("Additional Dependency: implementation " + depString);
+    if (depString.startsWith('`')) {
+      implementation include("${depString.substring(1)}")
+    } else {
+      implementation "${depString}"
+    }
+  }
+
+  for (String depString : System.getProperty('pickhaxe.gradle.maven.modImplementation').split('~')) {
+    if (depString.equals('')) continue;
+    System.out.println("Additional Dependency: modImplementation " + depString);
+    if (depString.startsWith('`')) {
+      modImplementation include("${depString.substring(1)}")
+    } else {
+      modImplementation "${depString}"
+    }
+  }
+  
+  for (String depString : System.getProperty('pickhaxe.gradle.maven.compile').split('~')) {
+    if (depString.equals('')) continue;
+    System.out.println("Additional Dependency: compile " + depString);
+    if (depString.startsWith('`')) {
+      compile include("${depString.substring(1)}")
+    } else {
+      compile "${depString}"
+    }
+  }
+
+  for (String depString : System.getProperty('pickhaxe.gradle.maven.modCompile').split('~')) {
+    if (depString.equals('')) continue;
+    System.out.println("Additional Dependency: modCompile " + depString);
+    if (depString.startsWith('`')) {
+      modCompile include("${depString.substring(1)}")
+    } else {
+      modCompile "${depString}"
+    }
+  }
+
+  for (String depString : System.getProperty('pickhaxe.gradle.maven.runtime').split('~')) {
+    if (depString.equals('')) continue;
+    System.out.println("Additional Dependency: runtime " + depString);
+    if (depString.startsWith('`')) {
+      runtime include("${depString.substring(1)}")
+    } else {
+      runtime "${depString}"
+    }
+  }
+
+  for (String depString : System.getProperty('pickhaxe.gradle.maven.modRuntime').split('~')) {
+    if (depString.equals('')) continue;
+    System.out.println("Additional Dependency: modRuntime " + depString);
+    if (depString.startsWith('`')) {
+      modRuntime include("${depString.substring(1)}")
+    } else {
+      modRuntime "${depString}"
+    }
+  }
+
+  for (String depString : System.getProperty('pickhaxe.gradle.maven.runtimeOnly').split('~')) {
+    if (depString.equals('')) continue;
+    System.out.println("Additional Dependency: runtimeOnly " + depString);
+    if (depString.startsWith('`')) {
+      runtimeOnly include("${depString.substring(1)}")
+    } else {
+      runtimeOnly "${depString}"
+    }
+  }
+
   switch(System.getProperty('pickhaxe.loader.current')) {
     case 'forge':
       minecraft "net.minecraftforge:forge:${System.getProperty('pickhaxe.minecraft.version')}-${System.getProperty('pickhaxe.loader.forge.apiVersion')}"

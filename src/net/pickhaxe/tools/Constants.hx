@@ -47,4 +47,6 @@ class Constants
    * The list of valid loaders.
    */
   public static final MINECRAFT_LOADERS:Array<String> = ['forge', 'fabric'];
+
+  public static final MOD_DEPENDENCY_TYPES:Array<String> = ['depends', 'recommends', 'suggests', 'conflicts', 'breaks'];
 }

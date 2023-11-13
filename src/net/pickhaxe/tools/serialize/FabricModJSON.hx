@@ -88,3 +88,19 @@ class FabricModJSON {
     return '[' + strArrayFiltered.join(',') + ']';
   }
 }
+
+class FabricMixinJSON {
+  public static function toJSON(input:FabricMixin, pretty:Bool = true):String {
+    var writer = new json2object.JsonWriter<FabricMixin>(true);
+    return writer.write(input, pretty ? '  ' : null);
+  }
+
+  public static function writeString(input:Null<String>):String {
+    if (input == null) return null;
+    return '"$input"';
+  }
+
+  public static function writeStringArray(input:Array<String>):String {
+    return '[' + input.map(writeString).join(',') + ']';
+  }
+}

@@ -1,5 +1,9 @@
 package net.pickhaxe.tools.util;
 
+import net.pickhaxe.tools.schema.PickHaxeProject;
+import net.pickhaxe.tools.util.Error.InvalidMixinId;
+import net.pickhaxe.tools.schema.PickHaxeProject.ModMixin;
+import net.pickhaxe.tools.util.Error.InvalidDependencyTypeException;
 import haxe.io.Path;
 import net.pickhaxe.schema.FabricMod;
 import net.pickhaxe.schema.FabricMod.EntrypointItem;
@@ -68,21 +72,22 @@ class Template
 
   public static function writeFabricManifest(defines:PickHaxeDefines, outputPath:Path):Void
   {
-    var fabricModStr:String = generateFabricManifest(defines);
+    var fabricMixins:Array<String> = writeFabricMixins(defines, new Path(outputPath.dir));
+    var fabricModStr:String = generateFabricManifest(defines, fabricMixins);
 
     IO.writeFile(outputPath, fabricModStr);
   }
 
-  public static function generateFabricManifest(defines:PickHaxeDefines):String
+  public static function generateFabricManifest(defines:PickHaxeDefines, fabricMixins:Array<String>):String
   {
     // Copy the `fabric.mod.json` file to the `generated/resources` folder.
     var entryPoints:Array<ModEntryPoint> = defines.pickhaxe.mod.entryPoints;
 
-    var mainEntrypoints:Array<EntrypointItem> = entryPoints.filter((entrypoint) -> entrypoint.environment == '*')
+    var mainEntrypoints:Array<EntrypointItem> = entryPoints.filter((entrypoint) -> entrypoint.environment == Environment.BOTH)
       .map((entrypoint) -> EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${entrypoint.value}'));
-    var clientEntrypoints:Array<EntrypointItem> = entryPoints.filter((entrypoint) -> entrypoint.environment == 'CLIENT')
+    var clientEntrypoints:Array<EntrypointItem> = entryPoints.filter((entrypoint) -> entrypoint.environment == Environment.CLIENT)
       .map((entrypoint) -> EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${entrypoint.value}'));
-    var serverEntrypoints:Array<EntrypointItem> = entryPoints.filter((entrypoint) -> entrypoint.environment == 'SERVER')
+    var serverEntrypoints:Array<EntrypointItem> = entryPoints.filter((entrypoint) -> entrypoint.environment == Environment.SERVER)
       .map((entrypoint) -> EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${entrypoint.value}'));
 
     var fabricModData:FabricMod =
@@ -111,6 +116,8 @@ class Template
 
         accessWidener: 'META-INF/${defines.pickhaxe.mod.id}.accesswidener',
 
+        mixins: fabricMixins,
+
         // TODO: Add support for client-only and server-only mods.
         environment: '*',
         entrypoints:
@@ -118,9 +125,113 @@ class Template
             main: mainEntrypoints,
             client: clientEntrypoints ?? [],
             server: serverEntrypoints ?? []
-          }
+          },
+
+        depends: [
+          "java" => '>=${defines.pickhaxe.java.version}', // Future versions are allowed.
+          "minecraft" => '${defines.pickhaxe.minecraft.version}', // Exact version.
+          "fabricloader" => '>=${defines.pickhaxe.loader.fabric.loaderVersion}', // Future versions are allowed.
+          "fabric-api" => "*", // Use any version of Fabric API? Is this fine?
+        ],
+        recommends: [],
+        suggests: [],
+        conflicts: [],
+        breaks: [],
       };
+
+    // Add additional dependencies as specified in the project file.
+    for (dependency in defines.pickhaxe.mod.dependencies) {
+      // Ensure ALL filter subtags are satisfied.
+      var shouldSkip:Bool = false;
+      for (loaderTag in dependency.loader) {
+        if (!PickHaxeDefines.satisfiesLoaderFilter(defines.pickhaxe.loader.current, loaderTag)) continue;
+      }
+      for (minecraftTag in dependency.minecraft) {
+        if (!PickHaxeDefines.satisfiesMinecraftFilter(defines.pickhaxe.minecraft.version, minecraftTag)) continue;
+      }
+      if (shouldSkip) continue;
+
+      switch (dependency.type) {
+        case "depends":
+          fabricModData.depends[dependency.id] = dependency.version;
+        case "recommends":
+          fabricModData.recommends[dependency.id] = dependency.version;
+        case "suggests":
+          fabricModData.suggests[dependency.id] = dependency.version;
+        case "conflicts":
+          fabricModData.conflicts[dependency.id] = dependency.version;
+        case "breaks":
+          fabricModData.breaks[dependency.id] = dependency.version;
+        default:
+          throw new InvalidDependencyTypeException(dependency.id, dependency.type);
+      }
+    }
+    
     return FabricModJSON.toJSON(fabricModData);
+  }
+
+  /**
+   * Write the `<id>.mixins.json` files.
+   * @return The array to write to `mixins` in `fabric.mod.json`.
+   */
+  public static function writeFabricMixins(defines:PickHaxeDefines, outputFolder:Path):Array<String> {
+    var mixins:Array<ModMixin> = defines.pickhaxe.mod.mixins;
+    
+    // Validate Fabric mixins.
+    var mixinIds:Array<String> = [];
+    for (mixin in mixins) {
+      var id:String = mixin?.id ?? defines.pickhaxe.mod.id;
+      if (mixinIds.indexOf(id) != -1) {
+        throw new InvalidMixinId(id);
+      }
+      mixinIds.push(id);
+    }
+
+    // Write Fabric mixins.
+    var mixinFiles:Array<String> = [];
+    for (mixin in mixins) {
+      var mixinId:String = mixin?.id ?? defines.pickhaxe.mod.id;
+      var mixinFile:String = '${mixinId}.mixins.json';
+      var path:Path = outputFolder.joinPaths(mixinFile);
+      var result:FabricMixin = buildFabricMixin(defines, mixin);
+
+      var resultStr:String = FabricMixinJSON.toJSON(result);
+      
+      IO.writeFile(path, resultStr);
+      mixinFiles.push(mixinFile);
+    }
+    return mixinFiles;
+  }
+
+  static function buildFabricMixin(defines:PickHaxeDefines, mixin:ModMixin):FabricMixin {
+    var mixinNamesBoth:Array<String> = mixin.mixinClasses
+      .filter((mixinClass) -> (mixinClass?.mixinType ?? Environment.BOTH) == Environment.BOTH)
+      .map((mixinClass) -> mixinClass.value);
+
+    var mixinNamesClient:Array<String> = mixin.mixinClasses
+      .filter((mixinClass) -> (mixinClass?.mixinType ?? Environment.BOTH) == Environment.CLIENT)
+      .map((mixinClass) -> mixinClass.value);
+
+    var mixinNamesServer:Array<String> = mixin.mixinClasses
+      .filter((mixinClass) -> (mixinClass?.mixinType ?? Environment.BOTH) == Environment.SERVER)
+      .map((mixinClass) -> mixinClass.value);
+
+    var mixinPkg:String = mixin?.mixinPackage ?? defines.pickhaxe.mod.parentPackage;
+
+    return {
+      required: true,
+      minVersion: "0.8", // ???
+      compatibilityLevel: "JAVA_17",
+      injectors: {
+        defaultRequire: 1,
+      },
+
+      mixinPackage: mixinPkg,
+
+      mixins: mixinNamesBoth,
+      client: mixinNamesClient,
+      server: mixinNamesServer,
+    }
   }
 
   public static function writeForgeManifest(defines:PickHaxeDefines, outputPath:Path):Void

@@ -77,7 +77,7 @@ class MinecraftVersionMacro
    */
   static function defineNextVersion(minecraftVersion:String):Void
   {
-    Context.info('- NEXT: ${minecraftVersion}', Context.currentPos());
+    // Context.info('- NEXT: ${minecraftVersion}', Context.currentPos());
     
     // MacroUtil.setDefine('minecraft_eq_${sanitizeVersion(minecraftVersion)}', 'false');
     MacroUtil.setDefine('minecraft_neq_${sanitizeVersion(minecraftVersion)}');

@@ -41,6 +41,11 @@ typedef FabricMod =
   var accessWidener:String;
 
   /**
+   * Mixin files used by this mod.
+   */
+  var mixins:Array<String>;
+
+  /**
    * A string value pointing to a path from the root of the mod's JAR file.
    * Defaults to an empty array.
    */
@@ -95,6 +100,31 @@ typedef FabricMod =
    */
   @:jcustomwrite(net.pickhaxe.tools.serialize.FabricModJSON.writeIcon)
   var ?icon:Icon;
+
+  /**
+   * List of mod IDs/versions that are mandatory for this mod to start.
+   */ 
+  var ?depends:Map<String, String>;
+
+  /**
+   * List of mod IDs/versions that are strongly recommended for this mod to start.
+   */
+  var ?recommends:Map<String, String>;
+
+  /**
+   * List of mod IDs/versions that are good but not necessary for this mod.
+   */
+  var ?suggests:Map<String, String>;
+  
+  /**
+   * List of mod IDs/versions that are strongly dissuated for this mod to start.
+   */
+  var ?conflicts:Map<String, String>;
+
+  /**
+   * List of mod IDs/versions that are incompatible with this mod.
+   */
+  var ?breaks:Map<String, String>;
 }
 
 /**
@@ -231,3 +261,34 @@ typedef PersonObject =
  * Based on SemVer 2.0.0.
  */
 typedef VersionRange = Either<String, Array<String>>;
+
+/**
+ * A `<modid>.mixins.json` file.
+ * @see https://fabricmc.net/wiki/tutorial:mixin_registration
+ */
+typedef FabricMixin = {
+  /**
+   * The package the below mixins are contained in.
+   */
+  @:alias('package')
+  var mixinPackage:String;
+
+  /**
+   * BOTH-side mixin class names.
+   */
+  var mixins:Array<String>;
+  /**
+   * CLIENT-side mixin class names.
+   */
+  var client:Array<String>;
+  /**
+   * SERVER-side mixin class names.
+   */
+  var server:Array<String>;
+
+  // Other stuff.
+  var required:Bool;
+  var minVersion:String;
+  var compatibilityLevel:String;
+  var injectors:{ defaultRequire:Int };
+}

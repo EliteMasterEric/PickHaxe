@@ -7,10 +7,19 @@ enum abstract Error(Int) from Int to Int {
   var UNKNOWN = 1;
 
   // Issues caused by the PickHaxe build tool.
+
+  // Bad repository.
   var NO_PROJECT_XML = 100;
   var INVALID_PROJECT_XML = 101;
+
+  // Bad arguments.
   var UNKNOWN_LOADER = 110;
   var UNKNOWN_TEMPLATE = 111;
+
+  // Bad project.xml contents
+  var PROJECT_INVALID_DEPENDENCY_TYPE = 120;
+  var PROJECT_INVALID_FILTER_OP = 121;
+  var PROJECT_INVALID_MIXIN_ID = 122;
 
   // Issues caused by Gradle.
   var GRADLE_ERROR = 200;
@@ -18,6 +27,9 @@ enum abstract Error(Int) from Int to Int {
   // Issues caused by Haxe.
   var HAXE_BUILD_ERROR = 300;
   var HAXE_VERSION_ERROR = 301;
+
+  // Issues caused by web APIs.
+  var WEB_BAD_FABRIC_API = 400;
 
   /**
    * Exit the program with the given error code.
@@ -169,5 +181,79 @@ class HaxeVersionException extends PickHaxeException {
 
   public override function getErrorMessage():String {
     return 'Haxe version mismatch, expected ${expected}, got ${actual}.';
+  }
+}
+
+class InvalidDependencyTypeException extends PickHaxeException {
+  var invalidType:String;
+  var modId:String;
+
+  public function new(modId:String, invalidType:String) {
+    this.invalidType = invalidType;
+    this.modId = modId;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.PROJECT_INVALID_DEPENDENCY_TYPE;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Invalid dependency type "${invalidType}" for mod "${modId}", expected one of [${Constants.MOD_DEPENDENCY_TYPES.join(', ')}].';
+  }
+}
+
+class InvalidFilterOp extends PickHaxeException {
+  var invalidOp:String;
+  var property:String;
+  var validOps:Array<String>;
+
+  public function new(property:String, invalidOp:String, validOps:Array<String>) {
+    this.invalidOp = invalidOp;
+    this.property = property;
+    this.validOps = validOps;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.PROJECT_INVALID_FILTER_OP;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Invalid filter operation "${invalidOp}" for property "${property}", expected one of [${validOps.join(', ')}].';
+  }
+}
+
+class InvalidMixinId extends PickHaxeException {
+  var invalidId:String;
+
+  public function new(invalidId:String) {
+    this.invalidId = invalidId;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.PROJECT_INVALID_MIXIN_ID;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Invalid <mod-mixin> ID "${invalidId}", expected no duplicates.';
+  }
+}
+
+class InvalidFabricAPIData extends PickHaxeException {
+  var msg:String;
+
+  public function new(msg:String) {
+    this.msg = msg;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.WEB_BAD_FABRIC_API;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Could not fetch Fabric API data for the specified version.';
   }
 }

@@ -207,7 +207,7 @@ class Build implements ICommand
     CLI.print('Building project for ${loader} ${mcVersion}...');
 
     // Setup defines, based on the provided arguments and the contents of the project's `project.xml` file.
-    var defines:PickHaxeDefines = PickHaxeDefinesBuilder.build(
+    var defines:PickHaxeDefines = PickHaxeDefines.build(
       {
         loader: loader,
         mcVersion: mcVersion,
@@ -502,6 +502,7 @@ class Build implements ICommand
         IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
 
         Template.writeFabricManifest(defines, IO.workingDir().joinPaths('generated/resources/fabric.mod.json'));
+        Template.writeFabricMixins(defines, IO.workingDir().joinPaths('generated/resources/'));
         Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('generated/resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
       case 'forge':
         CLI.print('Creating meta-inf folder for forge...');
@@ -626,14 +627,14 @@ class Build implements ICommand
         var baseResources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'));
         for (resource in baseResources)
         {
-          CLI.print('Adding resource:' + 'resources/${resource}@${resource}');
+          CLI.print('Adding resource:' + 'resources/${resource}@${resource}', Verbose);
           args = args.concat(['--resource', 'resources/${resource}@${resource}']);
         }
 
         var generatedResources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/resources'));
         for (resource in generatedResources)
         {
-          CLI.print('Adding resource:' + 'generated/resources/${resource}@${resource}');
+          CLI.print('Adding resource:' + 'generated/resources/${resource}@${resource}', Verbose);
           args = args.concat(['--resource', 'generated/resources/${resource}@${resource}']);
         }
       }
@@ -660,12 +661,24 @@ class Build implements ICommand
     // var javaLibExterns:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('externs/java'));
 
     // Add compile definitions.
-    args = args.concat(PickHaxeDefinesBuilder.toHaxeDefines(defines));
+    args = args.concat(defines.toHaxeDefines());
 
     // Include the mod's entry points in the build.
     for (entryPoint in defines.pickhaxe.mod.entryPoints)
     {
+      // We add all entry points to the build.
+      // Any classes not referenced by the entry point will be removed by DCE.
       args.push('${defines.pickhaxe.mod.parentPackage}.${entryPoint.value}');
+    }
+
+    // Include the mod's mixin classes in the build.
+    for (mixin in defines.pickhaxe.mod.mixins) {
+      var mixinPkg:String = mixin?.mixinPackage ?? defines.pickhaxe.mod.parentPackage;
+      for (mixinCls in mixin.mixinClasses) {
+        // We add ALL mixins (client, server, or both) to the build.
+        // Any classes not referenced by mixins will be removed by DCE.
+        args.push('${mixinPkg}.${mixinCls.value}');
+      }
     }
 
     if (performShading) {

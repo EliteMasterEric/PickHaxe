@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.commands;
 
+import net.pickhaxe.tools.schema.PickHaxeProject.Environment;
 import net.pickhaxe.tools.util.Template;
 import net.pickhaxe.tools.commands.Help.CommandInfo;
 
@@ -64,9 +65,9 @@ class Init implements ICommand
       {
         question: "Enter your mod's environment (default: Both):",
         options: [
-          {label: 'Client', value: 'CLIENT'},
-          {label: 'Server', value: 'SERVER'},
-          {label: 'Both', value: '*'}
+          {label: 'Client', value: Environment.CLIENT},
+          {label: 'Server', value: Environment.SERVER},
+          {label: 'Both', value: Environment.BOTH}
         ],
         defaultValue: '*'
       });
