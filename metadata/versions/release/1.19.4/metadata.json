@@ -1,0 +1,15 @@
+{
+  "type": "stable",
+  "version": "1.19.4",
+
+  "javaVersion": "17",
+
+  "forgeGradleVersion": "7.5.1",
+  "forgeGradlePluginVersion": "5.1.+",
+
+  "useLegacyFabric": false,
+  "fabricGradleVersion": "8.1.1",
+
+  "forgeVersion": "45.0.50",
+  "fmlVersion": "45"
+}

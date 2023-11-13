@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Minecraft Version",
+    "define": "minecraft",
+    "doc": "The current version of Minecraft that is being compiled for."
+  },
+  {
+    "name": "Minecraft Version Greater Than",
+    "define": "minecraft_gt_{VERSION}",
+    "doc": "Whether the version of Minecraft being compiled for is greater than the specified version (for example, minecraft_neq_1_20_2). Respects snapshots, betas, etc."
+  },
+  {
+    "name": "Minecraft Version Greater Than or Equal",
+    "define": "minecraft_gteq_{VERSION}",
+    "doc": "Whether the version of Minecraft being compiled for is greater than or equal to the specified version (for example, minecraft_neq_1_20_2). Respects snapshots, betas, etc."
+  },
+  {
+    "name": "Minecraft Version Equal",
+    "define": "minecraft_eq_{VERSION}",
+    "doc": "Whether the version of Minecraft being compiled for is equal to the specified version (for example, minecraft_neq_1_20_2). Respects snapshots, betas, etc."
+  },
+  {
+    "name": "Minecraft Version Not Equal",
+    "define": "minecraft_neq_{VERSION}",
+    "doc": "Whether the version of Minecraft being compiled for is not equal to the specified version (for example, minecraft_neq_1_20_2). Respects snapshots, betas, etc."
+  },
+  {
+    "name": "Minecraft Version less Than",
+    "define": "minecraft_lt_{VERSION}",
+    "doc": "Whether the version of Minecraft being compiled for is less than the specified version (for example, minecraft_neq_1_20_2). Respects snapshots, betas, etc."
+  },
+  {
+    "name": "Minecraft Version less Than or Equal",
+    "define": "minecraft_ltteq_{VERSION}",
+    "doc": "Whether the version of Minecraft being compiled for is less than or equal to the specified version (for example, minecraft_neq_1_20_2). Respects snapshots, betas, etc."
+  },
+  {
+    "name": "Minecraft Fabric",
+    "define": "fabric",
+    "doc": "Whether Minecraft Fabric is the mod loader being compiled for."
+  },
+  {
+    "name": "Minecraft Forge",
+    "define": "forge",
+    "doc": "Whether Minecraft Forge is the mod loader being compiled for."
+  }
+]

@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.schema;
 
+import net.pickhaxe.tools.schema.MinecraftManifest.MinecraftVersionType;
 import haxe.io.Path;
 import net.pickhaxe.tools.util.JSON;
 
@@ -33,9 +34,9 @@ class PickHaxeVersionMetadataReader
    * @param stable If false, `version` is a snapshot.
    * @return The metadata for the given version of Minecraft.
    */
-  public static function read(version:String, stable:Bool = true):PickHaxeVersionMetadata
+  public static function read(version:String, type:MinecraftVersionType = Release):PickHaxeVersionMetadata
   {
-    var parentDir:Path = IO.libraryDir().joinPaths('metadata/versions', stable ? 'stable' : 'snapshot', '${version}');
+    var parentDir:Path = IO.libraryDir().joinPaths('metadata/versions', type, '${version}');
     var path:Path = parentDir.joinPaths('metadata.json');
 
     try

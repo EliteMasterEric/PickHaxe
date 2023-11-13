@@ -322,7 +322,7 @@ typedef LibraryArtifact =
 /**
  * The type of Minecraft version, either a release or a snapshot.
  */
-enum abstract MinecraftVersionType(String)
+enum abstract MinecraftVersionType(String) from String to String
 {
   var OldAlpha = "old_alpha";
   var OldBeta = "old_beta";

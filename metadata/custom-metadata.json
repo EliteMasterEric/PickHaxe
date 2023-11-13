@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Mod",
+    "metadata": ":mod",
+    "doc": "Defines parameters for a net.pickhaxe.core.CommonMod, ClientMod, or ServerMod.",
+    "targets": ["TClass"]
+  }
+]
