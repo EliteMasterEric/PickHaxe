@@ -23,7 +23,8 @@ For as long as Minecraft modding has existed, people have been developing mappin
 
 - Getting errors regarding floats? There is a commmon source of confusion here: Doubles in Java (the 8-byte ones) are known as Floats in Haxe, and referencing Floats in Java (the 4-byte ones) require the rarely-used `Singles` type.
 
-Getting errors about floats and doubles? The 32-bit 
+- `<?>` gets replaced with `<Dynamic>`
+- `FeatureFlag...` gets replaced with `Array<FeatureFlag>`
 
 ## List of Mappings
 

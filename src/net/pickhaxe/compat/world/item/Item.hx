@@ -57,7 +57,7 @@ class Item_ForgeRegistrar extends net.pickhaxe.compat.forge.ForgeRegistrar<Item_
   }
 
   #if minecraft_lt_1_19
-  @:meta(net.minecraftforge.eventbus.api.SubscribeEvent())
+  @:strict(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function onRegister(event:net.minecraftforge.event.RegistryEvent.Register<Item_Minecraft>):Void {
     onRegisterEntries(event.getRegistry());
   }

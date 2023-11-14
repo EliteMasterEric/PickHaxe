@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Support for Legacy Fabric
 - Support for Quilt
 - Support for NeoForge
+- Support for mod dependencies
 - Update documentation
 - Add feature in tooling that checks metadata and warns you if a specific loader/version commmbination is unsupported
 - Add more Bare samples for MadeInHaxe
@@ -30,6 +31,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [] Quilt 1.18.2: Haven't looked into it, will need Gradle work
 - [] Quilt 1.19.4: Haven't looked into it, will need Gradle work
 - [] Quilt 1.20.2: Haven't looked into it, will need Gradle work
+
+
+## [0.5.0] - 2023-??-??
+## Added
+- Added support for mixins.
+  - See the Wiki for more information on how to use them.
+- Added the `<mod-dependency>` tag to `project.xml`.
+  - You can specify a mod ID and version, and whether it is mandatory, recommended, or has conflicts with your mod.
+  - Only applies at runtime, not at compile time.
+  - You can use the `<loader value="fabric" />` and `<minecraft op="gteq" value="1.20.2" />` subtags to conditionally apply these dependencies.
+- Added the `<mod-build-dependency>` tag to `project.xml`.
+  - You can specify a group ID, artifact name, version, and Maven URL to add it as a Gradle dependency for `build` and `make`.
+  - The appropriate JAR will be downloaded and made available to Haxe.
+  - You can use the `<loader value="fabric" />` and `<minecraft op="gteq" value="1.20.2" />` subtags to conditionally apply these dependencies.
+  - On Fabric, you can specify `include="true"` to use the mod as a JAR-in-JAR dependency.
+- Fabric mods will now specify proper versions of `fabric-api`, `fabricloader`, `minecraft`, and `java` as dependencies by default.
+  - This is to ensure the mod is installed on the correct version of the game.
+- Added support for `--help-user-metas` and `--help-user-defines` during compilation, which will help with completion.
+## Changes
+- Modified the backend of the metadata fetcher to better support older versions.
+- Added additional error codes for the PickHaxe command line tool.
+## Fixes
+- Removed some extraneous logging calls.
+
+
+## [0.4.1] - 2023-11-10
+## Fixes
+- Fixed a bug where Minecraft version macro would fail to complete.
+- Fixed a bug where the Shadow gradle plugin would fail to load (I just removed it entirely).
 
 
 ## [0.4.0] - 2023-11-10

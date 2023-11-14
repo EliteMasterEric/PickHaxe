@@ -120,6 +120,63 @@ abstract extern class BlockBehaviour
 @:native("net.minecraft.world.level.block.state.BlockBehaviour$Properties")
 extern class BlockBehaviour_Properties
 {
+  #if minecraft_gteq_1_20
+  public static function of():BlockBehaviour_Properties;
+
+  public static function copy(blockBehaviour:net.minecraft.world.level.block.state.BlockBehaviour):BlockBehaviour_Properties;
+
+  public function air():BlockBehaviour_Properties; 
+  public function dynamicShape():BlockBehaviour_Properties;
+  public function forceSolidOff():BlockBehaviour_Properties; 
+  public function forceSolidOn():BlockBehaviour_Properties; 
+  public function ignitedByLava():BlockBehaviour_Properties; 
+  public function instabreak():BlockBehaviour_Properties;
+  public function liquid():BlockBehaviour_Properties; 
+  public function noCollission():BlockBehaviour_Properties; 
+  public function noLootTable():BlockBehaviour_Properties; 
+  public function noOcclusion():BlockBehaviour_Properties;
+  public function noTerrainParticles():BlockBehaviour_Properties;
+  public function randomTicks():BlockBehaviour_Properties; 
+  public function replaceable():BlockBehaviour_Properties;
+  public function requiresCorrectToolForDrops():BlockBehaviour_Properties;
+  
+  public function destroyTime(destroyTime:Single):BlockBehaviour_Properties;
+  public function explosionResistance(explosionResistance:Single):BlockBehaviour_Properties;
+  public function friction(friction:Single):BlockBehaviour_Properties;
+  public function jumpFactor(jumpFactor:Single):BlockBehaviour_Properties;
+  public function speedFactor(speedFactor:Single):BlockBehaviour_Properties;
+  public overload function strength(strength:Single):BlockBehaviour_Properties;
+  public overload function strength(destroyTime:Single, explosionResistance:Single):BlockBehaviour_Properties;
+
+  public function emissiveRendering(emissiveRendering:BlockBehaviour_StatePredicate):BlockBehaviour_Properties; 
+  public function hasPostProcess(hasPostProcess:BlockBehaviour_StatePredicate):BlockBehaviour_Properties; 
+  public function isRedstoneConductor(isRedstoneConductor:BlockBehaviour_StatePredicate):BlockBehaviour_Properties;
+  public function isSuffocating(isSuffocating:BlockBehaviour_StatePredicate):BlockBehaviour_Properties;
+  public function isValidSpawn(isValidSpawn:BlockBehaviour_StateArgumentPredicate<net.minecraft.world.entity.EntityType<Dynamic>>):BlockBehaviour_Properties;
+  public function isViewBlocking(isViewBlocking:BlockBehaviour_StatePredicate):BlockBehaviour_Properties; 
+  public function offsetType(offsetType:BlockBehaviour_OffsetType):BlockBehaviour_Properties;
+  
+  public function dropsLike(block:net.minecraft.world.level.block.Block):BlockBehaviour_Properties; 
+  public function instrument(instrument:net.minecraft.world.level.block.state.properties.NoteBlockInstrument):BlockBehaviour_Properties;
+  public function lightLevel(lightEmission:java.util.function.ToIntFunction<net.minecraft.world.level.block.state.BlockState>):BlockBehaviour_Properties;
+  public function requiredFeatures(requiredFeatures:Array<net.minecraft.world.flag.FeatureFlag>):BlockBehaviour_Properties;
+  
+  public overload function mapColor(input:net.minecraft.world.level.material.MapColor):BlockBehaviour_Properties; 
+  public overload function mapColor(input:net.minecraft.world.item.DyeColor):BlockBehaviour_Properties;
+  public overload function mapColor(input:java.util.function.Function<net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.material.MapColor>):BlockBehaviour_Properties;
+  // public overload extern inline function mapColor(input:net.pickhaxe.compat.world.level.material.MapColor):BlockBehaviour_Properties {
+  //   var targetColor:net.minecraft.world.level.material.MapColor = input;
+  //   return this.mapColor(targetColor);
+  // }
+
+  public function pushReaction(pushReaction:net.minecraft.world.level.material.PushReaction):BlockBehaviour_Properties; 
+  public function sound(soundType:net.minecraft.world.level.block.SoundType):BlockBehaviour_Properties;
+
+  #else
+
+  //JUNK
+
+
   public static overload function of():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   #if minecraft_lteq_1_19_4
   public static overload function of(material:net.minecraft.world.level.material.Material):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
@@ -127,7 +184,7 @@ extern class BlockBehaviour_Properties
   public static overload function of(material:net.minecraft.world.level.material.Material, materialColor:net.minecraft.world.level.material.MaterialColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public static overload function of(material:net.minecraft.world.level.material.Material, materialColor:java.util.function.Function<net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.material.MaterialColor>):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   #end
-  public static function copy(blockBehaviour:net.minecraft.world.level.block.state.BlockBehaviour):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  
   #if minecraft_gteq_1_20
   // public overload function mapColor(dyeColor:net.minecraft.world.item.DyeColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   // public overload function mapColor(mapColor:net.minecraft.world.level.material.MapColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
@@ -159,11 +216,11 @@ extern class BlockBehaviour_Properties
   #end
   public function air():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function isValidSpawn(isValidSpawn:net.minecraft.world.level.block.state.BlockBehaviour.StateArgumentPredicate<net.minecraft.world.entity.EntityType<Dynamic>>):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public function isRedstoneConductor(isRedstoneConductor:net.minecraft.world.level.block.state.BlockBehaviour.StatePredicate):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public function isSuffocating(isSuffocating:net.minecraft.world.level.block.state.BlockBehaviour.StatePredicate):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public function isViewBlocking(isViewBlocking:net.minecraft.world.level.block.state.BlockBehaviour.StatePredicate):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public function hasPostProcess(hasPostProcess:net.minecraft.world.level.block.state.BlockBehaviour.StatePredicate):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public function emissiveRendering(emissiveRendering:net.minecraft.world.level.block.state.BlockBehaviour.StatePredicate):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function isRedstoneConductor(isRedstoneConductor:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function isSuffocating(isSuffocating:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function isViewBlocking(isViewBlocking:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function hasPostProcess(hasPostProcess:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  public function emissiveRendering(emissiveRendering:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function requiresCorrectToolForDrops():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   #if minecraft_lteq_1_19_4
   public function color(materialColor:net.minecraft.world.level.material.MaterialColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
@@ -179,6 +236,7 @@ extern class BlockBehaviour_Properties
   public function instrument(noteBlockInstrument:net.minecraft.world.level.block.state.properties.NoteBlockInstrument):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function replaceable():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   #end
+  #end
 }
 typedef Properties = BlockBehaviour_Properties;
 
@@ -186,7 +244,6 @@ typedef Properties = BlockBehaviour_Properties;
 @:native("net.minecraft.world.level.block.state.BlockBehaviour$StateArgumentPredicate")
 extern interface BlockBehaviour_StateArgumentPredicate<A>
 {
-  @:badMapping("unknownMethodMapping")
     public function test(var1:net.minecraft.world.level.block.state.BlockState, var2:net.minecraft.world.level.BlockGetter, var3:net.minecraft.core.BlockPos, var4:A):Bool;
 }
 typedef StateArgumentPredicate<A> = BlockBehaviour_StateArgumentPredicate<A>;
@@ -195,7 +252,6 @@ typedef StateArgumentPredicate<A> = BlockBehaviour_StateArgumentPredicate<A>;
 @:native("net.minecraft.world.level.block.state.BlockBehaviour$OffsetFunction")
 extern interface BlockBehaviour_OffsetFunction
 {
-  @:badMapping("unknownMethodMapping")
     public function evaluate(var1:net.minecraft.world.level.block.state.BlockState, var2:net.minecraft.world.level.BlockGetter, var3:net.minecraft.core.BlockPos):net.minecraft.world.phys.Vec3;
 }
 typedef OffsetFunction = BlockBehaviour_OffsetFunction;

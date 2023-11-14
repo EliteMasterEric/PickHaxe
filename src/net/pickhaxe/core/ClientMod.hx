@@ -1,11 +1,7 @@
 package net.pickhaxe.core;
 
 #if fabric
-<<<<<<< HEAD
 import net.fabricmc.api.ClientModInitializer;
-=======
-import net.fabricmc.api.ModInitializer;
->>>>>>> main
 #elseif forge
 #end
 

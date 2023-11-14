@@ -4,7 +4,7 @@ package net.pickhaxe.core;
  * An interface which provides support for `@:mixin` and many others.
  */
 @:autoBuild(net.pickhaxe.macro.mixin.MixinMacroMixin.build()) // @:mixin
-@:autoBuild(net.pickhaxe.macro.mixin.MixinMacroInject.build()) // @:inject
+// @:autoBuild(net.pickhaxe.macro.mixin.MixinMacroInject.build()) // @:inject
 interface Mixin {}
 
 /**

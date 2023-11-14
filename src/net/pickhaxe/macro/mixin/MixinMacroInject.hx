@@ -217,28 +217,37 @@ class MixinMacroInject
    */
   static function applyAnnotation(targetField:Field, mixinParams:InjectParams)
   {
-    var idExpr:Expr = macro id = $v{mixinParams.id ?? ""};
-    var cancellableExpr:Expr = macro cancellable = $v{mixinParams.cancellable ?? false};
-    var localsExpr:Expr = macro locals = $v{mixinParams.locals ?? NO_CAPTURE};
-    var remapExpr:Expr = macro remap = $v{mixinParams.remap ?? false};
-    var requireExpr:Expr = macro require = $v{mixinParams.require ?? -1};
-    var expectExpr:Expr = macro expect = $v{mixinParams.expect ?? 1};
-    var allowExpr:Expr = macro allow = $v{mixinParams.allow ?? -1};
-    var constraintsExpr:Expr = macro constraints = $v{mixinParams.constraints ?? ""};
+    var idExpr:Expr = macro 
+    var cancellableExpr:Expr = macro 
+    var localsExpr:Expr = macro 
+    var remapExpr:Expr = macro 
+    var requireExpr:Expr = macro 
+    var expectExpr:Expr = macro 
+    var allowExpr:Expr = macro 
+    var constraintsExpr:Expr = macro 
 
     var methodExpr:Expr = null;
     switch(mixinParams.method) {
       case Left(methodStr):
-        methodExpr = macro method = $v{methodStr};
+        methodExpr = macro $v{methodStr};
       case Right(methodStrArray):
-        methodExpr = macro method = [$v{methodStrArray}];
+        methodExpr = macro [$v{methodStrArray}];
       default:
         Context.error('Invalid @:inject annotation, "method" parameter must be a string or an array of strings!', Context.currentPos());
     }
 
-    switch macro @:meta(org.spongepowered.asm.mixin.injection.Inject(
-      ${idExpr}, ${cancellableExpr}, ${localsExpr}, ${remapExpr}, ${requireExpr}, ${expectExpr}, ${allowExpr}, ${constraintsExpr},
-      ${methodExpr})) ""
+    switch macro @:strict(org.spongepowered.asm.mixin.injection.Inject({
+      id: $v{mixinParams.id ?? ""},
+      cancellable: $v{mixinParams.cancellable ?? false},
+      locals: $v{mixinParams.locals ?? NO_CAPTURE},
+      remap: $v{mixinParams.remap ?? false},
+      require: $v{mixinParams.require ?? -1},
+      expect: $v{mixinParams.expect ?? 1},
+      allow: $v{mixinParams.allow ?? -1},
+      constraints: $v{mixinParams.constraints ?? ""},
+
+      method: ${methodExpr},
+    })) ""
     {
       case {expr: EMeta(m, _)}:
         // If it works, add the annotation to the field.

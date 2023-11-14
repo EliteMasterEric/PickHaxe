@@ -208,9 +208,15 @@ class MixinMacroMixin
     };
 
     var targetValueExpr:Expr = MacroUtil.makeQualifiedIdentifierExpr(mixinParams.targetName);
-    var targetExpr:Expr = macro value = ${targetValueExpr};
 
-    switch macro @:meta(org.spongepowered.asm.mixin.Mixin(${targetExpr}, ${priorityExpr})) ""
+    /*
+          value: net.minecraft.client.renderer.entity.player.PlayerRenderer, //$v{targetValueExpr},
+      priority: $v{priorityExpr},
+    */
+
+    switch macro @:strict(org.spongepowered.asm.mixin.Mixin({
+      value: [net.minecraft.client.renderer.entity.player.PlayerRenderer],
+    })) ""
     {
       case {expr: EMeta(m, _)}:
         // If it works, add the annotation to the class.
