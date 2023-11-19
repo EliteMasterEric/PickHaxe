@@ -2,15 +2,13 @@ package net.pickhaxe.compat.world.level.block;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block as Block_Minecraft;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties as Block_Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties as Minecraft_Block_Properties;
+
 #if forge
 import net.minecraftforge.registries.RegisterEvent;
 #end
 
 /**
- * TODO: I wanted this to REPLACE net.minecraft.world.level.block.Block
- * but I get a vague error `Should extend using a class`
- * 
  * Add new convenience and compatibility functions to the Block class.
  */
 @:forward
@@ -19,7 +17,7 @@ abstract Block(Block_Minecraft) from Block_Minecraft to Block_Minecraft
   /**
    * Alias to the real constructor.
    */
-  public inline function new(props:Block_Properties) {
+  public inline function new(props:Minecraft_Block_Properties) {
     this = new Block_Minecraft(props);
   }
 
@@ -46,6 +44,38 @@ abstract Block(Block_Minecraft) from Block_Minecraft to Block_Minecraft
     throw "Not implemented for Forge";
     #end
   }
+
+  /**
+   * Register this block as strippable with an axe.
+   * @param stripped The block to produce when this block is stripped.
+   * @return Self for chaining.
+   */
+   public function strippable(stripped:Block):Block {
+    #if fabric
+    net.fabricmc.fabric.api.registry.StrippableBlockRegistry.register(this, stripped);
+    #elseif forge
+
+    #end
+
+    // Chainable.
+    return abstract;
+  }
+
+  /**
+   * Register this block as flammable.
+   * @param burn Ignite odds; higher values increase the chance of fire spreading to this block.
+   * @param spread Burn odds; higher values increase the chance of fire destroying this block.
+   */
+   public function flammable(burn:Int, spread:Int):Block {
+    #if fabric
+    net.fabricmc.fabric.api.registry.FlammableBlockRegistry.getDefaultInstance().add(this, burn, spread);
+    #elseif forge
+
+    #end
+
+    // Chainable.
+    return abstract;
+  }
 }
 
 #if forge
@@ -71,7 +101,8 @@ class Block_ForgeRegistrar extends net.pickhaxe.compat.forge.ForgeRegistrar<Bloc
     return instance.queue(resourceLocation, item);
   }
 
-  override function applyEntryId(key:ResourceLocation, value:Block_Minecraft) {
+  override function applyEntryId(key:ResourceLocation, value:Block_Minecraft)
+  {
     value.setRegistryName(key);
   }
 

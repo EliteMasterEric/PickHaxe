@@ -6,7 +6,7 @@ import net.minecraft.world.level.material.MapColor as MinecraftMapColor;
  * Represents the color of this block when displayed on a Map.
  */
 // This abstract exists to allow use of map colors as arguments without importing, via inferring the enum type.
-enum abstract MapColor(String) from String /*to MinecraftMapColor*/ {
+enum abstract MapColor(String) from String to String {
   var NONE = "NONE";
   var GRASS = "GRASS";
   var SAND = "SAND";

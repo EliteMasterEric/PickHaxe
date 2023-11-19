@@ -64,7 +64,9 @@ abstract CreativeModeTab(CreativeModeTab_Minecraft) from CreativeModeTab_Minecra
    * @see https://github.com/FabricMC/fabric/blob/36f990282f52d8aa7150a5b6771b022d5cf3227e/fabric-item-group-api-v1/src/main/java/net/fabricmc/fabric/impl/itemgroup/FabricItemGroupBuilderImpl.java
    */
   function setId(resourceLocation:ResourceLocation):Void {
-    #if minecraft_gteq_1_19_3
+    #if minecraft_gteq_1_20
+    this.setId(resourceLocation);
+    #elseif minecraft_gteq_1_19_3
     var fabricItemGroup:net.fabricmc.fabric.impl.itemgroup.FabricItemGroup = cast this;
     fabricItemGroup.setId(resourceLocation);
     #else

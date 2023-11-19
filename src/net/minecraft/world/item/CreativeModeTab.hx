@@ -273,7 +273,7 @@ typedef ItemDisplayParameters = CreativeModeTab_ItemDisplayParameters;
 @:native("net.minecraft.world.item.CreativeModeTab$DisplayItemsGenerator")
 extern interface CreativeModeTab_DisplayItemsGenerator
 {
-  #if (minecraft >= "1.19.4")
+  #if (minecraft_gteq_1_19_4)
   // In 1.19.4, DisplayItemsGenerator takes arguments in a context.
   public overload function accept(context:ItemDisplayParameters, output:net.minecraft.world.item.CreativeModeTab.Output):Void;
   #else
