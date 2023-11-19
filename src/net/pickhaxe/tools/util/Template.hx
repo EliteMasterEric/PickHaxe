@@ -24,7 +24,7 @@ class Template
       .replace('#{pickhaxe.mod.description}', modParams.modDescription)
       .replace('#{pickhaxe.mod.entryPoint.environment}', modParams.modEnvironment)
       .replace('#{pickhaxe.mod.entryPoint.class}', modParams.entryClass)
-      .replace('#{pickhaxe.mod.license}', "All Rights Reserved"); // Default to All Rights Reserved
+      .replace('#{pickhaxe.mod.license}', Constants.DEFAULT_LICENSE);
   }
 
   public static function applyPickHaxeDefines(input:String, defines:PickHaxeDefines):String
@@ -83,12 +83,45 @@ class Template
     // Copy the `fabric.mod.json` file to the `generated/resources` folder.
     var entryPoints:Array<ModEntryPoint> = defines.pickhaxe.mod.entryPoints;
 
-    var mainEntrypoints:Array<EntrypointItem> = entryPoints.filter((entrypoint) -> entrypoint.environment == Environment.BOTH)
-      .map((entrypoint) -> EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${entrypoint.value}'));
-    var clientEntrypoints:Array<EntrypointItem> = entryPoints.filter((entrypoint) -> entrypoint.environment == Environment.CLIENT)
-      .map((entrypoint) -> EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${entrypoint.value}'));
-    var serverEntrypoints:Array<EntrypointItem> = entryPoints.filter((entrypoint) -> entrypoint.environment == Environment.SERVER)
-      .map((entrypoint) -> EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${entrypoint.value}'));
+    var mainEntrypoints:Array<EntrypointItem> = entryPoints.filter(function(entrypoint) {
+      for (loaderTag in entrypoint.loader) {
+        if (!PickHaxeDefines.satisfiesLoaderFilter(defines.pickhaxe.loader.current, loaderTag)) return false;
+      }
+      for (minecraftTag in entrypoint.minecraft) {
+        if (!PickHaxeDefines.satisfiesMinecraftFilter(defines.pickhaxe.minecraft.version, minecraftTag)) return false;
+      }
+      return entrypoint.environment == Environment.BOTH;
+    }).map((entrypoint) -> EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${entrypoint.value}'));
+
+    var clientEntrypoints:Array<EntrypointItem> = entryPoints.filter(function(entrypoint) {
+      for (loaderTag in entrypoint.loader) {
+        if (!PickHaxeDefines.satisfiesLoaderFilter(defines.pickhaxe.loader.current, loaderTag)) return false;
+      }
+      for (minecraftTag in entrypoint.minecraft) {
+        if (!PickHaxeDefines.satisfiesMinecraftFilter(defines.pickhaxe.minecraft.version, minecraftTag)) return false;
+      }
+      return entrypoint.environment == Environment.CLIENT;
+    }).map((entrypoint) -> EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${entrypoint.value}'));
+
+    var serverEntrypoints:Array<EntrypointItem> = entryPoints.filter(function(entrypoint) {
+      for (loaderTag in entrypoint.loader) {
+        if (!PickHaxeDefines.satisfiesLoaderFilter(defines.pickhaxe.loader.current, loaderTag)) return false;
+      }
+      for (minecraftTag in entrypoint.minecraft) {
+        if (!PickHaxeDefines.satisfiesMinecraftFilter(defines.pickhaxe.minecraft.version, minecraftTag)) return false;
+      }
+      return entrypoint.environment == Environment.SERVER;
+    }).map((entrypoint) -> EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${entrypoint.value}'));
+
+    var dataGenEntrypoints:Array<EntrypointItem> = defines.pickhaxe.mod.dataGenerators.filter(function (dataGenerator) {
+      for (loaderTag in dataGenerator.loader) {
+        if (!PickHaxeDefines.satisfiesLoaderFilter(defines.pickhaxe.loader.current, loaderTag)) return false;
+      }
+      for (minecraftTag in dataGenerator.minecraft) {
+        if (!PickHaxeDefines.satisfiesMinecraftFilter(defines.pickhaxe.minecraft.version, minecraftTag)) return false;
+      }
+      return true;
+    }).map((dataGenerator) -> EntrypointItem.Left('${defines.pickhaxe.mod.parentPackage}.${dataGenerator.value}'));
 
     var fabricModData:FabricMod =
       {
@@ -122,9 +155,10 @@ class Template
         environment: '*',
         entrypoints:
           {
-            main: mainEntrypoints,
+            main: mainEntrypoints ?? [],
             client: clientEntrypoints ?? [],
-            server: serverEntrypoints ?? []
+            server: serverEntrypoints ?? [],
+            fabricDataGen: dataGenEntrypoints ?? [],
           },
 
         depends: [
