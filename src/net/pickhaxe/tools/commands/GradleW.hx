@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.commands;
 
+import net.pickhaxe.tools.util.Error.ProjectNotBuiltException;
 import net.pickhaxe.tools.util.MCVersion;
 import net.pickhaxe.schema.FabricMod;
 import net.pickhaxe.tools.commands.Help.CommandInfo;
@@ -73,6 +74,10 @@ class GradleW implements ICommand
         mcVersion: mcVersion,
         jvm: !genSources,
       });
+
+    if (!IO.exists(IO.workingDir().joinPaths('generated'))) {
+      throw new ProjectNotBuiltException();
+    }
 
     var result:Bool = performGradleTask(defines);
 

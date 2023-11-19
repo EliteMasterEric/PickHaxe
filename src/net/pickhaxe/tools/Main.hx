@@ -1,5 +1,6 @@
 package net.pickhaxe.tools;
 
+import net.pickhaxe.tools.commands.ICommand;
 import net.pickhaxe.tools.commands.RunClient;
 import net.pickhaxe.tools.commands.Template;
 import net.pickhaxe.tools.commands.Build;
@@ -184,29 +185,15 @@ class Main
 
     try
     {
-      switch (command)
+      var command:ICommand = Help.getCommands().get(command);
+
+      if (command == null)
       {
-        case 'help':
-          new Help().perform(args);
-        case 'setup':
-          new Setup().perform(args);
-        case 'init':
-          new Init().perform(args);
-        case 'template':
-          new Template().perform(args);
-        case 'build':
-          new Build().perform(args);
-        case 'make':
-          new Make().perform(args);
-        case 'runClient':
-          new RunClient().perform(args);
-        case 'clean':
-          new Clean().perform(args);
-        case 'gradlew':
-          new GradleW().perform(args);
-        default:
-          CLI.print('Case fallthrough for command ${command}.');
+        CLI.print('Unknown command ${command}.');
+        return;
       }
+
+      command.perform(args);
     }
     catch (pickhaxeError:PickHaxeException)
     {

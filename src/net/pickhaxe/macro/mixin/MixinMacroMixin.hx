@@ -152,6 +152,16 @@ class MixinMacroMixin
                     default:
                       Context.error('Invalid @:mixin annotation, bad value for "target"!', Context.currentPos());
                   }
+                case 'targets':
+                  switch (paramField.expr.expr)
+                  {
+                    case EConst(CIdent(name)):
+                      result.targetName = name;
+                    case EField(expr, field, kind):
+                      result.targetName = MacroUtil.recurseField(expr.expr) + '.' + field;
+                    default:
+                      Context.error('Invalid @:mixin annotation, bad value for "targets"!', Context.currentPos());
+                  }
                 case 'targetName':
                   switch (paramField.expr.expr)
                   {
@@ -196,28 +206,13 @@ class MixinMacroMixin
   {
     var target:haxe.macro.Type.ClassType = Context.getLocalClass().get();
 
-    // Try to build the @:meta annotation via macro reification.
-    // The value is either the string
-    var priorityExpr:Expr = if (mixinParams.priority != null)
-    {
-      macro priority = $v{mixinParams.priority};
-    }
-    else
-    {
-      macro priority = $v{DEFAULT_PRIORITY};
-    };
-
     var targetValueExpr:Expr = MacroUtil.makeQualifiedIdentifierExpr(mixinParams.targetName);
-
-    /*
-          value: net.minecraft.client.renderer.entity.player.PlayerRenderer, //$v{targetValueExpr},
-      priority: $v{priorityExpr},
-    */
+    var targetExpr:Expr = macro value = ${targetValueExpr};
 
     switch macro @:strict(org.spongepowered.asm.mixin.Mixin({
-      value: [net.minecraft.client.renderer.entity.player.PlayerRenderer],
-    })) ""
-    {
+      value: untyped net.minecraft.client.renderer.entity.player.PlayerRenderer,
+      priority: $v{mixinParams?.priority ?? DEFAULT_PRIORITY}
+    })) "" {
       case {expr: EMeta(m, _)}:
         // If it works, add the annotation to the class.
         target.meta.add(m.name, m.params, m.pos);

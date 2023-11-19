@@ -74,14 +74,16 @@ https://forge.gemwire.uk/wiki/Toolchain
 https://fabricmc.net/wiki/tutorial:vscode_setup#generating_minecraft_source
 
 Minecraft JavaDocs:
-- Fabric: https://maven.fabricmc.net/docs/yarn-1.19.3+build.5/
+- Fabric 1.19.2: https://maven.fabricmc.net/docs/yarn-1.19.2+build.1/
+- Fabric 1.19.3: https://maven.fabricmc.net/docs/yarn-1.19.3+build.5/
+- Fabric 1.20: https://maven.fabricmc.net/docs/yarn-1.20.2+build.2/
 - Forge: https://nekoyue.github.io/ForgeJavaDocs-NG/
 
 Migration Guides:
 - 1.19.4 to 1.20: https://gist.github.com/ChampionAsh5357/cf818acc53ffea6f4387fe28c2977d56
 
 Mappings Lookups:
-- https://wagyourtail.xyz/Projects/MinecraftMappingViewer/App?version=1.19.4 (Fabric/MCP)
+- https://wagyourtail.xyz/Projects/MinecraftMappingViewer/App?version=1.20.2 (Fabric/MCP)
 - https://mappings.cephx.dev/ (Spigot/Bukkit)
 
 Common Bugs:

@@ -48,5 +48,13 @@ class Constants
    */
   public static final MINECRAFT_LOADERS:Array<String> = ['forge', 'fabric'];
 
+  /**
+   * Dependency types.
+   */
   public static final MOD_DEPENDENCY_TYPES:Array<String> = ['depends', 'recommends', 'suggests', 'conflicts', 'breaks'];
+
+  /**
+   * The default license to use.
+   */
+  public static final DEFAULT_LICENSE:String = "All Rights Reserved";
 }

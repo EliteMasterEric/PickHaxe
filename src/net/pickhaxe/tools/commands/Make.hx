@@ -132,6 +132,8 @@ class Make implements ICommand
             // Ignore.
           case '--clean':
             // Ignore.
+          case '--dump':
+            // Ignore.
           default:
             additionalArgs.push(arg);
         }

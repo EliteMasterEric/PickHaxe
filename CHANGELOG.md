@@ -46,6 +46,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - The appropriate JAR will be downloaded and made available to Haxe.
   - You can use the `<loader value="fabric" />` and `<minecraft op="gteq" value="1.20.2" />` subtags to conditionally apply these dependencies.
   - On Fabric, you can specify `include="true"` to use the mod as a JAR-in-JAR dependency.
+- Added a PickHaxe API for data generation.
+  - Added the `<mod-data-generator>` tag to `project.xml` to specify the data generator entrypoint.
+- Added `<loader>` and `<minecraft` subtags to the `<mod-entrypoint>` tag, to filter when an entrypoint is used.
 - Fabric mods will now specify proper versions of `fabric-api`, `fabricloader`, `minecraft`, and `java` as dependencies by default.
   - This is to ensure the mod is installed on the correct version of the game.
 - Added support for `--help-user-metas` and `--help-user-defines` during compilation, which will help with completion.
@@ -54,6 +57,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added additional error codes for the PickHaxe command line tool.
 ## Fixes
 - Removed some extraneous logging calls.
+- Fixed an issue where `pickhaxe runClient` was not functioning on Fabric loader.
 
 
 ## [0.4.1] - 2023-11-10

@@ -11,6 +11,7 @@ enum abstract Error(Int) from Int to Int {
   // Bad repository.
   var NO_PROJECT_XML = 100;
   var INVALID_PROJECT_XML = 101;
+  var PROJECT_NOT_BUILT = 102;
 
   // Bad arguments.
   var UNKNOWN_LOADER = 110;
@@ -255,5 +256,19 @@ class InvalidFabricAPIData extends PickHaxeException {
 
   public override function getErrorMessage():String {
     return 'Could not fetch Fabric API data for the specified version.';
+  }
+}
+
+class ProjectNotBuiltException extends PickHaxeException {
+  public function new() {
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.PROJECT_NOT_BUILT;
+  }
+
+  public override function getErrorMessage():String {
+    return 'The project must first be built with "pickhaxe build" before performing this command.';
   }
 }
