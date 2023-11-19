@@ -47,10 +47,16 @@ typedef PickHaxe =
    * Add new Haxelibs as dependencies to the project.
    */
   @:list('haxelib') var haxelibs:Array<HaxelibEntry>;
+
   /**
    * Mods can have multiple entry points.
    */
   @:list('mod-entry-point') var entryPoints:Array<ModEntryPoint>;
+
+  /**
+   * Mods can have multiple data generators.
+   */
+  @:list('mod-data-generator') var dataGenerators:Array<ModDataGenerator>;
 }
 
 /**
@@ -128,6 +134,9 @@ typedef ModMixin = {
   @:attr('package') var mixinPackage:String;
 
   @:list('class') var mixinClasses:Array<ModMixinClass>;
+
+  @:list('loader') var loader:Array<LoaderFilterTag>;
+  @:list('minecraft') var minecraft:Array<MinecraftFilterTag>;
 }
 
 typedef ModMixinClass =
@@ -266,7 +275,21 @@ typedef ModEntryPoint =
 {
   > ValueTag,
   @:attr var environment:String;
+
+  @:list('loader') var loader:Array<LoaderFilterTag>;
+  @:list('minecraft') var minecraft:Array<MinecraftFilterTag>;
 };
+
+/**
+ * `<mod-data-generator>` tag.
+ */
+ typedef ModDataGenerator =
+ {
+   > ValueTag,
+ 
+   @:list('loader') var loader:Array<LoaderFilterTag>;
+   @:list('minecraft') var minecraft:Array<MinecraftFilterTag>;
+ };
 
 /**
  * `<haxelib>` tag.

@@ -43,6 +43,15 @@ class GradleW extends CLIProcess
   }
 
   /**
+   * Generate Minecraft data files via DataGenerators.
+   * @return The output of the task.
+   */
+  public function runDatagen(?detached:Bool = true):Bool
+  {
+    return performTask(['runDatagen'], detached);
+  }
+
+  /**
    * Generate Minecraft sources from mappings.
    * @return The output of the task.
    */

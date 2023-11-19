@@ -143,7 +143,6 @@ class Build implements ICommand
           blurb: 'Rename core classes to avoid conflicts.',
           value: null,
         },
-
         {
           short: null,
           long: 'no-shading',
@@ -222,7 +221,7 @@ class Build implements ICommand
     // Move back to the parent of the working dir.
     Sys.setCwd(IO.workingDir().dir);
 
-    performHaxeBuild(defines, !genSources);
+    performHaxeBuild(defines);
 
     if (shouldMake) {
       CLI.print('Continuing to make...');
@@ -460,6 +459,7 @@ class Build implements ICommand
               return file.endsWith('.jar');
             });
 
+            // TODO: Make this work outside of Windows.
             Robocopy.instance.copyFiles(fullLoomCacheFolder.toString(), targetCacheFolder.toString(), loomCacheJARFiles);
 
             // Rename the files once they've been moved.
@@ -520,7 +520,7 @@ class Build implements ICommand
    * @param defines Project data
    * @param jvm If true, do not generate intermediate `.java` files.
    */
-  function performHaxeBuild(defines:PickHaxeDefines, jvm:Bool):Void
+  function performHaxeBuild(defines:PickHaxeDefines):Void
   {
     CLI.print('Performing Haxe build...');
 
@@ -569,7 +569,7 @@ class Build implements ICommand
     }
 
     // Export the Java project to the `generated` folder.
-    if (jvm)
+    if (!genSources)
     {
       CLI.print('Compiling to Java ${defines.pickhaxe.java.version}...');
       // --c-arg: Add Java compilation args
@@ -620,7 +620,7 @@ class Build implements ICommand
 
     if (!noResources)
     {
-      if (jvm)
+      if (!genSources)
       {
         CLI.print('Adding resources...');
 
@@ -679,6 +679,11 @@ class Build implements ICommand
         // Any classes not referenced by mixins will be removed by DCE.
         args.push('${mixinPkg}.${mixinCls.value}');
       }
+    }
+
+    // Include the mod's datagen classes in the build.
+    for (dataGenerator in defines.pickhaxe.mod.dataGenerators) {
+      args.push('${defines.pickhaxe.mod.parentPackage}.${dataGenerator.value}');
     }
 
     if (performShading) {

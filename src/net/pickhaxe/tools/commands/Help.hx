@@ -78,6 +78,7 @@ class Help implements ICommand
       'build' => new Build(),
       'make' => new Make(),
       'runClient' => new RunClient(),
+      'dataGen' => new DataGen(),
       'clean' => new Clean(),
       'gradlew' => new GradleW(),
     ];

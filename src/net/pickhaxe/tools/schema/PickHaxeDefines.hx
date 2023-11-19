@@ -99,6 +99,7 @@ typedef PickHaxeDefinesMod =
   version:String,
   description:String,
   entryPoints:Array<PickHaxeProject.ModEntryPoint>,
+  dataGenerators:Array<PickHaxeProject.ModDataGenerator>,
   license:String,
 
   dependencies:Array<PickHaxeProject.ModDependency>,
@@ -639,6 +640,7 @@ class Builder
                 mixins: projectFile.mixins,
 
                 entryPoints: projectFile.entryPoints,
+                dataGenerators: projectFile.dataGenerators,
 
                 // Default license
                 license: projectFile?.license?.value ?? 'All Rights Reserved',
@@ -815,6 +817,7 @@ class Builder
                 mixins: projectFile.mixins,
 
                 entryPoints: projectFile.entryPoints,
+                dataGenerators: projectFile.dataGenerators,
 
                 license: projectFile?.license?.value ?? 'All Rights Reserved',
 

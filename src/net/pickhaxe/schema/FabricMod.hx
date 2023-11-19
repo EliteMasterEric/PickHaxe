@@ -204,6 +204,17 @@ typedef EntrypointContainer =
    */
   @:jcustomwrite(net.pickhaxe.tools.serialize.FabricModJSON.writeEntrypointItemArray)
   var ?server:Array<EntrypointItem>;
+
+  /**
+   * Fabric utilizes the classes and methods named in `fabric-datagen`
+   * with type `DataGeneratorEntrypoint` when generating data.
+   * 
+   * Contains either strings (representing a class to instantiate or a static field to call)
+   * or objects containing a string and an optional language adapter key.
+   */
+  @:jcustomwrite(net.pickhaxe.tools.serialize.FabricModJSON.writeEntrypointItemArray)
+  @:alias("fabric-datagen")
+  var ?fabricDataGen:Array<EntrypointItem>;
 }
 
 typedef EntrypointItem = Either<String, EntrypointObject>;
