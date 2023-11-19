@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.5.0] - 2023-??-??
 ## Added
+- Added basic Block compat.
 - Added support for mixins.
   - See the Wiki for more information on how to use them.
 - Added the `<mod-dependency>` tag to `project.xml`.
