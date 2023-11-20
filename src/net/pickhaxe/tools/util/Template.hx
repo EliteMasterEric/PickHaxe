@@ -1,7 +1,7 @@
 package net.pickhaxe.tools.util;
 
 import net.pickhaxe.tools.schema.PickHaxeProject;
-import net.pickhaxe.tools.util.Error.InvalidMixinId;
+import net.pickhaxe.tools.util.Error.InvalidMixinIdException;
 import net.pickhaxe.tools.schema.PickHaxeProject.ModMixin;
 import net.pickhaxe.tools.util.Error.InvalidDependencyTypeException;
 import haxe.io.Path;
@@ -216,7 +216,7 @@ class Template
     for (mixin in mixins) {
       var id:String = mixin?.id ?? defines.pickhaxe.mod.id;
       if (mixinIds.indexOf(id) != -1) {
-        throw new InvalidMixinId(id);
+        throw new InvalidMixinIdException(id);
       }
       mixinIds.push(id);
     }

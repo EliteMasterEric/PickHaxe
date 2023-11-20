@@ -1,7 +1,7 @@
 package net.pickhaxe.tools.schema;
 
-import net.pickhaxe.tools.util.Error.InvalidFabricAPIData;
-import net.pickhaxe.tools.util.Error.InvalidFilterOp;
+import net.pickhaxe.tools.util.Error.InvalidFabricAPIDataException;
+import net.pickhaxe.tools.util.Error.InvalidFilterOpException;
 import net.pickhaxe.tools.schema.PickHaxeProject;
 import net.pickhaxe.tools.util.Error.NoProjectXMLException;
 import net.pickhaxe.tools.util.Error.UnknownLoaderException;
@@ -268,7 +268,7 @@ abstract PickHaxeDefines(PickHaxeDefinesRaw) from PickHaxeDefinesRaw to PickHaxe
       case GTEQ:
         return MCVersion.isGreaterThanOrEqualToVersion(current, tag.value);
       default:
-        throw new InvalidFilterOp('minecraft', tag.op, [EQ, NEQ, LT, GT, LTEQ, GTEQ]);
+        throw new InvalidFilterOpException('minecraft', tag.op, [EQ, NEQ, LT, GT, LTEQ, GTEQ]);
     }
   }
 
@@ -281,7 +281,7 @@ abstract PickHaxeDefines(PickHaxeDefinesRaw) from PickHaxeDefinesRaw to PickHaxe
       case NEQ:
         return current != tag.value;
       default:
-        throw new InvalidFilterOp('loader', tag.op, [EQ, NEQ]);
+        throw new InvalidFilterOpException('loader', tag.op, [EQ, NEQ]);
     }
   }
 
@@ -443,7 +443,7 @@ class Builder
     var fabricLoaderData:FabricMetaLoaderVersionData = FabricMeta.fetchLoaderDataForGameVersion(params.mcVersion)[0];
     if (fabricLoaderData == null)
     {
-      throw new InvalidFabricAPIData('Could not fetch loader data for ${params.mcVersion}');
+      throw new InvalidFabricAPIDataException('Could not fetch loader data for ${params.mcVersion}');
     }
     else
     {
@@ -453,7 +453,7 @@ class Builder
     var fabricYarnData:FabricMetaYarnDataItem = FabricMeta.fetchYarnData(params.mcVersion)[0];
     if (fabricYarnData == null)
     {
-      throw new InvalidFabricAPIData('Could not fetch Yarn data for ${params.mcVersion}');
+      throw new InvalidFabricAPIDataException('Could not fetch Yarn data for ${params.mcVersion}');
     }
     else
     {
