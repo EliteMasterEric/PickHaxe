@@ -28,6 +28,9 @@ enum abstract Error(Int) from Int to Int {
   // Issues caused by Haxe.
   var HAXE_BUILD_ERROR = 300;
   var HAXE_VERSION_ERROR = 301;
+  var FILE_NOT_FOUND = 302;
+  var DIR_NOT_FOUND = 303;
+  var FILE_ALREADY_EXISTS = 304;
 
   // Issues caused by web APIs.
   var WEB_BAD_FABRIC_API = 400;
@@ -204,7 +207,7 @@ class InvalidDependencyTypeException extends PickHaxeException {
   }
 }
 
-class InvalidFilterOp extends PickHaxeException {
+class InvalidFilterOpException extends PickHaxeException {
   var invalidOp:String;
   var property:String;
   var validOps:Array<String>;
@@ -225,7 +228,7 @@ class InvalidFilterOp extends PickHaxeException {
   }
 }
 
-class InvalidMixinId extends PickHaxeException {
+class InvalidMixinIdException extends PickHaxeException {
   var invalidId:String;
 
   public function new(invalidId:String) {
@@ -242,7 +245,7 @@ class InvalidMixinId extends PickHaxeException {
   }
 }
 
-class InvalidFabricAPIData extends PickHaxeException {
+class InvalidFabricAPIDataException extends PickHaxeException {
   var msg:String;
 
   public function new(msg:String) {
@@ -270,5 +273,56 @@ class ProjectNotBuiltException extends PickHaxeException {
 
   public override function getErrorMessage():String {
     return 'The project must first be built with "pickhaxe build" before performing this command.';
+  }
+}
+
+class FileNotFoundException extends PickHaxeException {
+  var path:String;
+
+  public function new(path:String) {
+    this.path = path;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.FILE_NOT_FOUND;
+  }
+
+  public override function getErrorMessage():String {
+    return 'File not found: ${path}';
+  }
+}
+
+class DirectoryNotFoundException extends PickHaxeException {
+  var path:String;
+
+  public function new(path:String) {
+    this.path = path;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.DIR_NOT_FOUND;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Directory not found: ${path}';
+  }
+}
+
+class FileAlreadyExistsException extends PickHaxeException {
+  var path:String;
+
+  public function new(path:String) {
+    this.path = path;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.FILE_ALREADY_EXISTS;
+  }
+
+  public override function getErrorMessage():String {
+    return 'File already exists: ${path}';
   }
 }

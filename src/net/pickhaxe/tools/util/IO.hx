@@ -1,5 +1,8 @@
 package net.pickhaxe.tools.util;
 
+import net.pickhaxe.tools.util.Error.FileAlreadyExistsException;
+import net.pickhaxe.tools.util.Error.FileNotFoundException;
+import net.pickhaxe.tools.util.Error.DirectoryNotFoundException;
 import sys.FileSystem;
 import haxe.PosInfos;
 import haxe.io.Path;
@@ -97,6 +100,7 @@ class IO
    */
   public static function readFile(path:Path):String
   {
+    if (!exists(path)) throw new FileNotFoundException(path.toString());
     return File.getContent(path.toString());
   }
 
@@ -107,14 +111,27 @@ class IO
    */
   public static function writeFile(path:Path, contents:String):Void
   {
+    makeDir(new Path(path.dir), true);
     File.saveContent(path.toString(), contents);
   }
 
   public static function writeFileBytes(path:Path, contents:haxe.io.Bytes):Void {
+    makeDir(new Path(path.dir), true);
     File.saveBytes(path.toString(), contents);
   }
 
   public static function moveFile(sourcePath:Path, targetPath:Path) {
+    if (!exists(new Path(sourcePath.dir))) {
+      throw new DirectoryNotFoundException(sourcePath.dir);
+    }
+    if (!exists(sourcePath)) {
+      throw new FileNotFoundException(sourcePath.toString());
+    }
+    makeDir(new Path(targetPath.dir), true);
+    if (exists(targetPath)) {
+      throw new FileAlreadyExistsException(targetPath.toString());
+    }
+
     sys.FileSystem.rename(sourcePath.toString(), targetPath.toString());
   }
 
@@ -125,6 +142,7 @@ class IO
    */
   public static function appendFile(path:Path, contents:String):Void
   {
+    makeDir(new Path(path.dir), true);
     var out:FileOutput = File.append(path.toString());
     out.writeString(contents);
     out.close();
@@ -140,6 +158,8 @@ class IO
   public static function readDirectory(path:Path, files:Bool = true, dirs:Bool = false):Array<String>
   {
     if (!files && !dirs) return [];
+
+    if (!exists(path)) throw new DirectoryNotFoundException(path.toString());
 
     var entries:Array<String> = sys.FileSystem.readDirectory(path.toString());
 
@@ -171,6 +191,8 @@ class IO
     if (!files && !dirs) return [];
 
     var entries:Array<String> = [];
+
+    if (!exists(path)) throw new DirectoryNotFoundException(path.toString());
 
     for (entry in sys.FileSystem.readDirectory(path.toString()))
     {
@@ -279,6 +301,12 @@ class IO
    */
   public static function copyFile(source:Path, dest:Path):Void
   {
+    if (!exists(source)) throw new FileNotFoundException(source.toString());
+
+    makeDir(new Path(dest.dir), true);
+
+    if (exists(dest)) throw new FileAlreadyExistsException(dest.toString());
+
     sys.io.File.copy(source.toString(), dest.toString());
   }
 
