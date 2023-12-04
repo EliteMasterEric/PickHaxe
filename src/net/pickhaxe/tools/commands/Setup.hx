@@ -87,6 +87,7 @@ class Setup implements ICommand
       var target:Path = haxePath.joinPaths('${Constants.LIBRARY_ID}');
 
       IO.copyFileUnix(source, target);
+      IO.updatePermissions(target)
     }
     catch (e:Dynamic) {}
   }
