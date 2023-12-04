@@ -279,7 +279,7 @@ class IO
    */
   public static function copyFile(source:Path, dest:Path):Void
   {
-    CFI.print("source: " + source.toString() + ", dest: " + dest.toString()));
+    CFI.print("source: " + source.toString() + ", dest: " + dest.toString());
 
     sys.io.File.copy(source.toString(), dest.toString());
   }
