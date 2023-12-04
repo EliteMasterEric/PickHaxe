@@ -299,7 +299,7 @@ class IO
   */
   public static function updatePermissions(path:Path):Void
   {
-    Sys.command("sudo", ["chmod", "+x", binPath + "/spoopy"]);
+    Sys.command("sudo", ["chmod", "+x", path.toString()]);
   }
 
   /**
