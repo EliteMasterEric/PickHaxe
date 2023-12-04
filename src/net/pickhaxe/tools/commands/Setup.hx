@@ -86,7 +86,7 @@ class Setup implements ICommand
       var source:Path = IO.libraryDir().joinPaths('templates/bin/${Constants.LIBRARY_ID}.sh');
       var target:Path = haxePath.joinPaths('${Constants.LIBRARY_ID}');
 
-      IO.copyFile(source, target);
+      IO.copyFileUnix(source, target);
     }
     catch (e:Dynamic) {}
   }

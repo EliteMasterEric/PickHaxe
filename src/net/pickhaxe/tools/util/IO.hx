@@ -279,9 +279,18 @@ class IO
    */
   public static function copyFile(source:Path, dest:Path):Void
   {
-    trace("source: " + source.toString() + ", dest: " + dest.toString());
-
     sys.io.File.copy(source.toString(), dest.toString());
+  }
+
+  /**
+   * Copy a file from one location to another
+   * , requesting administrative access.
+   * @param source The path to the file to copy.
+   * @param dest The path to copy the file to.
+   */
+  public static function copyFileUnix(source:Path, dest:Path):Void
+  {
+    Sys.command("sudo", ["cp", source.toString(), dest.toString()]);
   }
 
   /**
