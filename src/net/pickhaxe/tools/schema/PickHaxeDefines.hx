@@ -84,6 +84,7 @@ typedef PickHaxeDefinesMod =
   version:String,
   description:String,
   entryPoints:Array<PickHaxeProject.ModEntryPoint>,
+  dependencies:Array<PickHaxeProject.ModDependency>,
   license:String,
 
   authorData:AuthorData,
@@ -373,6 +374,8 @@ class Builder
 
               entryPoints: projectFile.entryPoints,
 
+              dependencies: projectFile?.dependencies ?? [],
+
               // Default license
               license: projectFile?.license?.value ?? 'All Rights Reserved',
 
@@ -537,6 +540,8 @@ class Builder
               parentPackage: projectFile.mod.parentPackage,
 
               entryPoints: projectFile.entryPoints,
+
+              dependencies: projectFile?.dependencies ?? [],
 
               license: projectFile?.license?.value ?? 'All Rights Reserved',
 
