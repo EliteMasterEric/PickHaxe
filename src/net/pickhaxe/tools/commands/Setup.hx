@@ -78,9 +78,18 @@ class Setup implements ICommand
 
   function setupMac():Void
   {
-    // TODO: Implement this.
-    // https://github.com/openfl/lime/blob/develop/tools/utils/PlatformSetup.hx#L824
-    CLI.print('Sorry, this command is not supported on your platform.');
+    var haxePathEnv:String = Sys.getEnv('HAXEPATH') ?? '/usr/local/bin';
+    var haxePath:Path = new Path(haxePathEnv);
+
+    try
+    {
+      var source:Path = IO.libraryDir().joinPaths('templates/bin/${Constants.LIBRARY_ID}.sh');
+      var target:Path = haxePath.joinPaths('${Constants.LIBRARY_ID}');
+
+      IO.copyFileUnix(source, target);
+      IO.updatePermissions(target);
+    }
+    catch (e:Dynamic) {}
   }
 
   function setupLinux():Void

@@ -283,6 +283,26 @@ class IO
   }
 
   /**
+   * Copy a file from one location to another
+   * , requesting administrative access.
+   * @param source The path to the file to copy.
+   * @param dest The path to copy the file to.
+   */
+  public static function copyFileUnix(source:Path, dest:Path):Void
+  {
+    Sys.command("sudo", ["cp", source.toString(), dest.toString()]);
+  }
+
+  /*
+  * Update permissions for file to not require administration access. (Unix only)
+  * @param path The path to the file to update permissions for.
+  */
+  public static function updatePermissions(path:Path):Void
+  {
+    Sys.command("sudo", ["chmod", "+x", path.toString()]);
+  }
+
+  /**
    * Clean up a path and convert it to a Path object.
    * @param input The path to clean up.
    * @return The cleaned up path.
