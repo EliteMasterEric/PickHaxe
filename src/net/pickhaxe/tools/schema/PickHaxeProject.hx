@@ -31,6 +31,8 @@ typedef PickHaxe =
 
   @:list('mod-contributor') var contributors:Array<ModAuthor>;
 
+  @:list('mod-dependency') var dependencies:Array<ModDependency>;
+
   /**
    * Add new Haxelibs as dependencies to the project.
    */
@@ -166,4 +168,17 @@ typedef ModMetadata =
 typedef ModLicense =
 {
   > ValueTag,
+};
+
+/**
+ * `<mod-dependency>` tag.
+ */
+typedef ModDependency =
+{
+  > ValueTag,
+
+  /**
+   * Should the dependency be external.
+   */
+  @:optional @:attr var externLib:Bool;
 };

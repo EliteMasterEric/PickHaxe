@@ -548,6 +548,17 @@ class Build implements ICommand
       }
     }
 
+    // Include the user's dependencies.
+    for (dependency in defines.pickhaxe.mod.dependencies)
+    {
+      var isExtern:String = !dependency.externLib ? '' : '-extern';
+
+      if (dependency.value.endsWith('.jar'))
+      {
+        args = args.concat(['--java-lib' + isExtern, '${dependency.value}']);
+      }
+    }
+
     // Pass options to the native Java compiler.
     // Any values passed here will be passed to `javac` when generating a JAR.
 

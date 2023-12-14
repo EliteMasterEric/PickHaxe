@@ -45,6 +45,11 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="dependency">
+    <xs:attribute name="value" type="xs:string" use="required" />
+    <xs:attribute name="externLib" type="xs:boolean" use="optional" />
+  </xs:complexType>
+
   <xs:element name="pickhaxe">
     <xs:complexType>
       <xs:all>
@@ -52,8 +57,9 @@
         <xs:element name="mod-metadata" type="metadata" minOccurs="1" maxOccurs="1" />
         <xs:element name="mod-license" type="license" minOccurs="0" maxOccurs="1" />
         <xs:element name="mod-contact" type="contact-info" minOccurs="0" maxOccurs="1" />
-        <xs:element name="mod-entry-point" type="entry-point" minOccurs="1" maxOccurs="unbounded"/>
-        <xs:element name="mod-author" type="author" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="mod-entry-point" type="entry-point" minOccurs="1" maxOccurs="unbounded" />
+        <xs:element name="mod-author" type="author" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="mod-dependency" type="dependency" minOccurs="0" maxOccurs="unbounded" />
       </xs:all>
     </xs:complexType>
   </xs:element>
