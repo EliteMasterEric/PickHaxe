@@ -440,7 +440,7 @@ class Build implements ICommand
           }
         }
 
-        CLI.print('Moving sources...');
+        CLI.print('Moving Fabric sources...');
 
         var mavenCachePath:Path = IO.workingDir().joinPaths(
           '.gradle/loom-cache/minecraftMaven/',
@@ -459,8 +459,7 @@ class Build implements ICommand
               return file.endsWith('.jar');
             });
 
-            // TODO: Make this work outside of Windows.
-            Robocopy.instance.copyFiles(fullLoomCacheFolder.toString(), targetCacheFolder.toString(), loomCacheJARFiles);
+            IO.copyDirectoryFiles(fullLoomCacheFolder, targetCacheFolder, loomCacheJARFiles);
 
             // Rename the files once they've been moved.
             for (jarFile in loomCacheJARFiles) {
@@ -481,7 +480,7 @@ class Build implements ICommand
         
         // We just need to move `minecraft.jar`.
 
-        CLI.print('Moving sources...');
+        CLI.print('Moving Forge sources...');
 
         return true;
       }

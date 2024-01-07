@@ -33,7 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [] Quilt 1.20.2: Haven't looked into it, will need Gradle work
 
 
-## [0.5.0] - 2023-??-??
+## [0.5.0] - 2024-??-??
 ## Added
 - Added basic Block compat.
 - Added support for mixins.
@@ -53,6 +53,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fabric mods will now specify proper versions of `fabric-api`, `fabricloader`, `minecraft`, and `java` as dependencies by default.
   - This is to ensure the mod is installed on the correct version of the game.
 - Added support for `--help-user-metas` and `--help-user-defines` during compilation, which will help with completion.
+- Added version checking for Java (ensuring it is installed and at least version 17).
 ## Changes
 - Modified the backend of the metadata fetcher to better support older versions.
 - Added additional error codes for the PickHaxe command line tool.

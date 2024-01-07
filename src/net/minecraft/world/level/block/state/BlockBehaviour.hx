@@ -216,11 +216,12 @@ extern class BlockBehaviour_Properties
   #end
   public function air():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function isValidSpawn(isValidSpawn:net.minecraft.world.level.block.state.BlockBehaviour.StateArgumentPredicate<net.minecraft.world.entity.EntityType<Dynamic>>):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public function isRedstoneConductor(isRedstoneConductor:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public function isSuffocating(isSuffocating:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public function isViewBlocking(isViewBlocking:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public function hasPostProcess(hasPostProcess:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-  public function emissiveRendering(emissiveRendering:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  // TODO: Figure out the proper arguments to re-add these.
+  // public function isRedstoneConductor(isRedstoneConductor:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  // public function isSuffocating(isSuffocating:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  // public function isViewBlocking(isViewBlocking:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  // public function hasPostProcess(hasPostProcess:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+  // public function emissiveRendering(emissiveRendering:net.minecraft.world.level.block.state.):net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   public function requiresCorrectToolForDrops():net.minecraft.world.level.block.state.BlockBehaviour.Properties;
   #if minecraft_lteq_1_19_4
   public function color(materialColor:net.minecraft.world.level.material.MaterialColor):net.minecraft.world.level.block.state.BlockBehaviour.Properties;

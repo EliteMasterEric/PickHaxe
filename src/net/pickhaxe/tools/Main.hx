@@ -11,6 +11,7 @@ import net.pickhaxe.tools.commands.Init;
 import net.pickhaxe.tools.commands.Make;
 import net.pickhaxe.tools.commands.Setup;
 import net.pickhaxe.tools.process.Haxe;
+import net.pickhaxe.tools.process.Java;
 import net.pickhaxe.tools.util.Error;
 import net.pickhaxe.tools.util.Error.PickHaxeException;
 
@@ -126,6 +127,7 @@ class Main
     try
     {
       Haxe.instance.validateVersion();
+      Java.instance.validateVersion();
     }
     catch (pickhaxeError:PickHaxeException)
     {

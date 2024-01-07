@@ -22,8 +22,9 @@ enum abstract Error(Int) from Int to Int {
   var PROJECT_INVALID_FILTER_OP = 121;
   var PROJECT_INVALID_MIXIN_ID = 122;
 
-  // Issues caused by Gradle.
+  // Issues caused by Gradle or Java.
   var GRADLE_ERROR = 200;
+  var JAVA_VERSION_ERROR = 201;
 
   // Issues caused by Haxe.
   var HAXE_BUILD_ERROR = 300;
@@ -185,6 +186,24 @@ class HaxeVersionException extends PickHaxeException {
 
   public override function getErrorMessage():String {
     return 'Haxe version mismatch, expected ${expected}, got ${actual}.';
+  }
+}
+
+class JavaVersionException extends PickHaxeException {
+  var actual:String; // Null if Java not installed.
+  var expected:String;
+  public function new(actual:String, expected:String) {
+    this.actual = actual;
+    this.expected = expected;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.JAVA_VERSION_ERROR;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Java version mismatch, expected ${expected}, got ${actual}.';
   }
 }
 

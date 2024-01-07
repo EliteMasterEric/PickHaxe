@@ -14,6 +14,7 @@
     "defines": "metadata/custom-defines.json"
   },
   "dependencies": {
+    "hxjava": "",
     "thx.semver": "",
     "json2object": "",
     "tink_lang": "",

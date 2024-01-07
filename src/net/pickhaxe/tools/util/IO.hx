@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.util;
 
+import net.pickhaxe.tools.process.Robocopy;
 import net.pickhaxe.tools.util.Error.FileAlreadyExistsException;
 import net.pickhaxe.tools.util.Error.FileNotFoundException;
 import net.pickhaxe.tools.util.Error.DirectoryNotFoundException;
@@ -296,6 +297,8 @@ class IO
 
   /**
    * Copy a file from one location to another.
+   * NOTE: This will forcibly replace the destination file if it already exists.
+   * If you don't want this to happen, query `IO.exists(dest)` first.
    * @param source The path to the file to copy.
    * @param dest The path to copy the file to.
    */
@@ -305,9 +308,39 @@ class IO
 
     makeDir(new Path(dest.dir), true);
 
-    if (exists(dest)) throw new FileAlreadyExistsException(dest.toString());
+    // if (exists(dest)) throw new FileAlreadyExistsException(dest.toString());
 
     sys.io.File.copy(source.toString(), dest.toString());
+  }
+
+  /**
+   * Copy a directory of files from one location to another.
+   * NOTE: This will forcibly replace the destination files if they already exist.
+   * @param source The path to the directory to copy.
+   * @param dest The path to copy the directory to.
+   */
+  public static function copyDirectoryFiles(source:Path, dest:Path, files:Array<String>):Void
+  {
+    if (!exists(source)) throw new DirectoryNotFoundException(source.toString());
+
+    switch (Platform.detectHostPlatform())
+    {
+      case WINDOWS:
+        // We need Robocopy since the source or destination paths may be too long.
+        Robocopy.instance.copyFiles(source.toString(), dest.toString(), files);
+
+      default:
+        // Copy each file in turn.
+        for (file in files)
+        {
+          var sourceFile:Path = source.joinPaths(file);
+          var destFile:Path = dest.joinPaths(file);
+
+          makeDir(new Path(destFile.dir), true);
+
+          copyFile(sourceFile, destFile);
+        }
+    }
   }
 
   /**
