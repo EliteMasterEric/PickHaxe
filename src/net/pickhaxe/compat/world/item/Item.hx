@@ -4,12 +4,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item as Item_Minecraft;
 
 /**
- * TODO: I wanted this to REPLACE net.minecraft.world.item.Item, 
- * but I get a vague error `Should extend using a class`
- * 
  * Add new convenience and compatibility functions to the Item class.
  */
-@:forward
+@:forward // Forward all fields and methods
 abstract Item(Item_Minecraft) from Item_Minecraft to Item_Minecraft
 {
   /**
@@ -19,6 +16,12 @@ abstract Item(Item_Minecraft) from Item_Minecraft to Item_Minecraft
     this = new Item_Minecraft(props);
   }
 
+  /**
+   * Register this item into the game's Item registery.
+   * @param resourceLocation The resource location to register this item under.
+   *                         Remember to include your mod ID in the namespace.
+   * @return Self, for chaining.
+   */
   public inline function register(resourceLocation:ResourceLocation):Item
   {
     #if fabric
@@ -33,6 +36,9 @@ abstract Item(Item_Minecraft) from Item_Minecraft to Item_Minecraft
 }
 
 #if forge
+/**
+ * Handles deferred item registration on Minecraft Forge.
+ */
 class Item_ForgeRegistrar extends net.pickhaxe.compat.forge.ForgeRegistrar<Item_Minecraft>
 {
   static var instance:Item_ForgeRegistrar = new Item_ForgeRegistrar();

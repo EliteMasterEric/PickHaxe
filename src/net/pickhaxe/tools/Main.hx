@@ -78,7 +78,7 @@ class Main
       if (arg.startsWith('-'))
       {
         // Parse a flag.
-        switch (arg)
+        switch (arg.toLowerCase())
         {
           // Flags
           case '-v':
@@ -102,7 +102,7 @@ class Main
       else if (command == null)
       {
         // Parse a command.
-        switch (arg)
+        switch (arg.toLowerCase())
         {
           case 'help':
             help = true;
@@ -187,7 +187,7 @@ class Main
 
     try
     {
-      var command:ICommand = Help.getCommands().get(command);
+      var command:ICommand = Help.getCommands().get(command.toLowerCase());
 
       if (command == null)
       {

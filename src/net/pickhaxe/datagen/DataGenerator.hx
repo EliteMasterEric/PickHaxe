@@ -4,6 +4,7 @@ package net.pickhaxe.datagen;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator.FabricDataGenerator_Pack;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator.FabricDataGenerator_Pack_Factory;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 #elseif forge
 #end
@@ -70,7 +71,8 @@ class DataGenerator #if fabric implements DataGeneratorEntrypoint #end
 
     var pack:FabricDataGenerator_Pack = fabricDataGenerator.createPack();
 
-    pack.addProvider(function (dataOutput:FabricDataOutput) {
+    // Parameter types AND return type must be explicitly defined and exactly these values.
+    pack.addProvider(function (dataOutput:FabricDataOutput):net.minecraft.data.DataProvider {
       return new PickHaxeAdvancementsProvider(this, dataOutput);
     });
   }

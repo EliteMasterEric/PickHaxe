@@ -239,7 +239,7 @@ class Build implements ICommand
 
       if (arg.startsWith('-'))
       {
-        switch (arg)
+        switch (arg.toLowerCase())
         {
           case '-h': // Gets processed elsewhere.
             return false;
@@ -492,24 +492,27 @@ class Build implements ICommand
 
   function performMakeMetaINF(defines:PickHaxeDefines):Void {
     // This needs to be replaced every time, as it is different for each mod loader and version.
-    IO.deleteDirectory(IO.workingDir().joinPaths('generated/resources/'));
+    var resourcePath = IO.workingDir().joinPaths('generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/');
+    
+    // Delete the META-INF folder if it exists.
+    IO.deleteDirectory(resourcePath.joinPaths('META-INF'));
 
     switch (loader)
     {
       case 'fabric':
         CLI.print('Creating meta-inf folder for fabric...');
-        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
+        IO.makeDir(resourcePath.joinPaths('META-INF'));
 
-        Template.writeFabricManifest(defines, IO.workingDir().joinPaths('generated/resources/fabric.mod.json'));
-        Template.writeFabricMixins(defines, IO.workingDir().joinPaths('generated/resources/'));
-        Template.writeFabricAccessWidener(defines, IO.workingDir().joinPaths('generated/resources/META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
+        Template.writeFabricManifest(defines, resourcePath.joinPaths('fabric.mod.json'));
+        Template.writeFabricMixins(defines, resourcePath);
+        Template.writeFabricAccessWidener(defines, resourcePath.joinPaths('META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
       case 'forge':
         CLI.print('Creating meta-inf folder for forge...');
-        IO.makeDir(IO.workingDir().joinPaths('generated/resources/META-INF'));
+        IO.makeDir(resourcePath.joinPaths('META-INF'));
 
-        Template.writeForgePackFile(defines, IO.workingDir().joinPaths('generated/resources/pack.mcmeta'));
-        Template.writeForgeManifest(defines, IO.workingDir().joinPaths('generated/resources/META-INF/mods.toml'));
-        Template.writeForgeAccessTransformer(defines, IO.workingDir().joinPaths('generated/resources/META-INF/accesstransformer.cfg'));
+        Template.writeForgePackFile(defines, resourcePath.joinPaths('pack.mcmeta'));
+        Template.writeForgeManifest(defines, resourcePath.joinPaths('META-INF/mods.toml'));
+        Template.writeForgeAccessTransformer(defines, resourcePath.joinPaths('META-INF/accesstransformer.cfg'));
       default:
         CLI.print('WARNING: Unknown loader Forge...');
     }
@@ -630,11 +633,12 @@ class Build implements ICommand
           args = args.concat(['--resource', 'resources/${resource}@${resource}']);
         }
 
-        var generatedResources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('generated/resources'));
+        var resourcePath = IO.workingDir().joinPaths('generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/');
+        var generatedResources:Array<String> = IO.readDirectoryRecursive(resourcePath);
         for (resource in generatedResources)
         {
-          CLI.print('Adding resource:' + 'generated/resources/${resource}@${resource}', Verbose);
-          args = args.concat(['--resource', 'generated/resources/${resource}@${resource}']);
+          CLI.print('Adding resource:' + 'generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${resource}@${resource}', Verbose);
+          args = args.concat(['--resource', 'generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${resource}@${resource}']);
         }
       }
       else

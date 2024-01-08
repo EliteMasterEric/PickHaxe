@@ -157,7 +157,7 @@ if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
 
 if (System.getProperty('pickhaxe.loader.current').equals('fabric')) {
   loom {
-    accessWidenerPath = file("resources/META-INF/${System.getProperty('pickhaxe.mod.id')}.accesswidener")
+    accessWidenerPath = file("resources/${System.getProperty('pickhaxe.loader.current')}/${System.getProperty('pickhaxe.minecraft.version')}/META-INF/${System.getProperty('pickhaxe.mod.id')}.accesswidener")
 
     runs {
       client {
@@ -185,7 +185,7 @@ if (System.getProperty('pickhaxe.loader.current').equals('fabric')) {
         ideConfigGenerated false
         
         vmArg "-Dfabric-api.datagen"
-        vmArg "-Dfabric-api.datagen.output-dir=${file("build/test/generated")}"
+        vmArg "-Dfabric-api.datagen.output-dir=${file("./resources/${System.getProperty('pickhaxe.loader.current')}/${System.getProperty('pickhaxe.minecraft.version')}/")}"
         vmArg "-Dfabric-api.datagen.modid=${System.getProperty('pickhaxe.mod.id')}"
 
         // No source sets.

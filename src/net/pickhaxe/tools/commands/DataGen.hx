@@ -14,7 +14,7 @@ import net.pickhaxe.tools.util.JSON;
  */
 class DataGen implements ICommand
 {
-  final commandName:String = 'dataGen';
+  final commandName:String = 'datagen';
 
   var loader:String;
   var mcVersion:String;
@@ -134,7 +134,7 @@ class DataGen implements ICommand
 
       if (arg.startsWith('-'))
       {
-        switch (arg)
+        switch (arg.toLowerCase())
         {
           case '-h': // Gets processed elsewhere.
             return false;

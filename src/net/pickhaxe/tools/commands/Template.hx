@@ -114,7 +114,7 @@ class Template implements ICommand
 
       if (arg.startsWith('-'))
       {
-        switch (arg)
+        switch (arg.toLowerCase())
         {
           case '-h': // Gets processed elsewhere.
             return false;
