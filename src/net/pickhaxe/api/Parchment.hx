@@ -9,17 +9,17 @@ class Parchment
 
   static final PARCHMENT_MAVEN_METADATA = '$BASE_URL/org/parchmentmc/data/parchment-:game_version/maven-metadata.xml';
 
-  static var mavenMetadataCache:MavenMetadata = null;
+  static var mavenMetadataCache:Map<String, MavenMetadata> = [];
 
   public static function fetchParchmentVersion(mcVersion:String):String
   {
-    if (mavenMetadataCache != null) return mavenMetadataCache.versioning.release;
+    if (mavenMetadataCache.exists(mcVersion)) return mavenMetadataCache.get(mcVersion).versioning.release;
 
     var mavenMetadata:MavenMetadata = XML.readParchmentMavenMetadata(mcVersion);
 
     if (mavenMetadata == null) return null;
 
-    mavenMetadataCache = mavenMetadata;
+    mavenMetadataCache.set(mcVersion, mavenMetadata);
 
     return mavenMetadata.versioning.release;
   }

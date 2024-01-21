@@ -1,5 +1,6 @@
 package net.pickhaxe.tools.schema;
 
+import thx.semver.Version;
 import net.pickhaxe.tools.util.Error.InvalidFabricAPIDataException;
 import net.pickhaxe.tools.util.Error.InvalidFilterOpException;
 import net.pickhaxe.tools.schema.PickHaxeProject;
@@ -474,6 +475,7 @@ class Builder
 
     var parchmentVersion:String = Parchment.fetchParchmentVersion(params.mcVersion);
     var parchmentMaven:String = 'parchment-${params.mcVersion}:${parchmentVersion}';
+    CLI.print('ParchmentVersion: ${parchmentVersion}');
     if (params.mappings == 'parchment')
     {
       // Make behavior intuitive:
@@ -485,6 +487,8 @@ class Builder
       var previousVersion:String = params.mcVersion;
       while (parchmentVersion == null)
       {
+        CLI.print('ParchmentVersion is null, recalculating');
+
         previousVersion = isSnapshot ? MCVersion.getPreviousSnapshotVersion(previousVersion) : MCVersion.getPreviousVersion(previousVersion);
 
         if (previousVersion == null)
@@ -515,6 +519,8 @@ class Builder
         }
       }
     }
+
+    CLI.print('ParchmentMaven: ${parchmentMaven}');
 
     var fabricAPIVersion:String = FabricMeta.getApiVersionForMinecraft(params.mcVersion);
     if (fabricAPIVersion == null) throw 'Could not load Fabric API version from API for version ${params.mcVersion}';
@@ -706,8 +712,8 @@ class Builder
         {
           // Reformat the mappings version.
           CLI.print('Success: Loaded Parchment version from API for version $previousVersion. (Parchment version: $parchmentVersion)');
-          parchmentMaven = 'parchment-${previousVersion}:${parchmentVersion}';
-          parchmentVersion = '${parchmentVersion}-${previousVersion}';
+          parchmentMaven = 'parchment-${currentVersion}:${parchmentVersion}';
+          parchmentVersion = '${parchmentVersion}-${currentVersion}';
         }
       }
     }
@@ -727,6 +733,9 @@ class Builder
     }
 
     var authorsString:String = authorsStringParts.join(', ');
+
+    // For the Forge-provided Java loader, the version is the major version of the Forge version.
+    var fmlVersion:String = '${Version.stringToVersion(versionMetadata.forgeVersion).major}';
 
     return new PickHaxeDefines(
       {
@@ -773,7 +782,7 @@ class Builder
                 forge:
                   {
                     apiVersion: versionMetadata.forgeVersion,
-                    fmlVersion: versionMetadata.fmlVersion,
+                    fmlVersion: fmlVersion,
                   },
                 fabric:
                   {

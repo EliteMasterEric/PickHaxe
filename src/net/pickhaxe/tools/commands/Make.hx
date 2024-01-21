@@ -187,21 +187,16 @@ class Make implements ICommand
 
     var result:Bool = false;
     if (genSources) {
-      trace('build');
       result = gradleW.performTask(["build"].concat(additionalArgs));
     } else {
       if (loader == 'forge') {
         // Forge requires reobfuscation AND shadowing.
         var targetTask:String = 'reobfSourcesJar';
-        // 'shadowSourcesJar';
-        // 'reobfShadowSourcesJar';
-        trace(targetTask);
         result = gradleW.performTask([targetTask].concat(additionalArgs));
       } else if (loader == 'fabric') {
-        trace('remapJar');
         result = gradleW.performTask(["remapJar"].concat(additionalArgs));
       } else {
-        trace('[WARNING] Unknown loader (${loader}) for make task.');
+        CLI.print('[WARNING] Unknown loader (${loader}) for make task.');
       }
     }
 

@@ -19,6 +19,8 @@ extern interface HolderLookup_Provider
   public function asGetterLookup():net.minecraft.core.HolderGetter.HolderGetter_Provider;
   public static function create(lookupStream:java.util.stream.Stream<net.minecraft.core.HolderLookup.RegistryLookup<Dynamic>>):net.minecraft.core.HolderLookup_Provider;
 }
+
+typedef Provider = HolderLookup_Provider;
 #end
 
 @:native("net.minecraft.core.HolderLookup$Delegate")
@@ -35,6 +37,8 @@ extern class HolderLookup_Delegate<T> implements net.minecraft.core.HolderLookup
   public function filterElements(predicate:java.util.function.Predicate<T>):net.minecraft.core.HolderLookup<T>;
 }
 
+typedef Delegate<T> = HolderLookup_Delegate<T>;
+
 #if minecraft_gteq_1_19_3
 @:native("net.minecraft.core.HolderLookup$RegistryLookup")
 extern interface HolderLookup_RegistryLookup<T>
@@ -43,6 +47,8 @@ extern interface HolderLookup_RegistryLookup<T>
   public function registryLifecycle():com.mojang.serialization.Lifecycle;
   public function filterFeatures(enabledFeatures:net.minecraft.world.flag.FeatureFlagSet):net.minecraft.core.HolderLookup<T>;
 }
+
+typedef RegistryLookup<T> = HolderLookup_RegistryLookup<T>;
 
 @:native("net.minecraft.core.HolderLookup$RegistryLookup$Delegate")
 @:realPath("net.minecraft.core.HolderLookup_RegistryLookup_Delegate")
@@ -62,11 +68,14 @@ abstract extern class HolderLookup_RegistryLookup_Delegate < T > implements net.
 
   public function listTags():java.util.stream.Stream<net.minecraft.core.HolderSet.HolderSet_Named<T>>;
 }
+
+typedef RegistryLookup_Delegate<T> = HolderLookup_RegistryLookup_Delegate<T>;
 #else
 @:native("net.minecraft.core.HolderLookup$RegistryLookup")
 extern class HolderLookup_RegistryLookup<T>
 {
 }
-#end
 
 typedef RegistryLookup<T> = HolderLookup_RegistryLookup<T>;
+#end
+

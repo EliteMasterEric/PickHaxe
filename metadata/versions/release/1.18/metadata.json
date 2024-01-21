@@ -10,6 +10,5 @@
   "useLegacyFabric": false,
   "fabricGradleVersion": "8.0.1",
 
-  "forgeVersion": "38.0.17",
-  "fmlVersion": "38"
+  "forgeVersion": "38.0.17"
 }

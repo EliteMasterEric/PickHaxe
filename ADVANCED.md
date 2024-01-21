@@ -66,6 +66,10 @@ MCP: A set of mappings made by the MCP team, one of the oldest mapping teams.
 mappings loom.officialMojangMappings()
 ```
 
+## Common Errors
+- `Could not find org.parchmentmc.data:parchment-1.20.4:2023.12.31` or other version
+  - Check if the target Parchment version exists: https://ldtteam.jfrog.io/ui/native/parchmentmc-public/org/parchmentmc/data/
+
 ## Additional Links
 
 Fabric Intermediaries: Maps sourcenames->unique mappings common to all versions but not readable by humans

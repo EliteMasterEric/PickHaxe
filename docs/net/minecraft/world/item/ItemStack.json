@@ -1,0 +1,9 @@
+{
+  "classDoc": "",
+  "fieldDocs": [
+    {
+      "name": "isEmpty",
+      "doc": "Whether this ItemStack represents an empty stack.\n@returns Whether this stack is empty."
+    }
+  ]
+}

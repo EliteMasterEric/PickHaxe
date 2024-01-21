@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Upcoming
 ### Enhancements
+- Added support for mixins.
+  - See the Wiki for more information on how to use them.
 - Support more versions of Forge
 - Support for Legacy Fabric
 - Support for Quilt
@@ -36,8 +38,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.5.0] - 2024-??-??
 ## Added
 - Added basic Block compat.
-- Added support for mixins.
-  - See the Wiki for more information on how to use them.
 - Added the `<mod-dependency>` tag to `project.xml`.
   - You can specify a mod ID and version, and whether it is mandatory, recommended, or has conflicts with your mod.
   - Only applies at runtime, not at compile time.
@@ -49,6 +49,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - On Fabric, you can specify `include="true"` to use the mod as a JAR-in-JAR dependency.
 - Added a PickHaxe API for data generation.
   - Added the `<mod-data-generator>` tag to `project.xml` to specify the data generator entrypoint.
+  - Added the `net.pickhaxe.datagen.DataGenerator` class. Extend this and override its methods to perform data generation.
+  - Added the `pickhaxe datagen <loader> <mcversion>` command to output generated data into the `generated/` folder. It will be automatically added to the built JAR when calling `pickhaxe build`.
 - Added `<loader>` and `<minecraft` subtags to the `<mod-entrypoint>` tag, to filter when an entrypoint is used.
 - Fabric mods will now specify proper versions of `fabric-api`, `fabricloader`, `minecraft`, and `java` as dependencies by default.
   - This is to ensure the mod is installed on the correct version of the game.
@@ -56,10 +58,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added version checking for Java (ensuring it is installed and at least version 17).
 ## Changes
 - Modified the backend of the metadata fetcher to better support older versions.
+- Generated resource files are now placed in `generated/resources/<loader>/<mcversion>/` rather than `generated/resources/`, to fix issues with switching versions.
+- Most command line tool arguments are no longer case-sensitive.
 - Added additional error codes for the PickHaxe command line tool.
 ## Fixes
+- Fixed an issue where `pickhaxe build` would fail to copy files properly on Linux.
+- Fixed an issue where `pickhaxe runClient` was not functioning properly on Fabric loader.
 - Removed some extraneous logging calls.
-- Fixed an issue where `pickhaxe runClient` was not functioning on Fabric loader.
 
 
 ## [0.4.1] - 2023-11-10

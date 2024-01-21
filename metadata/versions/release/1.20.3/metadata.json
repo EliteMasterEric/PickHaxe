@@ -1,6 +1,6 @@
 {
   "type": "stable",
-  "version": "1.20.2",
+  "version": "1.20.3",
 
   "javaVersion": "17",
 
@@ -10,5 +10,5 @@
   "useLegacyFabric": false,
   "fabricGradleVersion": "8.3",
 
-  "forgeVersion": "48.1.0"
+  "forgeVersion": "49.0.2"
 }

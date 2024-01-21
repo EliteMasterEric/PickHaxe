@@ -110,6 +110,8 @@ class DataGen implements ICommand
       jvm: !genSources,
     });
 
+    cleanGeneratedData(defines);
+
     if (shouldBuild) {
       CLI.print('Performing pre-runDatagen build...');
       new Build().perform([loader, mcVersion,
@@ -150,6 +152,10 @@ class DataGen implements ICommand
             genSources = false;
           case '--clean':
             shouldClean = true;
+          case '--make':
+            // Ignore.
+          case '--dump':
+            // Ignore.
           default:
             additionalArgs.push(arg);
         }
@@ -192,6 +198,14 @@ class DataGen implements ICommand
     mcVersion = mcVersion ?? Constants.DEFAULT_MINECRAFT_VERSION;
 
     return true;
+  }
+
+  function cleanGeneratedData(defines:PickHaxeDefines):Void {
+    // This needs to be replaced every time, as it is different for each mod loader and version.
+    var resourcePath = IO.workingDir().joinPaths('generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/');
+    
+    IO.deleteDirectory(resourcePath.joinPaths('assets'));
+    IO.deleteDirectory(resourcePath.joinPaths('data'));
   }
 
   function performGradleTask(defines:PickHaxeDefines):Bool
