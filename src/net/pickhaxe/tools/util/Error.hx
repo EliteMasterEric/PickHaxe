@@ -3,10 +3,9 @@ package net.pickhaxe.tools.util;
 import tink.xml.ReaderError;
 
 enum abstract Error(Int) from Int to Int {
-  var NO_ERROR = 0;
-  var UNKNOWN = 1;
-
   // Issues caused by the PickHaxe build tool.
+  var NO_BUILD_ERROR = 0;
+  var UNKNOWN_BUILD_ERROR = 1;
 
   // Bad repository.
   var NO_PROJECT_XML = 100;
@@ -35,6 +34,19 @@ enum abstract Error(Int) from Int to Int {
 
   // Issues caused by web APIs.
   var WEB_BAD_FABRIC_API = 400;
+
+  // ===============
+
+  // Issues caused by the PickHaxe compat or runtime.
+  var NO_RUNTIME_ERROR = 1000;
+  var UNKNOWN_RUNTIME_ERROR = 1001;
+
+  // Issues caused by improper use of a Builder.
+  var BUILDER_BAD_ID = 1100;
+  var BUILDER_BAD_VALUE = 1101;
+
+  var BUILDER_ADVANCEMENT_RECIPE_UNMARKED = 1110;
+  var BUILDER_ADVANCEMENT_TYPE_UNMARKED = 1111;
 
   /**
    * Exit the program with the given error code.
@@ -343,5 +355,74 @@ class FileAlreadyExistsException extends PickHaxeException {
 
   public override function getErrorMessage():String {
     return 'File already exists: ${path}';
+  }
+}
+
+class BuilderBadValueException extends PickHaxeException {
+  var builder:String;
+  var field:String;
+  var expected:String;
+  var actual:String;
+
+  public function new(builder:String, field:String, expected:String, actual:String) {
+    this.builder = builder;
+    this.field = field;
+    this.expected = expected;
+    this.actual = actual;
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.BUILDER_BAD_VALUE;
+  }
+
+  public override function getErrorMessage():String {
+    return 'Invalid value for ${field} passed to ${builder}, expected ${expected}, got ${actual}.';
+  }
+}
+
+class BuilderBadIdException extends BuilderBadValueException {
+  public function new(builder:String, id:String) {
+    super(builder, 'id', 'a valid ResourceLocation', id);
+  }
+
+  public override function getErrorCode():Error {
+    return Error.BUILDER_BAD_ID;
+  }
+}
+
+class BuilderAdvancementRecipeUnmarkedException extends PickHaxeException {
+  var id:String;
+
+  public function new(id:String) {
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.BUILDER_ADVANCEMENT_RECIPE_UNMARKED;
+  }
+
+  public override function getErrorMessage():String {
+    return 'AdvancementBuilder (ID: ${id}) expected .recipe() or .advancement(), but neither was called.';
+  }
+}
+
+class BuilderAdvancementTypeUnmarkedException extends PickHaxeException {
+  var id:String;
+
+  public function new(id:String) {
+    super();
+  }
+
+  public override function getErrorCode():Error {
+    return Error.BUILDER_ADVANCEMENT_TYPE_UNMARKED;
+  }
+
+  public override function getErrorMessage():String {
+    #if minecraft_lteq_1_20_2
+    return 'AdvancementBuilder (ID: ${id}) expected .task(), .goal(), .challenge(), or .frame(), but none were called.';
+    #else
+    return 'AdvancementBuilder (ID: ${id}) expected .task(), .goal(), .challenge(), or .advancementType(), but none were called.';
+    #end
   }
 }

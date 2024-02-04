@@ -51,6 +51,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Added the `<mod-data-generator>` tag to `project.xml` to specify the data generator entrypoint.
   - Added the `net.pickhaxe.datagen.DataGenerator` class. Extend this and override its methods to perform data generation.
   - Added the `pickhaxe datagen <loader> <mcversion>` command to output generated data into the `generated/` folder. It will be automatically added to the built JAR when calling `pickhaxe build`.
+- Added Advancement compat for data generation.
 - Added `<loader>` and `<minecraft` subtags to the `<mod-entrypoint>` tag, to filter when an entrypoint is used.
 - Fabric mods will now specify proper versions of `fabric-api`, `fabricloader`, `minecraft`, and `java` as dependencies by default.
   - This is to ensure the mod is installed on the correct version of the game.

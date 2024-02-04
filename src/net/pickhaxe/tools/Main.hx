@@ -145,7 +145,7 @@ class Main
       CLI.print('${error.message}');
       CLI.print('${error.stack}', Verbose);
 
-      Error.exit(UNKNOWN);
+      Error.exit(UNKNOWN_BUILD_ERROR);
     }
 
     if (command == null)
@@ -213,7 +213,7 @@ class Main
       CLI.print('${error.message}');
       CLI.print('${error.stack}');
 
-      Error.exit(UNKNOWN);
+      Error.exit(UNKNOWN_BUILD_ERROR);
     }
   }
 }
