@@ -19,10 +19,6 @@ class RunClient implements ICommand
   var loader:String;
   var mcVersion:String;
   var mappings:String = 'parchment';
-  /**
-   * If enabled, generate .java files rather than a .jar file.
-   */
-  var genSources:Bool = false; // Default to genArchive.
 
   var shouldBuild:Bool = true;
 
@@ -107,15 +103,13 @@ class RunClient implements ICommand
       loader: loader,
       mcVersion: mcVersion,
       mappings: mappings,
-      jvm: !genSources,
     });
 
     if (shouldBuild) {
       CLI.print('Performing pre-runClient build...');
       new Build().perform([loader, mcVersion,
         '--mappings', mappings,
-        shouldClean ? '--clean' : null,
-        genSources ? '--gen-sources' : '--gen-archive'].filter(function (x) return x != null));
+        shouldClean ? '--clean' : null].filter(function (x) return x != null));
     }
 
     CLI.print('Performing runClient...');
@@ -144,10 +138,6 @@ class RunClient implements ICommand
             shouldBuild = true;
           case '--no-build':
             shouldBuild = false;
-          case '--gen-sources':
-            genSources = true;
-          case '--gen-archive':
-            genSources = false;
           case '--clean':
             shouldClean = true;
           default:

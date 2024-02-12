@@ -18,7 +18,6 @@ class GradleW implements ICommand
 
   var loader:String;
   var mcVersion:String;
-  var genSources:Bool = true;
 
   var task:String;
   var additionalArgs:Array<String>;
@@ -72,7 +71,6 @@ class GradleW implements ICommand
       {
         loader: loader,
         mcVersion: mcVersion,
-        jvm: !genSources,
       });
 
     if (!IO.exists(IO.workingDir().joinPaths('generated'))) {
@@ -108,10 +106,6 @@ class GradleW implements ICommand
             return false;
           case '--help': // Gets processed elsewhere.
             return false;
-          case '--gen-sources':
-            genSources = true;
-          case '--gen-archive':
-            genSources = false;
           default:
             additionalArgs.push(arg);
         }

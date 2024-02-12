@@ -62,11 +62,6 @@ class Build implements ICommand
   var performShading:Bool = false;
 
   /**
-   * If enabled, generate .java files rather than a .jar file.
-   */
-  var genSources:Bool = false; // Default to genArchive.
-
-  /**
    * Whether to use the `--dump` option, and what mode to use.
    */
   var dumpType:String = null;
@@ -211,7 +206,6 @@ class Build implements ICommand
         loader: loader,
         mcVersion: mcVersion,
         mappings: mappings,
-        jvm: !genSources,
       });
 
     var result:Bool = performGradleSetup(defines);
@@ -286,10 +280,6 @@ class Build implements ICommand
             performShading = false;
           case '--no-resources':
             noResources = true;
-          case '--gen-sources':
-            genSources = true;
-          case '--gen-archive':
-            genSources = false;
           case '--make':
             shouldMake = true;
           case '--clean':
@@ -570,29 +560,11 @@ class Build implements ICommand
       }
     }
 
-    // Export the Java project to the `generated` folder.
-    if (!genSources)
-    {
-      CLI.print('Compiling to Java ${defines.pickhaxe.java.version}...');
-      // --c-arg: Add Java compilation args
-      args = args.concat(['--c-arg', '-source']);
-      args = args.concat(['--c-arg', '${defines.pickhaxe.java.version}']);
-      args = args.concat(['--c-arg', '-target']);
-      args = args.concat(['--c-arg', '${defines.pickhaxe.java.version}']);
-      // haxe.noNativeLibsCache: Native libraries are cached internally during build process.
-      // args = args.concat(['--define', 'haxe.noNativeLibsCache']);
-      // TODO: How to 
-
-      args = args.concat([
-        '--jvm',
-        './build/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${defines.pickhaxe.mod.id}-${defines.pickhaxe.mod.version}-dev.jar'
-      ]);
-    }
-    else
-    {
-      args = args.concat(['--java', './generated/java/']);
-      args = args.concat(['--define', 'no-compilation']);
-    }
+    // Use the JVM target, with the correct JAR file.
+    args = args.concat([
+      '--jvm',
+      './build/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${defines.pickhaxe.mod.id}-${defines.pickhaxe.mod.version}-dev.jar'
+    ]);
 
     if (!debug)
     {
@@ -622,42 +594,21 @@ class Build implements ICommand
 
     if (!noResources)
     {
-      if (!genSources)
+      CLI.print('Adding resources...');
+
+      var baseResources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'));
+      for (resource in baseResources)
       {
-        CLI.print('Adding resources...');
-
-        var baseResources:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'));
-        for (resource in baseResources)
-        {
-          CLI.print('Adding resource:' + 'resources/${resource}@${resource}', Verbose);
-          args = args.concat(['--resource', 'resources/${resource}@${resource}']);
-        }
-
-        var resourcePath = IO.workingDir().joinPaths('generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/');
-        var generatedResources:Array<String> = IO.readDirectoryRecursive(resourcePath);
-        for (resource in generatedResources)
-        {
-          CLI.print('Adding resource:' + 'generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${resource}@${resource}', Verbose);
-          args = args.concat(['--resource', 'generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${resource}@${resource}']);
-        }
+        CLI.print('Adding resource:' + 'resources/${resource}@${resource}', Verbose);
+        args = args.concat(['--resource', 'resources/${resource}@${resource}']);
       }
-      else
+
+      var resourcePath = IO.workingDir().joinPaths('generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/');
+      var generatedResources:Array<String> = IO.readDirectoryRecursive(resourcePath);
+      for (resource in generatedResources)
       {
-        CLI.print('Copying resources...');
-        // We actually need to copy these files to the `generated/resources` folder.
-        var resourceDirs:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'), false, true);
-        for (resourceDir in resourceDirs)
-        {
-          IO.makeDir(IO.workingDir().joinPaths('generated/resources', resourceDir));
-        }
-        var resourceFiles:Array<String> = IO.readDirectoryRecursive(IO.workingDir().joinPaths('resources'), true, false);
-        for (resourceFile in resourceFiles)
-        {
-          if (!IO.exists(IO.workingDir().joinPaths('generated/resources', resourceFile)))
-          {
-            IO.copyFile(IO.workingDir().joinPaths('resources', resourceFile), IO.workingDir().joinPaths('generated/resources', resourceFile));
-          }
-        }
+        CLI.print('Adding resource:' + 'generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${resource}@${resource}', Verbose);
+        args = args.concat(['--resource', 'generated/resources/${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${resource}@${resource}']);
       }
     }
 

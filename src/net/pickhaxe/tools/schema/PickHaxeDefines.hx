@@ -35,7 +35,7 @@ typedef PickHaxeDefinesPickHaxe =
   version:String,
   haxe:
   {
-    libraries:Array<HaxelibEntry>, version:String, jvm:String
+    libraries:Array<HaxelibEntry>, version:String
   },
   gradle:
   {
@@ -141,7 +141,6 @@ typedef BuildParams =
 {
   loader:String,
   mcVersion:String,
-  jvm:Bool,
   ?noMapping:Bool,
   ?mappings:String,
 }
@@ -160,7 +159,6 @@ abstract PickHaxeDefines(PickHaxeDefinesRaw) from PickHaxeDefinesRaw to PickHaxe
 
     // result.append(DEFINE, 'pickhaxe.version=' + defines.pickhaxe.version); // Use `pickhaxe` instead.
     // result.append(DEFINE, 'pickhaxe.haxe.version=${defines.pickhaxe.gradle.version}'); // Use `haxe` instead.
-    result.append(Builder.DEFINE, 'pickhaxe.haxe.jvm=${this.pickhaxe.haxe.jvm}');
     result.append(Builder.DEFINE, 'pickhaxe.gradle.version=${this.pickhaxe.gradle.version}');
     result.append(Builder.DEFINE, 'pickhaxe.java.version=${this.pickhaxe.java.version}');
     result.append(Builder.DEFINE, 'pickhaxe.loader.current=${this.pickhaxe.loader.current}');
@@ -207,7 +205,6 @@ abstract PickHaxeDefines(PickHaxeDefinesRaw) from PickHaxeDefinesRaw to PickHaxe
     return [
       '-Dpickhaxe.version=${this.pickhaxe.version}',
       '-Dpickhaxe.haxe.version=${this.pickhaxe.haxe.version}',
-      '-Dpickhaxe.haxe.jvm=${this.pickhaxe.haxe.jvm}',
       '-Dpickhaxe.java.version=${this.pickhaxe.java.version}',
       '-Dpickhaxe.gradle.version=${this.pickhaxe.gradle.version}',
       '-Dpickhaxe.gradle.plugins.forgegradle=${this.pickhaxe.gradle.plugins.forgegradle}',
@@ -565,7 +562,6 @@ class Builder
               {
                 libraries: projectFile.haxelibs,
                 version: Constants.HAXE_VERSION,
-                jvm: params.jvm ? 'true' : 'false',
               },
 
             java:
@@ -747,7 +743,6 @@ class Builder
               {
                 libraries: projectFile.haxelibs,
                 version: Constants.HAXE_VERSION,
-                jvm: params.jvm ? 'true' : 'false',
               },
 
             java:

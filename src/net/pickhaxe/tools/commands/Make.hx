@@ -18,7 +18,6 @@ class Make implements ICommand
   var loader:String;
   var mcVersion:String;
   var mappings:String;
-  var genSources:Bool = false; // Default to genArchive.
 
   var additionalArgs:Array<String>;
 
@@ -80,7 +79,6 @@ class Make implements ICommand
         loader: loader,
         mcVersion: mcVersion,
         mappings: mappings,
-        jvm: !genSources,
       });
 
     var result:Bool = performGradleTask(defines);
@@ -112,10 +110,6 @@ class Make implements ICommand
             return false;
           case '--help': // Gets processed elsewhere.
             return false;
-          case '--gen-sources':
-            genSources = true;
-          case '--gen-archive':
-            genSources = false;
           case '--mappings':
             var nextArg:String = args[i + 1];
             if (nextArg != null && !nextArg.startsWith('-'))
@@ -186,18 +180,14 @@ class Make implements ICommand
     var gradleW:GradleWProcess = new GradleWProcess(defines);
 
     var result:Bool = false;
-    if (genSources) {
-      result = gradleW.performTask(["build"].concat(additionalArgs));
+    if (loader == 'forge') {
+      // Forge requires reobfuscation AND shadowing.
+      var targetTask:String = 'reobfSourcesJar';
+      result = gradleW.performTask([targetTask].concat(additionalArgs));
+    } else if (loader == 'fabric') {
+      result = gradleW.performTask(["remapJar"].concat(additionalArgs));
     } else {
-      if (loader == 'forge') {
-        // Forge requires reobfuscation AND shadowing.
-        var targetTask:String = 'reobfSourcesJar';
-        result = gradleW.performTask([targetTask].concat(additionalArgs));
-      } else if (loader == 'fabric') {
-        result = gradleW.performTask(["remapJar"].concat(additionalArgs));
-      } else {
-        CLI.print('[WARNING] Unknown loader (${loader}) for make task.');
-      }
+      CLI.print('[WARNING] Unknown loader (${loader}) for make task.');
     }
 
     // Move back to the parent of the workding dir.
