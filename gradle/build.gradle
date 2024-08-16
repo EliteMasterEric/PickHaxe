@@ -13,6 +13,8 @@ buildscript {
 
   ext.FORGEGRADLE_VERSION = System.getProperty('pickhaxe.gradle.plugins.forgegradle')
 
+  ext.FABRICLOOM_VERSION = System.getProperty('pickhaxe.gradle.plugins.fabricloom')
+
   ext.ADDITIONAL_MAVEN_URLS = System.getProperty('pickhaxe.gradle.maven.urls').split('~')
 } 
 
@@ -29,7 +31,7 @@ plugins {
   // 
   // Fabric
   //
-  id 'fabric-loom' version '1.1-SNAPSHOT' apply false
+  id 'fabric-loom' version "${FABRICLOOM_VERSION}" apply false
 
   //
   // Common
@@ -85,6 +87,18 @@ switch(System.getProperty('pickhaxe.java.version')) {
         break;
       case 'forge':
         java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+        break;
+      default:
+        throw new Exception("PickHaxe: Unknown loader: ${System.getProperty('pickhaxe.loader.current')}")
+    }
+  case '21':
+    switch(System.getProperty('pickhaxe.loader.current')) {
+      case 'fabric':
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+        break;
+      case 'forge':
+        java.toolchain.languageVersion = JavaLanguageVersion.of(21)
         break;
       default:
         throw new Exception("PickHaxe: Unknown loader: ${System.getProperty('pickhaxe.loader.current')}")
@@ -347,8 +361,10 @@ dependencies {
 }
 
 tasks.withType(JavaCompile).configureEach {
+	// Minecraft 1.20 (1.20-pre2) upwards uses Java 21.
 	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-	it.options.release = System.getProperty('pickhaxe.java.version') == '17' ? 17 : 8
+  // Older versions use Java 8.
+	it.options.release = System.getProperty('pickhaxe.java.version').toInteger()
   options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
@@ -397,12 +413,12 @@ tasks.jar {
   }
 }
 
-if (System.getProperty('pickhaxe.loader.current').equals('fabric') && System.getProperty('pickhaxe.haxe.jvm').equals('true')) {
+if (System.getProperty('pickhaxe.loader.current').equals('fabric')) {
   remapJar {
     input = file("../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
     archiveFileName = "../../../build/fabric/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}.jar"
   }
-} else if (System.getProperty('pickhaxe.loader.current').equals('forge') && System.getProperty('pickhaxe.haxe.jvm').equals('true')
+} else if (System.getProperty('pickhaxe.loader.current').equals('forge')
   && (System.getProperty('pickhaxe.task').equals('reobfSourcesJar') || System.getProperty('pickhaxe.task').equals('reobfShadowSourcesJar')|| System.getProperty('pickhaxe.task').equals('shadowSourcesJar'))) {
   task sourcesJar(type: Jar) {
     from zipTree("../build/forge/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
@@ -434,3 +450,4 @@ if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
 
 // Run the copyBuildArtifacts task after the build task.
 build.finalizedBy(copyBuildArtifacts)
+// remapJar.finalizedBy(copyBuildArtifacts)

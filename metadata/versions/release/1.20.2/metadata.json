@@ -8,7 +8,8 @@
   "forgeGradlePluginVersion": "6.0.14",
 
   "useLegacyFabric": false,
-  "fabricGradleVersion": "8.3",
+  "fabricGradleVersion": "8.7",
+  "fabricLoomPluginVersion": "1.6-SNAPSHOT",
 
   "forgeVersion": "48.1.0"
 }

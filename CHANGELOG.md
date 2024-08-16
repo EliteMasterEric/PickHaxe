@@ -23,7 +23,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Functional interfaces need to be fully qualified (i.e. if you're passing a function as an argument, add typing to all the arguments or it will break at runtime).
 - `pickhaxe runClient` doesn't work on Fabric (need to figure out a fix)
 ### Versions to Fix
-- [] Fabric 1.16.5 (Bare): Just need to write it
 - [] Forge 1.19.4 (Bare): Just need to write it
 - [] Forge 1.20.2 (Bare): Just need to write it
 - [] Forge 1.16.5 (Bare): Something Gradle-related?
@@ -37,7 +36,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.5.0] - 2024-??-??
 ## Added
-- Added basic Block compat.
 - Added the `<mod-dependency>` tag to `project.xml`.
   - You can specify a mod ID and version, and whether it is mandatory, recommended, or has conflicts with your mod.
   - Only applies at runtime, not at compile time.
@@ -51,13 +49,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Added the `<mod-data-generator>` tag to `project.xml` to specify the data generator entrypoint.
   - Added the `net.pickhaxe.datagen.DataGenerator` class. Extend this and override its methods to perform data generation.
   - Added the `pickhaxe datagen <loader> <mcversion>` command to output generated data into the `generated/` folder. It will be automatically added to the built JAR when calling `pickhaxe build`.
-- Added Advancement compat for data generation.
 - Added `<loader>` and `<minecraft` subtags to the `<mod-entrypoint>` tag, to filter when an entrypoint is used.
 - Fabric mods will now specify proper versions of `fabric-api`, `fabricloader`, `minecraft`, and `java` as dependencies by default.
   - This is to ensure the mod is installed on the correct version of the game.
 - Added support for `--help-user-metas` and `--help-user-defines` during compilation, which will help with completion.
 - Added version checking for Java (ensuring it is installed and at least version 17).
 ## Changes
+- The `net.pickhaxe.compat` 
 - Modified the backend of the metadata fetcher to better support older versions.
 - Generated resource files are now placed in `generated/resources/<loader>/<mcversion>/` rather than `generated/resources/`, to fix issues with switching versions.
 - Most command line tool arguments are no longer case-sensitive.
@@ -172,9 +170,9 @@ A day 1 patch to resolve a couple of issues people were having.
 - Added a new set of Minecraft version compile defines, which is more compatible with snapshot versions.
   - Each version should have defines for `eq`, `neq`, `gt`, `gteq`, `lt`, and `lteq`, for each comparison operation.
   - Instead of `#if (minecraft >= "1.19.3")`, it is recommended to use `#if minecraft_gteq_1_19_3` if compatibility with snapshots is needed.
-- Added the `<haxelib name="pickhaxe-tmi">` tag for use in `project.xml` files.
+- Added the `<haxelib>` tag for use in `project.xml` files.
   - This adds Haxelibs to the build dependencies for the library.
-  - Specify `version="1.0.0"` to set the version or `git="gitrepourl"` to use a Git repository version.
+  - Specify `name="pickhaxe-compat"` and optionally `version="1.0.0"` to set the version or `git="gitrepourl"` to use a Git repository version.
   - Feel free to create your own plugins for PickHaxe as standalone Haxelibs!
 - Added externs for several Minecraft classes:
   - `net.minecraft.network.chat.Component`
