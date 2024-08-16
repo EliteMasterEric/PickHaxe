@@ -230,11 +230,18 @@ extern class Item
     oldStack:net.minecraft.world.item.ItemStack, newStack:net.minecraft.world.item.ItemStack):Bool;
   public function allowContinuingBlockBreaking(player:net.minecraft.world.entity.player.Player, oldStack:net.minecraft.world.item.ItemStack,
     newStack:net.minecraft.world.item.ItemStack):Bool;
+
+  public function isSuitableFor(stack:net.minecraft.world.item.ItemStack, state:net.minecraft.world.level.block.state.BlockState):Bool;
+  public function getRecipeRemainder(stack:net.minecraft.world.item.ItemStack):net.minecraft.world.item.ItemStack;
+
+  #if minecraft_gteq_1_20_5
+  @:deprecated("Replaced with DataComponentTypes#ATTRIBUTE_MODIFIERS")
+  public function getAttributeModifiers(stack:net.minecraft.world.item.ItemStack):net.minecraft.world.item.component.ItemAttributeModifiers;
+  #else
   public function getAttributeModifiers(stack:net.minecraft.world.item.ItemStack,
     slot:net.minecraft.world.entity.EquipmentSlot):com.google.common.collect.Multimap<net.minecraft.world.entity.ai.attributes.Attribute,
       net.minecraft.world.entity.ai.attributes.AttributeModifier>;
-  public function isSuitableFor(stack:net.minecraft.world.item.ItemStack, state:net.minecraft.world.level.block.state.BlockState):Bool;
-  public function getRecipeRemainder(stack:net.minecraft.world.item.ItemStack):net.minecraft.world.item.ItemStack;
+  #end
 }
 
 @:native("net.minecraft.world.item.Item$Properties")
@@ -254,3 +261,21 @@ extern class Item_Properties
 }
 
 typedef Properties = Item_Properties;
+
+#if minecraft_gteq_1_20_5
+@:native("net.minecraft.world.item.Item$TooltipContext")
+extern interface Item_TooltipContext
+{
+  public static extern var EMPTY:Item_TooltipContext;
+
+  public function registries():Null<net.minecraft.core.HolderLookup.Provider>;
+  public function tickRate():Float;
+  public function mapData(var1:net.minecraft.world.level.saveddata.maps.MapId):Null<net.minecraft.world.level.saveddata.maps.MapItemSavedData>;
+
+  public static overload extern function of(level:Null<net.minecraft.world.level.Level>):Item_TooltipContext;
+
+  public static overload extern function of(registries:net.minecraft.core.HolderLookup.Provider):Item_TooltipContext;
+}
+
+typedef TooltipContext = Item_TooltipContext;
+#end

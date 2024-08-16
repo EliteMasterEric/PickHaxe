@@ -20,5 +20,7 @@ final extern class FeatureFlagSet
   public function hashCode():Int;
 }
 #else
+#if pickhaxe_compat
 typedef FeatureFlagSet = net.pickhaxe.compat.world.flag.FeatureFlagSet;
+#end
 #end

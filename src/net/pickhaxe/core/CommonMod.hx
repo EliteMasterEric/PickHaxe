@@ -95,10 +95,12 @@ class CommonMod #if fabric implements ModInitializer #end
     // We can rely on this class's events to be called before the Registrar events.
     forge_getEventBus().register(this);
 
+    #if pickhaxe_compat
     net.pickhaxe.compat.world.item.Item.Item_ForgeRegistrar.register(forge_getEventBus());
 
     #if (minecraft_gteq_1_19_3 && minecraft_lt_1_20)
     net.pickhaxe.compat.world.item.CreativeModeTab.CreativeModeTab_ForgeRegistrar.register(forge_getEventBus());
+    #end
     #end
   }
 

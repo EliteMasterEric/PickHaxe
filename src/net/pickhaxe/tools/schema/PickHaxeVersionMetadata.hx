@@ -18,6 +18,7 @@ typedef PickHaxeVersionMetadata =
   forgeGradleVersion:String,
 
   forgeGradlePluginVersion:String,
+  fabricLoomPluginVersion:String,
 
   forgeVersion:String,
   fmlVersion:String
@@ -39,6 +40,10 @@ class PickHaxeVersionMetadataReader
     var parentDir:Path = IO.libraryDir().joinPaths('metadata/versions', type, '${version}');
     var path:Path = parentDir.joinPaths('metadata.json');
 
+    if (!IO.exists(path)) {
+      CLI.print('Error parsing PickHaxeVersionMetadata for version ${type}/${version}: metadata does not exist!');
+    }
+
     try
     {
       var metadata:PickHaxeVersionMetadata = cast JSON.fromJSONFile(path);
@@ -47,7 +52,7 @@ class PickHaxeVersionMetadataReader
     catch (e)
     {
       CLI.print('Error parsing PickHaxeVersionMetadata (${path.toString()}): ${e}');
-      throw 'JSON Parsing Error';
+      throw e;
     }
   }
 }

@@ -19,11 +19,12 @@ class Java extends CLIProcess
 
   /**
    * Ensures that the Java version is 
+   * @param target The version we want, defaults to 17.
    */
-  public function validateVersion():Void {
+  public function validateVersion(target:Int = 17):Void {
     var version = getVersion();
-    if (version.major < 17) {
-      throw new JavaVersionException(version, "JDK 17+");
+    if (version.major < target) {
+      throw new JavaVersionException(version, 'JDK ${target}');
     }
   }
 
@@ -43,7 +44,7 @@ class Java extends CLIProcess
 
     var exitCode = output.exitCode;
     if (exitCode != 0) {
-      throw new JavaVersionException(output.output, "JDK 17+");
+      throw new JavaVersionException(output.output, 'JDK version check failed');
     }
 
     return output.output;

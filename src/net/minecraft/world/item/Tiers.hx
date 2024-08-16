@@ -14,7 +14,11 @@ final extern class Tiers extends java.lang.Enum<net.minecraft.world.item.Tiers>
   public function getUses():Int;
   public function getSpeed():Single;
   public function getAttackDamageBonus():Single;
-  public function getLevel():Int;
   public function getEnchantmentValue():Int;
   public function getRepairIngredient():net.minecraft.world.item.crafting.Ingredient;
+  #if minecraft_gteq_1_20_5
+  public function getIncorrectBlocksForDrops():net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block>;
+  #else
+  public function getLevel():Int;
+  #end
 }

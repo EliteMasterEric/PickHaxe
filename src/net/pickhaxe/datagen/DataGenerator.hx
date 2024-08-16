@@ -68,7 +68,12 @@ class DataGenerator #if fabric implements DataGeneratorEntrypoint #end
    * 
    * @param consumer The advancement generation function.
    */
-  public function onGenerateAdvancements(consumer:Consumer<AdvancementHolder>):Void {
+  #if minecraft_gteq_1_21
+  public function onGenerateAdvancements(consumer:Consumer<AdvancementHolder>):Void
+  #else
+  public function onGenerateAdvancements(consumer:Consumer<AdvancementEntry>):Void
+  #end
+  {
     // Do nothing. Override me!
   }
 
@@ -159,34 +164,36 @@ class DataGenerator #if fabric implements DataGeneratorEntrypoint #end
     var pack:FabricDataGenerator_Pack = fabricDataGenerator.createPack();
 
     // Parameter types AND return type must be explicitly defined and exactly these values.
-    pack.addProvider(function (dataOutput:FabricDataOutput):net.minecraft.data.DataProvider {
-      return new PickHaxeAdvancementsProvider(this, dataOutput);
+    pack.addProvider(function (dataOutput:FabricDataOutput,
+      registryLookup:CompletableFuture<HolderLookup_Provider>):net.minecraft.data.DataProvider {
+      return PickHaxeAdvancementsProvider.create(this, dataOutput, registryLookup);
     });
 
-    pack.addProvider(function (dataOutput:FabricDataOutput):net.minecraft.data.DataProvider {
-      return new PickHaxeBlockLootTableProvider(this, dataOutput);
+    pack.addProvider(function (dataOutput:FabricDataOutput,
+      registryLookup:CompletableFuture<HolderLookup_Provider>):net.minecraft.data.DataProvider {
+      return new PickHaxeBlockLootTableProvider(this, dataOutput, registryLookup);
     });
 
-    pack.addProvider(function (dataOutput:FabricDataOutput):net.minecraft.data.DataProvider {
+    pack.addProvider(function (dataOutput:FabricDataOutput, registryLookup:CompletableFuture<HolderLookup_Provider>):net.minecraft.data.DataProvider {
       return new PickHaxeModelProvider(this, dataOutput);
     });
 
     for (languageCode in getLanguageCodesToTranslate()) {
-      pack.addProvider(function (dataOutput:FabricDataOutput):net.minecraft.data.DataProvider {
-        return new PickHaxeLanguageProvider(this, dataOutput, languageCode);
+      pack.addProvider(function (dataOutput:FabricDataOutput, registryLookup:CompletableFuture<HolderLookup_Provider>):net.minecraft.data.DataProvider {
+        return new PickHaxeLanguageProvider(this, dataOutput, languageCode, registryLookup);
       });
     }
 
-    pack.addProvider(function (dataOutput:FabricDataOutput):net.minecraft.data.DataProvider {
-      return new PickHaxeRecipeProvider(this, dataOutput);
+    pack.addProvider(function (dataOutput:FabricDataOutput, registryLookup:CompletableFuture<HolderLookup_Provider>):net.minecraft.data.DataProvider {
+      return new PickHaxeRecipeProvider(this, dataOutput, registryLookup);
     });
 
-    pack.addProvider(function (dataOutput:FabricDataOutput, completableFuture:CompletableFuture<HolderLookup_Provider>):net.minecraft.data.DataProvider {
-      return new PickHaxeItemTagProvider(this, dataOutput, completableFuture);
+    pack.addProvider(function (dataOutput:FabricDataOutput, registryLookup:CompletableFuture<HolderLookup_Provider>):net.minecraft.data.DataProvider {
+      return new PickHaxeItemTagProvider(this, dataOutput, registryLookup);
     });
 
-    pack.addProvider(function (dataOutput:FabricDataOutput, completableFuture:CompletableFuture<HolderLookup_Provider>):net.minecraft.data.DataProvider {
-      return new PickHaxeBlockTagProvider(this, dataOutput, completableFuture);
+    pack.addProvider(function (dataOutput:FabricDataOutput, registryLookup:CompletableFuture<HolderLookup_Provider>):net.minecraft.data.DataProvider {
+      return new PickHaxeBlockTagProvider(this, dataOutput, registryLookup);
     });
   }
   #end
@@ -199,14 +206,32 @@ class DataGenerator #if fabric implements DataGeneratorEntrypoint #end
 private class PickHaxeAdvancementsProvider extends FabricAdvancementProvider {
   var dataGenerator:DataGenerator;
 
+  #if minecraft_gteq_1_21
+  public function new(dataGenerator:DataGenerator, dataOutput:FabricDataOutput, registryLookup:CompletableFuture<net.minecraft.core.HolderLookup.Provider>) {
+    super(dataOutput, registryLookup);
+    this.dataGenerator = dataGenerator;
+  }
+  #else
   public function new(dataGenerator:DataGenerator, dataOutput:FabricDataOutput) {
     super(dataOutput);
     this.dataGenerator = dataGenerator;
   }
+  #end
 
-  public overload function generateAdvancement(consumer:java.util.function.Consumer<AdvancementHolder>) {
+  public overload function generateAdvancement(registryLookup:net.minecraft.core.HolderLookup.Provider, consumer:java.util.function.Consumer<AdvancementHolder>) {
     // Redirect to DataGenerator.onGenerateAdvancements
     dataGenerator.onGenerateAdvancements(consumer);
+  }
+
+  public static overload extern inline function create(
+    dataGenerator:DataGenerator, dataOutput:FabricDataOutput,
+    registryLookup:CompletableFuture<net.minecraft.core.HolderLookup.Provider>):PickHaxeAdvancementsProvider {
+    return new PickHaxeAdvancementsProvider(dataGenerator, dataOutput, registryLookup);
+  }
+
+  public static overload extern inline function create(
+    dataGenerator:DataGenerator, dataOutput:FabricDataOutput):PickHaxeAdvancementsProvider {
+    return create(dataGenerator, dataOutput, null);
   }
 }
 
@@ -216,10 +241,17 @@ private class PickHaxeAdvancementsProvider extends FabricAdvancementProvider {
 private class PickHaxeBlockLootTableProvider extends FabricBlockLootTableProvider {
   var dataGenerator:DataGenerator;
 
+  #if minecraft_gteq_1_21
+  public function new(dataGenerator:DataGenerator, dataOutput:FabricDataOutput, registryLookup:CompletableFuture<net.minecraft.core.HolderLookup.Provider>) {
+    super(dataOutput, registryLookup);
+    this.dataGenerator = dataGenerator;
+  }
+  #else
   public function new(dataGenerator:DataGenerator, dataOutput:FabricDataOutput) {
     super(dataOutput);
     this.dataGenerator = dataGenerator;
   }
+  #end
 
   public overload function generate() {
     // Redirect to DataGenerator.onGenerateBlockLootTables
@@ -256,13 +288,17 @@ private class PickHaxeLanguageProvider extends FabricLanguageProvider {
   var dataGenerator:DataGenerator;
   var languageCode:String;
 
-  public function new(dataGenerator:DataGenerator, dataOutput:FabricDataOutput, languageCode:String) {
-    super(dataOutput, languageCode);
+  public function new(dataGenerator:DataGenerator, dataOutput:FabricDataOutput, languageCode:String, registryLookup:CompletableFuture<net.minecraft.core.HolderLookup.Provider>) {
+    super(dataOutput, languageCode, registryLookup);
     this.dataGenerator = dataGenerator;
     this.languageCode = languageCode;
   }
 
+  #if minecraft_gteq_1_21
+  public overload function generateTranslations(_param1:net.minecraft.core.HolderLookup.HolderLookup_Provider, translationBuilder:TranslationBuilder) {
+  #else
   public overload function generateTranslations(translationBuilder:TranslationBuilder) {
+  #end
     // Redirect to DataGenerator.onGenerateTranslations
     dataGenerator.onGenerateTranslations(dataOutput, this.languageCode, translationBuilder);
   }
@@ -274,10 +310,17 @@ private class PickHaxeLanguageProvider extends FabricLanguageProvider {
 private class PickHaxeRecipeProvider extends FabricRecipeProvider {
   var dataGenerator:DataGenerator;
 
+  #if minecraft_gteq_1_21
+  public function new(dataGenerator:DataGenerator, dataOutput:FabricDataOutput, registryLookup:CompletableFuture<net.minecraft.core.HolderLookup.Provider>) {
+    super(dataOutput, registryLookup);
+    this.dataGenerator = dataGenerator;
+  }
+  #else
   public function new(dataGenerator:DataGenerator, dataOutput:FabricDataOutput) {
     super(dataOutput);
     this.dataGenerator = dataGenerator;
   }
+  #end
 
   public overload function buildRecipes(recipeOutput:RecipeOutput) {
     // Redirect to DataGenerator.onGenerateRecipes

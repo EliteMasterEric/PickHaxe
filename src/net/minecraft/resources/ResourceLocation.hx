@@ -18,16 +18,33 @@ extern class ResourceLocation extends java.lang.Object implements java.lang.Comp
   public static final DEFAULT_NAMESPACE:String;
   public static final REALMS_NAMESPACE:String;
 
+  #if minecraft_gteq_1_21
+  /**
+   * Constructor made private in 1.21 in favor of `ResourceLocation#fromNamespaceAndPath()`
+   */
+  private function new(string:String, string2:String);
+  #else
   public overload function new(string:String, string2:String);
-
   public overload function new(string:String);
+  #end
 
+  #if minecraft_gteq_1_21
+  public static function fromNamespaceAndPath(namespace:String, path:String):net.minecraft.resources.ResourceLocation;
+  public static function createUntrusted(namespace:String, path:String):net.minecraft.resources.ResourceLocation;
+  public static function parse(input:String):net.minecraft.resources.ResourceLocation;
+  public static function withDefaultNamespace(path:String):net.minecraft.resources.ResourceLocation;
+  #else
   /**
    * Constructs a `ResourceLocation` from the specified `location`, split into a namespace and path by the specified `separator` char.
    *  
    *  If the `separator` char is not present in the `location`, the namespace defaults to `minecraft`, taking the `location` as the path.@throws net.minecraft.ResourceLocationException if there is a non ,{@code [a-z0-9_.-]}, character in the decomposed namespace or a non ,{@code [a-z0-9/._-]}, character in the decomposed path.@see #tryParse(String)@see #isValidResourceLocation(String)@param : location the location string to parse as a ,{@code ResourceLocation}@param : separator the separator to separate the namespace and path by. This should not be any of these characters: ,{@code [a-z0-9/._-]},.
    */
   public static function of(location:String, separator:Int):net.minecraft.resources.ResourceLocation;
+
+  public static inline function fromNamespaceAndPath(namespace:String, path:String):net.minecraft.resources.ResourceLocation {
+    return new net.minecraft.resources.ResourceLocation(namespace, path);
+  }
+  #end
 
   /**
    * Attempts to parse the specified `location` as a `ResourceLocation` by splitting it into a

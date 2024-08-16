@@ -120,10 +120,12 @@ extern class CreativeModeTab_Builder
 
   public overload function displayItems(displayItemsGenerator:CreativeModeTab_DisplayItemsGenerator):CreativeModeTab_Builder;
 
+  #if pickhaxe_compat
   public overload extern inline function displayItems(displayItemsGenerator:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorFunction_A):CreativeModeTab_Builder
   {
     return displayItems(net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorHaxe.buildA(displayItemsGenerator));
   }
+  #end
 
   /**
    * TODO: Tried to make this have the same name, but get the error:
@@ -131,10 +133,12 @@ extern class CreativeModeTab_Builder
    * ... The signatures are different in Haxe, but not in the target language
    * ... The second field is declared here
    */
+  #if pickhaxe_compat
   public overload extern inline function displayItemsB(displayItemsGenerator:net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorFunction_B):CreativeModeTab_Builder
   {
     return displayItems(net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorHaxe.buildB(displayItemsGenerator));
   }
+  #end
 
   public function build():CreativeModeTab;
 }
@@ -224,7 +228,9 @@ extern interface CreativeModeTab_Output
   //  tabVisibility:net.minecraft.world.item.CreativeModeTab.TabVisibility):Void;
 }
 #else
+#if pickhaxe_compat
 typedef CreativeModeTab_Output = net.pickhaxe.compat.world.item.CreativeModeTabBuilder.CreativeModeTab_Output;
+#end
 #end
 typedef Output = CreativeModeTab_Output;
 
@@ -239,7 +245,9 @@ final extern class CreativeModeTab_TabVisibility extends java.lang.Enum<net.mine
   public static var SEARCH_TAB_ONLY:net.minecraft.world.item.CreativeModeTab.TabVisibility;
 }
 #else
+#if pickhaxe_compat
 typedef CreativeModeTab_TabVisibility = net.pickhaxe.compat.world.item.CreativeModeTabBuilder.CreativeModeTab_TabVisibility;
+#end
 #end
 typedef TabVisibility = CreativeModeTab_TabVisibility;
 
@@ -265,7 +273,9 @@ final extern class CreativeModeTab_ItemDisplayParameters extends java.lang.Recor
   public function holders():net.minecraft.core.HolderLookup.HolderLookup_Provider;
 }
 #else
+#if pickhaxe_compat
 typedef CreativeModeTab_ItemDisplayParameters = net.pickhaxe.compat.world.item.CreativeModeTabBuilder.CreativeModeTab_ItemDisplayParameters;
+#end
 #end
 typedef ItemDisplayParameters = CreativeModeTab_ItemDisplayParameters;
 
@@ -285,5 +295,7 @@ extern interface CreativeModeTab_DisplayItemsGenerator
 
 typedef DisplayItemsGenerator = CreativeModeTab_DisplayItemsGenerator;
 #else
+#if pickhaxe_compat
 typedef DisplayItemsGenerator = net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorHaxe;
+#end
 #end

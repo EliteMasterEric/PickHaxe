@@ -255,7 +255,7 @@ class Template
     return {
       required: true,
       minVersion: "0.8", // ???
-      compatibilityLevel: "JAVA_17",
+      compatibilityLevel: "JAVA_21",
       injectors: {
         defaultRequire: 1,
       },
@@ -329,6 +329,7 @@ class Template
       // Added to default Fabric in 1.19.3.
       add("accessible method net/minecraft/world/item/AxeItem <init> (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V");
       add("accessible method net/minecraft/world/item/HoeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V");
+      // This particular constructor was made public in 1.20.5.
       add("accessible method net/minecraft/world/item/PickaxeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V");
 
       // Allow modifying internal variables of Creative Mode tabs.

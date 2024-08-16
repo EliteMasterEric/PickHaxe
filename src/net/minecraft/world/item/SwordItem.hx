@@ -3,7 +3,11 @@ package net.minecraft.world.item;
 @:native("net.minecraft.world.item.SwordItem")
 extern class SwordItem extends net.minecraft.world.item.TieredItem implements net.minecraft.world.item.Vanishable
 {
+  #if minecraft_gteq_1_20_5
+  public function new(tier:net.minecraft.world.item.Tier, properties:net.minecraft.world.item.Item.Properties);
+  #else
   public function new(tier:net.minecraft.world.item.Tier, i:Int, f:Single, properties:net.minecraft.world.item.Item.Properties);
+  #end
   public function getDamage():Single;
   public function canAttackBlock(state:net.minecraft.world.level.block.state.BlockState, level:net.minecraft.world.level.Level,
     pos:net.minecraft.core.BlockPos, player:net.minecraft.world.entity.player.Player):Bool;

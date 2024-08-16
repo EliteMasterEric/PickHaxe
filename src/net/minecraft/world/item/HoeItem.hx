@@ -3,10 +3,14 @@ package net.minecraft.world.item;
 @:native("net.minecraft.world.item.HoeItem")
 extern class HoeItem extends net.minecraft.world.item.DiggerItem
 {
+  #if minecraft_gteq_1_20_5 
+  public function new(tier:net.minecraft.world.item.Tier, properties:net.minecraft.world.item.Item.Properties);
+  #else
   /**
    * An access transformer is used to make this constructor public.
    */
   public function new(tier:net.minecraft.world.item.Tier, i:Int, f:Single, properties:net.minecraft.world.item.Item.Properties);
+  #end
 
   public function useOn(context:net.minecraft.world.item.context.UseOnContext):net.minecraft.world.InteractionResult;
   public static function changeIntoState(state:net.minecraft.world.level.block.state.BlockState):java.util.function.Consumer<net.minecraft.world.item.context.UseOnContext>;

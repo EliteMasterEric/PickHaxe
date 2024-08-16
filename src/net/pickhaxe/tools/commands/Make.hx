@@ -19,6 +19,7 @@ class Make implements ICommand
   var mcVersion:String;
   var mappings:String;
 
+  var verbose:Bool;
   var additionalArgs:Array<String>;
 
   public function new() {}
@@ -38,6 +39,12 @@ class Make implements ICommand
           short: 'h',
           long: 'help',
           blurb: 'Output usage information',
+          value: null,
+        },
+        {
+          short: null,
+          long: 'verbose',
+          blurb: 'Print verbose output',
           value: null,
         },
         {
@@ -128,6 +135,8 @@ class Make implements ICommand
             // Ignore.
           case '--dump':
             // Ignore.
+          case '--verbose':
+            verbose = true;
           default:
             additionalArgs.push(arg);
         }
@@ -181,11 +190,15 @@ class Make implements ICommand
 
     var result:Bool = false;
     if (loader == 'forge') {
-      // Forge requires reobfuscation AND shadowing.
-      var targetTask:String = 'reobfSourcesJar';
-      result = gradleW.performTask([targetTask].concat(additionalArgs));
+      var allArguments = ['reobfSourcesJar'].concat(additionalArgs);
+      if (verbose) allArguments.push('--debug');
+
+      result = gradleW.performTask(allArguments);
     } else if (loader == 'fabric') {
-      result = gradleW.performTask(["remapJar"].concat(additionalArgs));
+      var allArguments = ["remapJar"].concat(additionalArgs);
+      if (verbose) allArguments.push('--debug');
+
+      result = gradleW.performTask(allArguments);
     } else {
       CLI.print('[WARNING] Unknown loader (${loader}) for make task.');
     }

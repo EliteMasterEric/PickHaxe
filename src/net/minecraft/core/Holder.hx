@@ -49,7 +49,7 @@ final extern class Holder_Direct<T> extends java.lang.Record implements net.mine
 // typedef Direct<T> = Holder_Direct<T>;
 #end
 #if minecraft_gteq_1_18_2
-@:native("net.minecraft.core.Holder.Holder_Reference")
+@:native("net.minecraft.core.Holder$Reference")
 extern class Holder_Reference<T> implements net.minecraft.core.Holder<T>
 {
   @:badMapping("unknownMethodMapping")
@@ -81,7 +81,7 @@ typedef Reference<T> = Holder_Reference<T>;
 #end
 
 #if minecraft_gteq_1_18_2
-@:native("net.minecraft.core.Holder.Holder_Reference$Type")
+@:native("net.minecraft.core.Holder$Reference$Type")
 final extern class Holder_Reference_Type extends java.lang.Enum<net.minecraft.core.Holder.Holder_Reference_Type>
 {
   public static function values():java.NativeArray<net.minecraft.core.Holder.Holder_Reference_Type>;

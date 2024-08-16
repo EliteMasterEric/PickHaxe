@@ -22,7 +22,11 @@ extern class BuiltInRegistries
   public static final BLOCK_ENTITY_TYPE:Registry<net.minecraft.world.level.block.entity.BlockEntityType<Dynamic>>;
   public static final PAINTING_VARIANT:DefaultedRegistry<net.minecraft.world.entity.decoration.PaintingVariant>;
   public static final CUSTOM_STAT:Registry<net.minecraft.resources.ResourceLocation>;
+  #if minecraft_gteq_1_20_5
+  public static final CHUNK_STATUS:DefaultedRegistry<net.minecraft.world.level.chunk.status.ChunkStatus>;
+  #else
   public static final CHUNK_STATUS:DefaultedRegistry<net.minecraft.world.level.chunk.ChunkStatus>;
+  #end
   public static final RULE_TEST:Registry<net.minecraft.world.level.levelgen.structure.templatesystem.RuleTestType<Dynamic>>;
   public static final POS_RULE_TEST:Registry<net.minecraft.world.level.levelgen.structure.templatesystem.PosRuleTestType<Dynamic>>;
   public static final MENU:Registry<net.minecraft.world.inventory.MenuType<Dynamic>>;
@@ -75,6 +79,22 @@ extern class BuiltInRegistries
   public static final INSTRUMENT:Registry<net.minecraft.world.item.Instrument>;
   #if minecraft_gteq_1_20
   public static final CREATIVE_MODE_TAB:Registry<net.minecraft.world.item.CreativeModeTab>;
+  #end
+  #if minecraft_gteq_1_21
+  public static final DECORATED_POT_PATTERN:Registry<net.minecraft.world.level.block.entity.DecoratedPotPattern>;
+  public static final TRIGGER_TYPES:Registry<net.minecraft.advancements.CriterionTrigger>;
+  public static final NUMBER_FORMAT_TYPE:Registry<net.minecraft.network.chat.numbers.NumberFormatType>;
+  public static final ARMOR_MATERIAL:Registry<	net.minecraft.world.item.ArmorMaterial>;
+  public static final DATA_COMPONENT_TYPE:Registry<	net.minecraft.core.component.DataComponentType>;
+  public static final ENTITY_SUB_PREDICATE_TYPE:Registry<com.mojang.serialization.MapCodec<net.minecraft.advancements.critereon.EntitySubPredicate>>;
+  // public static final ITEM_SUB_PREDICATE_TYPE:Registry<net.minecraft.advancements.critereon.ItemSubPredicate.Type>;
+  public static final MAP_DECORATION_TYPE:Registry<net.minecraft.world.level.saveddata.maps.MapDecorationType>;
+  public static final ENCHANTMENT_EFFECT_COMPONENT_TYPE:Registry<net.minecraft.core.component.DataComponentType>;
+  public static final ENCHANTMENT_LEVEL_BASED_VALUE_TYPE:Registry<com.mojang.serialization.MapCodec<net.minecraft.world.item.enchantment.LevelBasedValue>>;
+  public static final ENCHANTMENT_ENTITY_EFFECT_TYPE:Registry<com.mojang.serialization.MapCodec<net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect>>;
+  public static final ENCHANTMENT_LOCATION_BASED_EFFECT_TYPE:Registry<com.mojang.serialization.MapCodec<net.minecraft.world.item.enchantment.effects.EnchantmentLocationBasedEffect>>;
+  public static final ENCHANTMENT_VALUE_EFFECT_TYPE:Registry<com.mojang.serialization.MapCodec<net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect>>;
+  public static final ENCHANTMENT_PROVIDER_TYPE:Registry<com.mojang.serialization.MapCodec<net.minecraft.world.item.enchantment.providers.EnchantmentProvider>>;
   #end
   public static final REGISTRY:Registry<net.minecraft.core.Registry<Dynamic>>;
   #if minecraft_eq_23w13a_or_b

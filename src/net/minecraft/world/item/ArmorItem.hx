@@ -2,7 +2,7 @@ package net.minecraft.world.item;
 
 import net.minecraft.world.entity.EquipmentSlot;
 
-#if minecraft_gteq_1_20
+#if minecraft_gteq_1_20_4
 import net.minecraft.core.dispenser.BlockSource;
 #else
 import net.minecraft.core.BlockSource;
@@ -12,6 +12,10 @@ import net.minecraft.core.BlockSource;
 extern class ArmorItem extends net.minecraft.world.item.Item implements net.minecraft.world.item.Equipable
 {
   public static final DISPENSE_ITEM_BEHAVIOR:net.minecraft.core.dispenser.DispenseItemBehavior;
+
+  #if minecraft_gteq_1_20_5
+  public overload function new(armorMaterial:net.minecraft.core.Holder<net.minecraft.world.item.ArmorMaterial>, type:ArmorItem_Type, properties:net.minecraft.world.item.Item.Properties);
+  #end
 
   #if minecraft_gteq_1_19_4
   /**
@@ -84,6 +88,8 @@ final extern class ArmorItem_Type extends java.lang.Enum<net.minecraft.world.ite
   }
 }
 #else
+#if pickhaxe_compat
 typedef ArmorItem_Type = net.pickhaxe.compat.world.item.ArmorItem_Type;
+#end
 #end
 // typedef Type = ArmorItem_Type;

@@ -15,7 +15,12 @@ extern class Registries
   public static final CARVER:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.levelgen.carver.WorldCarver<Dynamic>>>;
   public static final CAT_VARIANT:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.entity.animal.CatVariant>>;
   public static final CHUNK_GENERATOR:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<com.mojang.serialization.Codec<net.minecraft.world.level.chunk.ChunkGenerator>>>;
+  #if minecraft_gteq_1_20_5
+  // ChunkStatus moved to net.minecraft.world.level.chunk.status
+  public static final CHUNK_STATUS:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.chunk.status.ChunkStatus>>;
+  #else
   public static final CHUNK_STATUS:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.level.chunk.ChunkStatus>>;
+  #end
   public static final COMMAND_ARGUMENT_TYPE:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.commands.synchronization.ArgumentTypeInfo<Dynamic>>>;
   public static final CUSTOM_STAT:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.resources.ResourceLocation>>;
   public static final DAMAGE_TYPE:net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<net.minecraft.world.damagesource.DamageType>>;

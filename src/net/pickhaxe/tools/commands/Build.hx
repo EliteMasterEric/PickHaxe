@@ -424,7 +424,7 @@ class Build implements ICommand
         }
 
         for (file in IO.readDirectoryRecursive(mainDepsFolder, true, false)) {
-          if (file.startsWith('minecraft-merged-project-root-')) {
+          if (file.startsWith('minecraft-merged-')) {
             CLI.print('Removing the Minecraft.jar (we are copying it from elsewhere)...');
             IO.deleteFile(mainDepsFolder.joinPaths(file));
           }
@@ -432,9 +432,13 @@ class Build implements ICommand
 
         CLI.print('Moving Fabric sources...');
 
-        var mavenCachePath:Path = IO.workingDir().joinPaths(
+        // Use the first directory in the path.
+        var mavenCachePathBase:Path = IO.workingDir().joinPaths(
           '.gradle/loom-cache/minecraftMaven/',
-          'net/minecraft/minecraft-merged-project-root/'
+          'net/minecraft/'
+        );
+        var mavenCachePath:Path = mavenCachePathBase.joinPaths(
+          IO.readDirectory(mavenCachePathBase, false, true)[0]
         );
 
         for (loomCacheFolder in IO.readDirectory(mavenCachePath, false, true)) {

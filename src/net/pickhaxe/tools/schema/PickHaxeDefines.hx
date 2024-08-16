@@ -42,6 +42,7 @@ typedef PickHaxeDefinesPickHaxe =
     version:String, plugins:
     {
       forgegradle:String,
+      fabricloom:String
     }, maven: PickHaxeDefinesMaven,
   },
   java:
@@ -208,6 +209,7 @@ abstract PickHaxeDefines(PickHaxeDefinesRaw) from PickHaxeDefinesRaw to PickHaxe
       '-Dpickhaxe.java.version=${this.pickhaxe.java.version}',
       '-Dpickhaxe.gradle.version=${this.pickhaxe.gradle.version}',
       '-Dpickhaxe.gradle.plugins.forgegradle=${this.pickhaxe.gradle.plugins.forgegradle}',
+      '-Dpickhaxe.gradle.plugins.fabricloom=${this.pickhaxe.gradle.plugins.fabricloom}',
       '-Dpickhaxe.minecraft.version=${this.pickhaxe.minecraft.version}',
       '-Dpickhaxe.minecraft.resourcePackFormat=${this.pickhaxe.minecraft.resourcePackFormat}',
       '-Dpickhaxe.minecraft.dataPackFormat=${this.pickhaxe.minecraft.dataPackFormat}',
@@ -577,6 +579,7 @@ class Builder
                 plugins:
                   {
                     forgegradle: versionMetadata.forgeGradlePluginVersion,
+                    fabricloom: versionMetadata.fabricLoomPluginVersion,
                   },
                 maven: buildMaven(projectFile, params),
               },
@@ -756,6 +759,7 @@ class Builder
                 plugins:
                   {
                     forgegradle: versionMetadata.forgeGradlePluginVersion,
+                    fabricloom: versionMetadata.fabricLoomPluginVersion
                   },
                 maven: buildMaven(projectFile, params),
               },

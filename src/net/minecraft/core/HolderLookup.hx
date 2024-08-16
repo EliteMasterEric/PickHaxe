@@ -50,11 +50,15 @@ extern interface HolderLookup_RegistryLookup<T>
 
 typedef RegistryLookup<T> = HolderLookup_RegistryLookup<T>;
 
+// Refactored from an abstract class to an interface in 1.20.5
 @:native("net.minecraft.core.HolderLookup$RegistryLookup$Delegate")
 @:realPath("net.minecraft.core.HolderLookup_RegistryLookup_Delegate")
-abstract extern class HolderLookup_RegistryLookup_Delegate < T > implements net.minecraft.core.HolderLookup.RegistryLookup < T >
+extern #if minecraft_gteq_1_20_5 interface #else abstract class #end HolderLookup_RegistryLookup_Delegate < T >
+#if minecraft_gteq_1_20_5 extends #else implements #end net.minecraft.core.HolderLookup.RegistryLookup < T >
 {
+  #if minecraft_lt_1_20_5
   public function new();
+  #end
 
   public function key():net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<T>>;
 
