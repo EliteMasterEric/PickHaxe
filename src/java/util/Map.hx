@@ -22,6 +22,7 @@
 
 package java.util;
 
+@:native("java.util.Map")
 extern interface Map<K, V>
 {
   function clear():Void;
@@ -40,9 +41,16 @@ extern interface Map<K, V>
 
   function remove(key:Dynamic):V;
 
+  function forEach(action:java.util.function.BiConsumer<K, V>):Void;
+
   function size():Int;
 
   function values():java.util.Collection<V>;
+
+  public static overload extern function of<K, E>():Map<K, E>;
+  public static overload extern function of<K, E>(key1:K, element1:E):Map<K, E>;
+  public static overload extern function of<K, E>(key1:K, element1:E, key2:K, element2:E):Map<K, E>;
+  public static overload extern function of<K, E>(key1:K, element1:E, key2:K, element2:E, key3:K, element3:E):Map<K, E>;
 }
 
 @:native("java.util.Map$Entry")
@@ -52,3 +60,5 @@ extern interface Map_Entry<K, V>
   function getValue():V;
   function setValue(v:V):V;
 }
+
+typedef Entry<K, V> = java.util.Map.Map_Entry<K, V>;

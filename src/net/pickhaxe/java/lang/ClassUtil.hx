@@ -3,6 +3,14 @@ package net.pickhaxe.java.lang;
 import net.pickhaxe.core.PickHaxe;
 
 class ClassUtil {
+  public static function toJavaClass(cls:Class<Dynamic>):java.lang.Class<Dynamic> {
+    return java.Lib.toNativeType(cls);
+  }
+
+  public static function toHaxeClass(cls:java.lang.Class<Dynamic>):Class<Dynamic> {
+    return java.Lib.fromNativeType(cls);
+  }
+
   public static function triggerStaticInitializer(cls:Class<Dynamic>):Void {
     var clsName:String = Type.getClassName(cls);
     PickHaxe.logInfo('Triggering static initializer for class ${clsName}');

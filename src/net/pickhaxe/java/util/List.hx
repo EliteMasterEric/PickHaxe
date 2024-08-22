@@ -31,4 +31,15 @@ class List {
     }
     return list;
   }
+
+  /**
+   * Turn a `java.util.List<T>` into a `haxe.Array<T>`.
+   */
+  public static function toArray<T>(list:java.util.List<T>):Array<T> {
+    var arr:Array<T> = new Array<T>();
+    for (element in list) {
+      arr.push(element);
+    }
+    return arr;
+  }
 }

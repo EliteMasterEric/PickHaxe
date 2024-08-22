@@ -26,6 +26,8 @@ For as long as Minecraft modding has existed, people have been developing mappin
 - `<?>` gets replaced with `<Dynamic>`
 - `FeatureFlag...` gets replaced with `Array<FeatureFlag>`
 
+A ResourceLocation is a namespace+path pair, like `minecraft:block/stone`. A ResourceKey is a ResourceLocation associated with a specific Registry.
+
 ## List of Mappings
 
 Mojmaps: The official mappings from Mojang. Only available for 1.14.4+.

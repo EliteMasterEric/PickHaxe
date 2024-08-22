@@ -9,3 +9,5 @@ generated/
 gradle/.gradle/
 gradle/build/
 gradle/gradle/
+
+completion.hxml
