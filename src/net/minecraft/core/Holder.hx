@@ -14,10 +14,25 @@ extern interface Holder<T>
   public function unwrap():com.mojang.datafixers.util.Either<net.minecraft.resources.ResourceKey<T>, T>;
   public function unwrapKey():java.util.Optional<net.minecraft.resources.ResourceKey<T>>;
   public function kind():net.minecraft.core.Holder.Kind;
-  @:badMapping("unknownMethodMapping")
   public static function direct<T>(value:T):net.minecraft.core.Holder<T>;
+
+  #if (minecraft_gteq_1_18_2 && minecraft_lt_1_19_3)
+  // Added in 1.18.2, removed in 1.19.3
+  public function isValidInRegistry(var1:net.minecraft.core.Registry<T>):Bool;
+  public static function hackyErase<T>(value:Holder<T>):net.minecraft.core.Holder<T>;
+  #end
+
   #if minecraft_gteq_1_19_3
+  // Added in 1.19.3
   public function canSerializeIn(var1:net.minecraft.core.HolderOwner<T>):Bool;
+  #end
+
+  #if minecraft_gteq_1_20_6
+  // Added in 1.20.6
+  public overload function is(var1:Holder<T>):Bool;
+  
+  // Interface function with a default implementation.
+  @:java.default public function getRegisteredName():String;
   #end
 }
 #end
@@ -27,6 +42,12 @@ extern interface Holder<T>
 final extern class Holder_Direct<T> extends java.lang.Record implements net.minecraft.core.Holder<T>
 {
   public function new(value:T);
+
+  // Record functions.
+  public function toString():String;
+  public final function hashCode():Int;
+  public final function equals(o:Dynamic):Bool;
+
   public function isBound():Bool;
   public overload function is(location:net.minecraft.resources.ResourceLocation):Bool;
   public overload function is(resourceKey:net.minecraft.resources.ResourceKey<T>):Bool;
@@ -35,24 +56,34 @@ final extern class Holder_Direct<T> extends java.lang.Record implements net.mine
   public function unwrap():com.mojang.datafixers.util.Either<net.minecraft.resources.ResourceKey<T>, T>;
   public function unwrapKey():java.util.Optional<net.minecraft.resources.ResourceKey<T>>;
   public function kind():net.minecraft.core.Holder.Kind;
-  public function toString():String;
   public function tags():java.util.stream.Stream<net.minecraft.tags.TagKey<T>>;
-  public final function hashCode():Int;
-  public final function equals(o:Dynamic):Bool;
-  @:badMapping("unknownMethodMapping")
   public function value():T;
+  
+  #if (minecraft_gteq_1_18_2 && minecraft_lt_1_19_3)
+  // Added in 1.18.2, removed in 1.19.3
+  public function isValidInRegistry(var1:net.minecraft.core.Registry<T>):Bool;
+  #end
+
   #if minecraft_gteq_1_19_3
+  // Added in 1.19.3
   public function canSerializeIn(owner:net.minecraft.core.HolderOwner<T>):Bool;
+  #end
+
+  #if minecraft_gteq_1_20_6
+  // Added in 1.20.6
+  public overload function is(var1:Holder<T>):Bool;
   #end
 }
 
 // typedef Direct<T> = Holder_Direct<T>;
 #end
+
 #if minecraft_gteq_1_18_2
 @:native("net.minecraft.core.Holder$Reference")
 extern class Holder_Reference<T> implements net.minecraft.core.Holder<T>
 {
-  @:badMapping("unknownMethodMapping")
+  private function new(referenceType:net.minecraft.core.Holder.Holder_Reference_Type, registry:net.minecraft.core.Registry<T>, key:net.minecraft.resources.ResourceKey<T>, value:T);
+
   public function key():net.minecraft.resources.ResourceKey<T>;
   public function value():T;
   public overload function is(location:net.minecraft.resources.ResourceLocation):Bool;
@@ -63,17 +94,30 @@ extern class Holder_Reference<T> implements net.minecraft.core.Holder<T>
   public function unwrapKey():java.util.Optional<net.minecraft.resources.ResourceKey<T>>;
   public function kind():net.minecraft.core.Holder.Kind;
   public function isBound():Bool;
-  function bindKey(key:net.minecraft.resources.ResourceKey<T>):Void;
-  @:badMapping("unknownMethodMapping")
-  function bindValue(value:T):Void;
-  function bindTags(tags:java.util.Collection<net.minecraft.tags.TagKey<T>>):Void;
   public function tags():java.util.stream.Stream<net.minecraft.tags.TagKey<T>>;
-  public function toString():String;
+
+  private function bindTags(tags:java.util.Collection<net.minecraft.tags.TagKey<T>>):Void;
+
+  #if (minecraft_gteq_1_18_2 && minecraft_lt_1_19_3)
+  public static function createStandAlone<T>(registry:net.minecraft.core.Registry<T>, key:net.minecraft.resources.ResourceKey<T>):net.minecraft.core.Holder.Holder_Reference<T>;
+  public static function createIntrusive<T>(registry:net.minecraft.core.Registry<T>, value:T):net.minecraft.core.Holder.Holder_Reference<T>;
+  public function isValidInRegistry(var1:net.minecraft.core.Registry<T>):Bool;
+  private function bind(key:net.minecraft.resources.ResourceKey<T>, value:T):Void;
+  #end
+
+
   #if minecraft_gteq_1_19_3
-  public function canSerializeIn(owner:net.minecraft.core.HolderOwner<T>):Bool;
-  public static function createIntrusive<T>(owner:net.minecraft.core.HolderOwner<T>, value:Null<T>):net.minecraft.core.Holder.Holder_Reference<T>;
   public static function createStandAlone<T>(owner:net.minecraft.core.HolderOwner<T>,
     key:net.minecraft.resources.ResourceKey<T>):net.minecraft.core.Holder.Holder_Reference<T>;
+  public static function createIntrusive<T>(owner:net.minecraft.core.HolderOwner<T>, value:T):net.minecraft.core.Holder.Holder_Reference<T>;
+  public function canSerializeIn(owner:net.minecraft.core.HolderOwner<T>):Bool;
+
+  private function bindKey(key:net.minecraft.resources.ResourceKey<T>):Void;
+  private function bindValue(value:T):Void;
+  #end
+
+  #if minecraft_gteq_1_20_6
+  public overload function is(var1:Holder<T>):Bool;
   #end
 }
 
@@ -84,10 +128,11 @@ typedef Reference<T> = Holder_Reference<T>;
 @:native("net.minecraft.core.Holder$Reference$Type")
 final extern class Holder_Reference_Type extends java.lang.Enum<net.minecraft.core.Holder.Holder_Reference_Type>
 {
-  public static function values():java.NativeArray<net.minecraft.core.Holder.Holder_Reference_Type>;
-  public static function valueOf(name:String):net.minecraft.core.Holder.Holder_Reference_Type;
   public static var STAND_ALONE:net.minecraft.core.Holder.Holder_Reference_Type;
   public static var INTRUSIVE:net.minecraft.core.Holder.Holder_Reference_Type;
+
+  public static function values():java.NativeArray<net.minecraft.core.Holder.Holder_Reference_Type>;
+  public static function valueOf(name:String):net.minecraft.core.Holder.Holder_Reference_Type;
 }
 
 typedef Type = Holder_Reference_Type;
@@ -97,10 +142,11 @@ typedef Type = Holder_Reference_Type;
 @:native("net.minecraft.core.Holder$Kind")
 final extern class Holder_Kind extends java.lang.Enum<net.minecraft.core.Holder.Kind>
 {
-  public static function values():java.NativeArray<net.minecraft.core.Holder.Kind>;
-  public static function valueOf(name:String):net.minecraft.core.Holder.Kind;
   public static var REFERENCE:net.minecraft.core.Holder.Kind;
   public static var DIRECT:net.minecraft.core.Holder.Kind;
+
+  public static function values():java.NativeArray<net.minecraft.core.Holder.Kind>;
+  public static function valueOf(name:String):net.minecraft.core.Holder.Kind;
 }
 
 typedef Kind = Holder_Kind;

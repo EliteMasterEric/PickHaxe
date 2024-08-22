@@ -18,12 +18,16 @@ extern #if (minecraft_lteq_1_19_2) abstract #end class CreativeModeTab
   public var langId:String; // Exposed via access transformer.
 
   #end
+
+  public static overload extern inline function builder():net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder {
+    return new net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder(net.minecraft.world.item.CreativeModeTab.Row.TOP, 0);
+  }
   #if minecraft_gteq_1_19_3
   public function new(row:net.minecraft.world.item.CreativeModeTab.Row, i:Int, type:net.minecraft.world.item.CreativeModeTab.Type,
     component:net.minecraft.network.chat.Component, supplier:java.util.function.Supplier<net.minecraft.world.item.ItemStack>,
     displayItemsGenerator:net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator);
 
-  public static function builder(row:net.minecraft.world.item.CreativeModeTab.Row,
+  public static overload extern function builder(row:net.minecraft.world.item.CreativeModeTab.Row,
     column:Int):net.minecraft.world.item.CreativeModeTab.CreativeModeTab_Builder;
 
   public function row():net.minecraft.world.item.CreativeModeTab.Row;
@@ -138,6 +142,70 @@ extern class CreativeModeTab_Builder
   {
     return displayItems(net.pickhaxe.compat.world.item.CreativeModeTabBuilder.DisplayItemsGeneratorHaxe.buildB(displayItemsGenerator));
   }
+  #end
+
+  #if (forge && minecraft_gteq_1_20)
+  /**
+   * Gives this tab a search bar.
+   * Note that, if using a custom {@link #withBackgroundLocation(net.minecraft.resources.ResourceLocation) background image},
+   * you will need to make sure that your image contains the input box and the scroll bar.
+   */
+  public overload extern function withSearchBar():CreativeModeTab_Builder;
+
+  /**
+   * Gives this tab a search bar, with a specific width.
+   * @param width The width of the search bar
+   */
+  public overload extern function withSearchBar(width:Int):CreativeModeTab_Builder;
+
+  /**
+   * Set the color of the tab label.
+   */
+  public function withLabelColor(color:Int):CreativeModeTab_Builder;
+
+  /**
+   * Sets the color of the tab's slots.
+   */
+  public function withSlotColor(color:Int):CreativeModeTab_Builder;
+
+  public function withTabFactory(tabFactory:java.util.function.Function<CreativeModeTab_Builder, CreativeModeTab>):CreativeModeTab_Builder;
+
+  // public overload extern function withTabsBefore(tabBefore:net.minecraft.resources.ResourceLocation):CreativeModeTab_Builder;
+
+  /**
+   * Define tabs that should come <i>before</i> this tab.
+   * This tab will be placed <strong>after</strong> the {@code tabs}.
+   */
+  public overload extern function withTabsBefore(tabsBefore:java.NativeArray<net.minecraft.resources.ResourceLocation>):CreativeModeTab_Builder;
+
+  public overload extern inline function withTabsBefore(tabBefore:net.minecraft.resources.ResourceLocation):CreativeModeTab_Builder {
+    var input:java.NativeArray<net.minecraft.resources.ResourceLocation> = java.NativeArray.make(tabBefore);
+    var result = withTabsBefore(input);
+    return result;
+  }
+  public overload extern inline function withTabsBefore(...tabsBefore:net.minecraft.resources.ResourceLocation):CreativeModeTab_Builder {
+    var input:java.NativeArray<net.minecraft.resources.ResourceLocation> = net.pickhaxe.java.NativeArrayUtil.fromArray(tabsBefore.toArray());
+    var result = withTabsBefore(input);
+    return result;
+  }
+
+  /**
+   * Define tabs that should come <i>after</i> this tab.
+   * This tab will be placed <strong>before</strong> the {@code tabs}.
+   */
+  public overload extern function withTabsAfter(tabsAfter:java.NativeArray<net.minecraft.resources.ResourceLocation>):CreativeModeTab_Builder;
+
+  public overload extern inline function withTabsAfter(tabAfter:net.minecraft.resources.ResourceLocation):CreativeModeTab_Builder {
+    var input:java.NativeArray<net.minecraft.resources.ResourceLocation> = java.NativeArray.make(tabAfter);
+    var result = withTabsAfter(input);
+    return result;
+  }
+  public overload extern inline function withTabsAfter(...tabsAfter:net.minecraft.resources.ResourceLocation):CreativeModeTab_Builder {
+    var input:java.NativeArray<net.minecraft.resources.ResourceLocation> = net.pickhaxe.java.NativeArrayUtil.fromArray(tabsAfter.toArray());
+    var result = withTabsAfter(input);
+    return result;
+  }
+
   #end
 
   public function build():CreativeModeTab;

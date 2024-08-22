@@ -60,7 +60,8 @@ extern class BlockSetType extends java.lang.Record
   public function equals(object:Dynamic):Bool;
 }
 
-enum BlockSetType_PressurePlateSensitivity {
+@:native("net.minecraft.world.level.block.state.properties.BlockSetType$PressurePlateSensitivity")
+extern enum BlockSetType_PressurePlateSensitivity {
   EVERYTHING;
   MOBS;
 }

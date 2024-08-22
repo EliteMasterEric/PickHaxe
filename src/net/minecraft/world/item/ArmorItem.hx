@@ -15,25 +15,28 @@ extern class ArmorItem extends net.minecraft.world.item.Item implements net.mine
 
   #if minecraft_gteq_1_20_5
   public overload function new(armorMaterial:net.minecraft.core.Holder<net.minecraft.world.item.ArmorMaterial>, type:ArmorItem_Type, properties:net.minecraft.world.item.Item.Properties);
-  #end
-
-  #if minecraft_gteq_1_19_4
+  
+  public function getMaterial():net.minecraft.core.Holder<net.minecraft.world.item.ArmorMaterial>;
+  #elseif minecraft_gteq_1_19_4
   /**
    * @since 1.19.4
    */
   public overload function new(armorMaterial:net.minecraft.world.item.ArmorMaterial, type:ArmorItem_Type, properties:net.minecraft.world.item.Item.Properties);
+
+  public function getMaterial():net.minecraft.world.item.ArmorMaterial;
   #else
 
   /**
    * @param slot The equipment slot. Used until `1.19.3`, when it was replaced with ArmorType.
    */
   public overload function new(armorMaterial:net.minecraft.world.item.ArmorMaterial, slot:EquipmentSlot, properties:net.minecraft.world.item.Item.Properties);
+
+  public function getMaterial():net.minecraft.world.item.ArmorMaterial;
   #end
 
   public static function dispenseArmor(source:BlockSource, stack:net.minecraft.world.item.ItemStack):Bool;
   public function getType():net.minecraft.world.item.ArmorItem.ArmorItem_Type;
   public function getEnchantmentValue():Int;
-  public function getMaterial():net.minecraft.world.item.ArmorMaterial;
   public function isValidRepairItem(stack:net.minecraft.world.item.ItemStack, repairCandidate:net.minecraft.world.item.ItemStack):Bool;
   public function use(level:net.minecraft.world.level.Level, player:net.minecraft.world.entity.player.Player,
     usedHand:net.minecraft.world.InteractionHand):net.minecraft.world.InteractionResultHolder<net.minecraft.world.item.ItemStack>;

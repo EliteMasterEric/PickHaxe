@@ -37,7 +37,7 @@ extern interface Registry<T>
    */
   public function keySet():java.util.Set<net.minecraft.resources.ResourceLocation>;
 
-  public function entrySet():java.util.Set<java.util.Entry<net.minecraft.resources.ResourceKey<T>, T>>;
+  public function entrySet():java.util.Set<java.util.Map.Entry<net.minecraft.resources.ResourceKey<T>, T>>;
   public function registryKeySet():java.util.Set<net.minecraft.resources.ResourceKey<T>>;
   public function getRandom(var1:net.minecraft.util.RandomSource):java.util.Optional<net.minecraft.core.Holder.Holder_Reference<T>>;
   public function stream():java.util.stream.Stream<T>;

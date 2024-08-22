@@ -1,44 +1,35 @@
 package net.minecraft.world.item;
 
+import net.minecraft.core.Holder;
+import net.minecraft.world.item.ArmorMaterial;
+
 @:native("net.minecraft.world.item.ArmorMaterials")
-final extern class ArmorMaterials extends java.lang.Enum<net.minecraft.world.item.ArmorMaterials>
+final extern class ArmorMaterials
+#if minecraft_gteq_1_20_5 extends java.lang.Object #else extends java.lang.Enum<ArmorMaterials> #end
 {
-  public static function values():Array<net.minecraft.world.item.ArmorMaterials>;
-  public static function valueOf(name:String):net.minecraft.world.item.ArmorMaterials;
+  public static function values():Array<ArmorMaterial>;
+  public static function valueOf(name:String):ArmorMaterial;
 
-    public static var LEATHER:net.minecraft.world.item.ArmorMaterials;
+  #if minecraft_gteq_1_20_5
+  public static var LEATHER:Holder<ArmorMaterial>;
+  public static var CHAIN:Holder<ArmorMaterial>;
+  public static var IRON:Holder<ArmorMaterial>;
+  public static var GOLD:Holder<ArmorMaterial>;
+  public static var DIAMOND:Holder<ArmorMaterial>;
+  public static var TURTLE:Holder<ArmorMaterial>;
+  public static var NETHERITE:Holder<ArmorMaterial>;
+  public static var ARMADILLO:Holder<ArmorMaterial>;
+  
+  public static function bootstrap(arg0:net.minecraft.core.Registry<ArmorMaterial>):Void;
+  #else
+  public static var LEATHER:ArmorMaterials;
+  public static var CHAIN:ArmorMaterials;
+  public static var IRON:ArmorMaterials;
+  public static var GOLD:ArmorMaterials;
+  public static var DIAMOND:ArmorMaterials;
+  public static var TURTLE:ArmorMaterials;
+  public static var NETHERITE:ArmorMaterials;
 
-    public static var CHAIN:net.minecraft.world.item.ArmorMaterials;
-
-    public static var IRON:net.minecraft.world.item.ArmorMaterials;
-
-    public static var GOLD:net.minecraft.world.item.ArmorMaterials;
-
-    public static var DIAMOND:net.minecraft.world.item.ArmorMaterials;
-
-    public static var TURTLE:net.minecraft.world.item.ArmorMaterials;
-
-    public static var NETHERITE:net.minecraft.world.item.ArmorMaterials;
-
-    #if minecraft_gteq_1_19
-    public static final CODEC:net.minecraft.util.StringRepresentable.StringRepresentable_EnumCodec<net.minecraft.world.item.ArmorMaterials>;
-    #end
-
-    public function getDurabilityForType(type:net.minecraft.world.item.ArmorItem.ArmorItem_Type):Int;
-
-    public function getDefenseForType(type:net.minecraft.world.item.ArmorItem.ArmorItem_Type):Int;
-
-    public function getEnchantmentValue():Int;
-
-    public function getEquipSound():net.minecraft.sounds.SoundEvent;
-
-    public function getRepairIngredient():net.minecraft.world.item.crafting.Ingredient;
-
-    public function getName():String;
-
-    public function getToughness():Float;
-
-    public function getKnockbackResistance():Float;
-
-    public function getSerializedName():String;
+  public static final CODEC:net.minecraft.util.StringRepresentable.StringRepresentable_EnumCodec<ArmorMaterials>;
+  #end
 }
