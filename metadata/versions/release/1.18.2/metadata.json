@@ -11,5 +11,8 @@
   "fabricGradleVersion": "7.3",
   "fabricLoomPluginVersion": "1.2-SNAPSHOT",
 
-  "forgeVersion": "40.2.1"
+  "forgeVersion": "40.2.1",
+  "forgeDisableObfuscation": false,
+
+  "neoforgeVersion": null
 }

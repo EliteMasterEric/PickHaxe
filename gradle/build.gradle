@@ -28,6 +28,11 @@ plugins {
   id 'net.minecraftforge.gradle.patcher' version "${FORGEGRADLE_VERSION}" apply false
   id 'org.parchmentmc.librarian.forgegradle' version '1.+' apply false
 
+  //
+  // NeoForge
+  //  
+  id 'net.neoforged.gradle.userdev' version '7.0.145' apply false
+
   // 
   // Fabric
   //
@@ -45,6 +50,8 @@ switch(System.getProperty('pickhaxe.loader.current')) {
     apply plugin: 'net.minecraftforge.gradle'
     apply plugin: 'org.parchmentmc.librarian.forgegradle'
     break
+  case 'neoforge':
+    apply plugin: 'net.neoforged.gradle.userdev'
   case 'fabric':
     apply plugin: 'fabric-loom'
     break
@@ -129,6 +136,12 @@ if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
         break;
     }
 
+    if (System.getProperty('pickhaxe.loader.forge.disableReobf')) {
+      println("PickHaxe (Forge): Disabling reobf")
+      // Tell FG to not automtically create the reobf tasks, as we now use Official mappings at runtime, If you don't use them at dev time then you'll have to fix your reobf yourself.
+      reobf = false
+    }
+
     runs {
       client {
           taskName 'runClient'
@@ -163,6 +176,14 @@ if (System.getProperty('pickhaxe.loader.current').equals('forge')) {
 
           // No source sets.
       }
+      
+      data {
+          taskName 'runData'
+          // example of overriding the workingDirectory set in configureEach above
+          workingDirectory project.file('../run/forge/data')
+          // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+          args '--mod', System.getProperty('pickhaxe.mod.id'), '--all', '--output', file("./resources/${System.getProperty('pickhaxe.loader.current')}/${System.getProperty('pickhaxe.minecraft.version')}/"), '--existing', file("../resources/")
+      }
     }
 
     accessTransformer = file('resources/META-INF/accesstransformer.cfg')
@@ -193,7 +214,8 @@ if (System.getProperty('pickhaxe.loader.current').equals('fabric')) {
       }
 
       datagen {
-        inherit server
+        // We need to inherit from the client to perform datagen on texture stuff.
+        inherit client
         name "Data Generation"
         runDir "../run/fabric/datagen"
         ideConfigGenerated false
@@ -308,7 +330,8 @@ dependencies {
     case 'forge':
       minecraft "net.minecraftforge:forge:${System.getProperty('pickhaxe.minecraft.version')}-${System.getProperty('pickhaxe.loader.forge.apiVersion')}"
 
-      if (System.getProperty('pickhaxe.task').equals('runClient') || System.getProperty('pickhaxe.task').equals('runDatagen')) {
+      if (System.getProperty('pickhaxe.task').equals('runClient')
+        || System.getProperty('pickhaxe.task').equals('runDatagen') || System.getProperty('pickhaxe.task').equals('runData')) {
         // Add JARs to the classpath for the runClient task.
 
         // Run configurations use the dev JAR.
@@ -316,6 +339,9 @@ dependencies {
         println "../build/${System.getProperty('pickhaxe.loader.current')}/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar"
         runtimeOnly files("../build/${System.getProperty('pickhaxe.loader.current')}/${System.getProperty('pickhaxe.minecraft.version')}/${System.getProperty('pickhaxe.mod.id')}-${System.getProperty('pickhaxe.mod.version')}-dev.jar")
       }
+
+      // Hack fix for now, force jopt-simple to be exactly 5.0.4 because Mojang ships that version, but some transitive dependencies request 6.0+ 
+      implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
       break;
     case 'fabric':
       // To change the versions see the gradle.properties file

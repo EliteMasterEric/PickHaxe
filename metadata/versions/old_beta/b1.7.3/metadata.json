@@ -10,5 +10,6 @@
   "useLegacyFabric": true,
   "fabricGradleVersion": "8.0.1",
 
-  "forgeVersion": null
+  "forgeVersion": null,
+  "forgeDisableObfuscation": false
 }
