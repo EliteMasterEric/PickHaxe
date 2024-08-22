@@ -7,6 +7,7 @@ import net.fabricmc.api.ClientModInitializer;
 
 /**
  * Represents the core mod class, and the entry point for our mod.
+ * Only loaded on clients, suitable for setting up client-specific logic such as rendering.
  * 
  * Equivalent to the `@Mod` annotation in Forge and the ModInitializer interface in Fabric.
  * Build macros will generate any necessary information and additional code.
@@ -41,9 +42,23 @@ class ClientMod #if fabric implements ClientModInitializer #end
    * Main initialization method for the mod.
    * Equivalent to `net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent` in Forge.
    */
-   public function onModInitialize():Void {
+  public function onModInitialize():Void {
     // Do nothing. Override me!
   }
+
+  //
+  // Don't overrride these functions, please.
+  //
+  #if forge
+  function forge_registerListeners()
+  {
+    net.pickhaxe.core.PickHaxe.logDebug('ClientMod constructed, registering Forge lifecycle listeners...');
+
+    // Add each lifecycle function to the event bus.
+    // We can rely on this class's events to be called before the Registrar events.
+    forge_getEventBus().register(this);
+  }
+  #end
 
   #if fabric
   public function onInitializeClient():Void

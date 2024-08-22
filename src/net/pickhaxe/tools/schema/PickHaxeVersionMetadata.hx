@@ -21,6 +21,8 @@ typedef PickHaxeVersionMetadata =
   fabricLoomPluginVersion:String,
 
   forgeVersion:String,
+  forgeDisableObfuscation:Bool,
+
   fmlVersion:String
 }
 

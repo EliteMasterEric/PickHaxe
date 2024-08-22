@@ -88,16 +88,32 @@ class Make implements ICommand
         mappings: mappings,
       });
 
-    var result:Bool = performGradleTask(defines);
+    if (shouldDoNoObfuscation(defines)) {
+      CLI.print('No obfuscation needed for current version, copying dev JAR...');
 
-    if (result)
-    {
+      var sourcePath = IO.workingDir().joinPaths('./build/',
+        '${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${defines.pickhaxe.mod.id}-${defines.pickhaxe.mod.version}-dev.jar');
+      var destPath = IO.workingDir().joinPaths('./build/',
+        '${defines.pickhaxe.loader.current}/${defines.pickhaxe.minecraft.version}/${defines.pickhaxe.mod.id}-${defines.pickhaxe.mod.version}.jar');
+      IO.copyFile(sourcePath, destPath);
+
       CLI.print('Project make successful.');
+    } else {
+      var result:Bool = performGradleTask(defines);
+
+      if (result)
+      {
+        CLI.print('Project make successful.');
+      }
+      else
+      {
+        CLI.print('Project make resulted in FAILURE.');
+      }
     }
-    else
-    {
-      CLI.print('Project make resulted in FAILURE.');
-    }
+  }
+
+  function shouldDoNoObfuscation(defines:PickHaxeDefines):Bool {
+    return (defines.pickhaxe.loader.current == 'forge' && defines.pickhaxe.loader.forge.disableObfuscation);
   }
 
   function parseArgs(args:Array<String>):Bool
@@ -189,18 +205,31 @@ class Make implements ICommand
     var gradleW:GradleWProcess = new GradleWProcess(defines);
 
     var result:Bool = false;
-    if (loader == 'forge') {
-      var allArguments = ['reobfSourcesJar'].concat(additionalArgs);
-      if (verbose) allArguments.push('--debug');
 
-      result = gradleW.performTask(allArguments);
-    } else if (loader == 'fabric') {
-      var allArguments = ["remapJar"].concat(additionalArgs);
-      if (verbose) allArguments.push('--debug');
+    switch (loader) {
+      case 'fabric':
+        var allArguments = ["remapJar"].concat(additionalArgs);
+        if (verbose) allArguments.push('--debug');
+  
+        result = gradleW.performTask(allArguments);
+      case 'quilt':
+        var allArguments = ["remapJar"].concat(additionalArgs);
+        if (verbose) allArguments.push('--debug');
+  
+        result = gradleW.performTask(allArguments);
 
-      result = gradleW.performTask(allArguments);
-    } else {
-      CLI.print('[WARNING] Unknown loader (${loader}) for make task.');
+      case 'forge':
+        var allArguments = ['reobfSourcesJar'].concat(additionalArgs);
+        if (verbose) allArguments.push('--debug');
+  
+        result = gradleW.performTask(allArguments);
+      case 'neoforge':
+        var allArguments = ['reobfSourcesJar'].concat(additionalArgs);
+        if (verbose) allArguments.push('--debug');
+  
+        result = gradleW.performTask(allArguments);
+      default:
+        CLI.print('[WARNING] Unknown loader (${loader}) for make task.');
     }
 
     // Move back to the parent of the workding dir.

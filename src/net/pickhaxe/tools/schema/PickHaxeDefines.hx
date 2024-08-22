@@ -33,6 +33,10 @@ typedef PickHaxeDefinesRaw =
 typedef PickHaxeDefinesPickHaxe =
 {
   version:String,
+  project:
+  {
+    xmlPath:String,
+  },
   haxe:
   {
     libraries:Array<HaxelibEntry>, version:String
@@ -41,9 +45,8 @@ typedef PickHaxeDefinesPickHaxe =
   {
     version:String, plugins:
     {
-      forgegradle:String,
-      fabricloom:String
-    }, maven: PickHaxeDefinesMaven,
+      forgegradle:String, fabricloom:String
+    }, maven:PickHaxeDefinesMaven,
   },
   java:
   {
@@ -51,8 +54,7 @@ typedef PickHaxeDefinesPickHaxe =
   },
   minecraft:
   {
-    release:Bool, snapshot:Bool, old_beta:Bool, old_alpha:Bool,
-    version:String, resourcePackFormat:Int, dataPackFormat:Int,
+    release:Bool, snapshot:Bool, old_beta:Bool, old_alpha:Bool, version:String, resourcePackFormat:Int, dataPackFormat:Int,
   },
   loader:
   {
@@ -61,7 +63,7 @@ typedef PickHaxeDefinesPickHaxe =
       apiVersion:String, loaderVersion:String,
     }, forge:
     {
-      apiVersion:String, fmlVersion:String,
+      apiVersion:String, fmlVersion:String, disableObfuscation:Bool
     }
   },
   mappings:
@@ -80,7 +82,7 @@ typedef PickHaxeDefinesPickHaxe =
   mod:PickHaxeDefinesMod,
 }
 
-typedef PickHaxeDefinesMaven = 
+typedef PickHaxeDefinesMaven =
 {
   urls:String,
   implementation:String,
@@ -158,6 +160,8 @@ abstract PickHaxeDefines(PickHaxeDefinesRaw) from PickHaxeDefinesRaw to PickHaxe
   {
     var result:Array<String> = [];
 
+    result.append(Builder.DEFINE, 'pickhaxe.project.xmlpath=${this.pickhaxe.project.xmlPath}');
+
     // result.append(DEFINE, 'pickhaxe.version=' + defines.pickhaxe.version); // Use `pickhaxe` instead.
     // result.append(DEFINE, 'pickhaxe.haxe.version=${defines.pickhaxe.gradle.version}'); // Use `haxe` instead.
     result.append(Builder.DEFINE, 'pickhaxe.gradle.version=${this.pickhaxe.gradle.version}');
@@ -192,8 +196,24 @@ abstract PickHaxeDefines(PickHaxeDefinesRaw) from PickHaxeDefinesRaw to PickHaxe
 
     // Special defines.
 
-    // Add a define for the current loader (#if fabric, #if forge)
-    result.append(Builder.DEFINE, this.pickhaxe.loader.current);
+    // Add a define for the current loader (#if fabric, #if forge, etc.)
+    switch (this.pickhaxe.loader.current)
+    {
+      case 'fabric':
+        result.append(Builder.DEFINE, 'fabric');
+        result.append(Builder.DEFINE, 'fabriclike'); // Since I'm too lazy to put #if (fabric || quilt) everywhere
+      case 'quilt':
+        result.append(Builder.DEFINE, 'quilt');
+        result.append(Builder.DEFINE, 'fabriclike'); // Since I'm too lazy to put #if (fabric || quilt) everywhere
+      case 'forge':
+        result.append(Builder.DEFINE, 'forge');
+        result.append(Builder.DEFINE, 'forgelike'); // Since I'm too lazy to put #if (forge || neoforge) everywhere
+      case 'neoforge':
+        result.append(Builder.DEFINE, 'neoforge');
+        result.append(Builder.DEFINE, 'forgelike'); // Since I'm too lazy to put #if (forge || neoforge) everywhere
+      default:
+        result.append(Builder.DEFINE, this.pickhaxe.loader.current);
+    }
 
     // Add a define for the current Minecraft version (#if minecraft == 1.19.3, #if minecraft >= 1.12.2)
     result.append(Builder.DEFINE, 'minecraft=${this.pickhaxe.minecraft.version}');
@@ -222,24 +242,16 @@ abstract PickHaxeDefines(PickHaxeDefinesRaw) from PickHaxeDefinesRaw to PickHaxe
       '-Dpickhaxe.gradle.maven.runtime=${this.pickhaxe.gradle.maven.runtime}',
       '-Dpickhaxe.gradle.maven.modRuntime=${this.pickhaxe.gradle.maven.modRuntime}',
       '-Dpickhaxe.gradle.maven.runtimeOnly=${this.pickhaxe.gradle.maven.runtimeOnly}',
-      if (this.pickhaxe.loader.fabric.apiVersion != null) '-Dpickhaxe.loader.fabric.apiVersion=${this.pickhaxe.loader.fabric.apiVersion}'
-      else
-        null,
-      if (this.pickhaxe.loader.fabric.loaderVersion != null) '-Dpickhaxe.loader.fabric.loaderVersion=${this.pickhaxe.loader.fabric.loaderVersion}'
-      else
-        null,
-      if (this.pickhaxe.loader.forge.apiVersion != null) '-Dpickhaxe.loader.forge.apiVersion=${this.pickhaxe.loader.forge.apiVersion}'
-      else
-        null,
+      if (this.pickhaxe.loader.fabric.apiVersion != null) '-Dpickhaxe.loader.fabric.apiVersion=${this.pickhaxe.loader.fabric.apiVersion}' else null,
+      if (this.pickhaxe.loader.fabric.loaderVersion != null) '-Dpickhaxe.loader.fabric.loaderVersion=${this.pickhaxe.loader.fabric.loaderVersion}' else null,
+      if (this.pickhaxe.loader.forge.apiVersion != null) '-Dpickhaxe.loader.forge.apiVersion=${this.pickhaxe.loader.forge.apiVersion}' else null,
+      '-Dpickhaxe.loader.forge.disableObfuscation=${this.pickhaxe.loader.forge.disableObfuscation}',
       '-Dpickhaxe.mappings.current=${this.pickhaxe.mappings.current}',
       '-Dpickhaxe.mappings.yarn.version=${this.pickhaxe.mappings.yarn.version}',
       '-Dpickhaxe.mappings.parchment.maven=${this.pickhaxe.mappings.parchment.maven}',
       '-Dpickhaxe.mappings.parchment.version=${this.pickhaxe.mappings.parchment.version}',
-      if (this.pickhaxe.mappings.intermediary.maven != null) '-Dpickhaxe.mappings.intermediary.maven=${this.pickhaxe.mappings.intermediary.maven}'
-      else
-        null,
-      if (this.pickhaxe.mappings.intermediary.version != null) '-Dpickhaxe.mappings.intermediary.version=${this.pickhaxe.mappings.intermediary.version}'
-      else
+      if (this.pickhaxe.mappings.intermediary.maven != null) '-Dpickhaxe.mappings.intermediary.maven=${this.pickhaxe.mappings.intermediary.maven}' else null,
+      if (this.pickhaxe.mappings.intermediary.version != null) '-Dpickhaxe.mappings.intermediary.version=${this.pickhaxe.mappings.intermediary.version}' else
         null,
       '-Dpickhaxe.mod.id=${this.pickhaxe.mod.id}',
       '-Dpickhaxe.mod.name=${this.pickhaxe.mod.name}',
@@ -311,21 +323,25 @@ class Builder
   {
     params = validateBuildParams(params);
 
-    CLI.print("Reading project file...");
+    var projectFilePath:haxe.io.Path = IO.workingDir().joinPaths('project.xml');
 
-    var projectFile:PickHaxeProject = net.pickhaxe.tools.util.XML.readProjectFile(IO.workingDir().joinPaths('project.xml'));
+    CLI.print('Reading project file (${projectFilePath})...');
+
+    var projectFile:PickHaxeProject = net.pickhaxe.tools.util.XML.readProjectFile(projectFilePath);
 
     if (projectFile == null)
     {
       throw new NoProjectXMLException();
     }
 
-    CLI.print("Read project file.");
+    CLI.print('Read project file successfully.');
 
     return switch (params.loader)
     {
-      case 'fabric': buildFabric(projectFile, params);
-      case 'forge': buildForge(projectFile, params);
+      case 'fabric': buildFabric(projectFilePath.toString(), projectFile, params);
+      case 'quilt': buildQuilt(projectFilePath.toString(), projectFile, params);
+      case 'forge': buildForge(projectFilePath.toString(), projectFile, params);
+      case 'neoforge': buildNeoForge(projectFilePath.toString(), projectFile, params);
       default: throw 'Unknown loader: ' + params.loader;
     }
   }
@@ -347,12 +363,15 @@ class Builder
     return params;
   }
 
-  static function buildMaven(projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefinesMaven {
+  static function buildMaven(projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefinesMaven
+  {
     var buildDeps:Array<PickHaxeProject.ModBuildDependency> = projectFile.buildDependencies.filter(function(v:PickHaxeProject.ModBuildDependency):Bool {
-      for (loaderTag in v.loader) {
+      for (loaderTag in v.loader)
+      {
         if (!PickHaxeDefines.satisfiesLoaderFilter(params.loader, loaderTag)) return false;
       }
-      for (minecraftTag in v.minecraft) {
+      for (minecraftTag in v.minecraft)
+      {
         if (!PickHaxeDefines.satisfiesMinecraftFilter(params.mcVersion, minecraftTag)) return false;
       }
       return true;
@@ -383,7 +402,6 @@ class Builder
       }))
         '${buildDep.include ? '`' : ''}${buildDep.group}:${buildDep.name}:${buildDep.version}'
     ].join('~');
-
 
     var mavenModCompile:String = [
       for (buildDep in buildDeps.filter(function(v:PickHaxeProject.ModBuildDependency):Bool {
@@ -426,7 +444,7 @@ class Builder
     };
   }
 
-  static function buildFabric(projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
+  static function buildFabric(projectFilePath:String, projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
   {
     var versionMetadata:PickHaxeVersionMetadata = PickHaxeVersionMetadataReader.read(params.mcVersion, MCVersion.getVersionType(params.mcVersion));
 
@@ -560,6 +578,11 @@ class Builder
           {
             version: Constants.LIBRARY_VERSION,
 
+            project:
+              {
+                xmlPath: projectFilePath,
+              },
+
             haxe:
               {
                 libraries: projectFile.haxelibs,
@@ -607,6 +630,7 @@ class Builder
                   {
                     apiVersion: null,
                     fmlVersion: null,
+                    disableObfuscation: false
                   },
               },
 
@@ -666,7 +690,16 @@ class Builder
       });
   }
 
-  static function buildForge(projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
+  static function buildQuilt(projectFilePath:String, projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
+  {
+    var result = buildFabric(projectFilePath, projectFile, params);
+
+    result.pickhaxe.loader.current = 'quilt';
+
+    return result;
+  }
+
+  static function buildForge(projectFilePath:String, projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
   {
     var versionMetadata:PickHaxeVersionMetadata = PickHaxeVersionMetadataReader.read(params.mcVersion, MCVersion.getVersionType(params.mcVersion));
     var versionMappings:PickHaxeVersionMappings = PickHaxeVersionMappingsReader.read(params.mcVersion, MCVersion.getVersionType(params.mcVersion));
@@ -742,6 +775,11 @@ class Builder
           {
             version: Constants.LIBRARY_VERSION,
 
+            project:
+              {
+                xmlPath: projectFilePath,
+              },
+
             haxe:
               {
                 libraries: projectFile.haxelibs,
@@ -781,6 +819,7 @@ class Builder
                 forge:
                   {
                     apiVersion: versionMetadata.forgeVersion,
+                    disableObfuscation: versionMetadata.forgeDisableObfuscation,
                     fmlVersion: fmlVersion,
                   },
                 fabric:
@@ -843,5 +882,14 @@ class Builder
               },
           }
       });
+  }
+
+  static function buildNeoForge(projectFilePath:String, projectFile:PickHaxeProject, params:BuildParams):PickHaxeDefines
+  {
+    var result = buildForge(projectFilePath, projectFile, params);
+
+    result.pickhaxe.loader.current = 'neoforge';
+
+    return result;
   }
 }

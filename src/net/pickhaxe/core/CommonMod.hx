@@ -5,7 +5,18 @@ import net.fabricmc.api.ModInitializer;
 #elseif forge
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+#if minecraft_gteq_1_19
+// GatherDataEvent moved to data.event in 1.19+
+import net.minecraftforge.data.event.GatherDataEvent;
+#else
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 #end
+#end
+
+import net.minecraft.data.DataGenerator as VanillaDataGenerator;
+import net.minecraft.data.DataGenerator.DataGenerator_PackGenerator as VanillaPackGenerator;
+import net.pickhaxe.datagen.DataGenerator as PickHaxeDataGenerator;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Represents the core mod class, and the entry point for our mod.
@@ -194,8 +205,30 @@ class CommonMod #if fabric implements ModInitializer #end
   @:strict(net.minecraftforge.eventbus.api.SubscribeEvent())
   public function forge_onInitialize(event:net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent):Void
   {
-    net.pickhaxe.core.PickHaxe.logDebug('CommonMod received FMLCommonSetupEvent.');
+    net.pickhaxe.core.PickHaxe.logDebug('CommonMod received GatherDataEvent.');
     onModInitialize();
+  }
+
+  @:strict(net.minecraftforge.eventbus.api.SubscribeEvent())
+  public function forge_onGatherData(event:GatherDataEvent):Void
+  {
+    net.pickhaxe.core.PickHaxe.logInfo('CommonMod received GatherDataEvent.');
+
+    forge_onDataGen(event);
+  }
+
+  // private static final _MOD_NAME:String = net.pickhaxe.macro.PickHaxeProjectMacro.fetchModName();
+
+  private function forge_onDataGen(event:GatherDataEvent):Void {
+    // var modDescription:String = net.pickhaxe.macro.PickHaxeProjectMacro.fetchModDescription();
+    // net.pickhaxe.core.PickHaxe.logInfo('Performing PickHaxe data generation for mod (${net.pickhaxe.macro.PickHaxeProjectMacro.fetchModName()})...');
+
+    var testString = net.pickhaxe.macro.PickHaxeProjectMacro.test();
+
+    var pickHaxeDataGen:PickHaxeDataGenerator = new PickHaxeDataGenerator(
+      event.getModContainer().getModId()
+    );
+    pickHaxeDataGen.onInitializeDataGenerator(event);
   }
   #end
 

@@ -207,11 +207,22 @@ class DataGen implements ICommand
 
     var result:Bool = false;
 
-    // Okay, trust me this one is neccessary.
-    // We don't put anything in here, we just need it to exist.
-    IO.makeDir(IO.workingDir().joinPaths('build/resources/main/'));
+    switch (loader) {
+      case 'fabric':
+        // Okay, trust me this one is neccessary.
+        // We don't put anything in here, we just need it to exist.
+        IO.makeDir(IO.workingDir().joinPaths('build/resources/main/'));
 
-    result = gradleW.performTask(["runDatagen"].concat(additionalArgs));
+        var allArguments = ["runDatagen"].concat(additionalArgs);
+        // if (verbose) allArguments.push('--debug');
+  
+        result = gradleW.performTask(allArguments);
+      case 'forge':
+        var allArguments = ["runData"].concat(additionalArgs);
+        // if (verbose) allArguments.push('--debug');
+
+        result = gradleW.performTask(allArguments);
+    }
 
     // Move back to the parent of the workding dir.
     Sys.setCwd(IO.workingDir().dir);

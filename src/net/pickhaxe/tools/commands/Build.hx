@@ -1,5 +1,7 @@
 package net.pickhaxe.tools.commands;
 
+import net.pickhaxe.tools.util.access.ForgeAccessTransformer;
+import net.pickhaxe.tools.util.access.FabricAccessWidener;
 import net.pickhaxe.tools.process.Robocopy;
 import haxe.io.Path;
 import net.pickhaxe.api.FabricMeta;
@@ -330,9 +332,18 @@ class Build implements ICommand
         mcVersion = FabricMeta.fetchLatestStableGameVersion();
         CLI.print('No Minecraft version specified, using latest stable version: ${mcVersion}');
       }
-      else
+      else if (loader == "quilt") {
+        // Quilt
+        mcVersion = FabricMeta.fetchLatestStableGameVersion();
+        CLI.print('No Minecraft version specified, using latest stable version: ${mcVersion}');
+      }
+      else if (loader == "forge")
       {
         // Forge
+        mcVersion = Constants.DEFAULT_MINECRAFT_VERSION;
+        CLI.print('No Minecraft version specified, using default: ${mcVersion}');
+      } else if (loader == "neoforge") {
+        // NeoForge
         mcVersion = Constants.DEFAULT_MINECRAFT_VERSION;
         CLI.print('No Minecraft version specified, using default: ${mcVersion}');
       }
@@ -413,7 +424,7 @@ class Build implements ICommand
         throw new GradleException('Failed to copy dependencies.');
       }
 
-      if (loader == "fabric")
+      if (loader == "fabric" || loader == "quilt")
       {
         CLI.print('Generating sources...');
         var genSourceSuccess:Bool = gradleWProcess.genSources(!attachGradle); // Generates mapped sources for Minecraft.
@@ -468,19 +479,36 @@ class Build implements ICommand
           }
         }
       }
-      else
+      else if (loader == "forge")
       {
-        // The copyDependencies task already generates and moves the sources in Forge.
-        
-        // We just need to move `minecraft.jar`.
-
-        CLI.print('Moving Forge sources...');
-
-        return true;
+        return generateSources_forge(defines);
+      }
+      else if (loader == "neoforge")
+      {
+        return generateSources_neoforge(defines);
       }
     }
 
     // Cleanup after Gradle.
+    return true;
+  }
+
+
+  function generateSources_forge(defines:PickHaxeDefines):Bool {
+    // The copyDependencies task already generates and moves the sources in Forge.
+    // We just need to move `minecraft.jar`.
+    
+    CLI.print('Moving Forge sources...');
+
+    return true;
+  }
+
+  function generateSources_neoforge(defines:PickHaxeDefines):Bool {
+    // The copyDependencies task already generates and moves the sources in NeoForge.
+    // We just need to move `minecraft.jar`.
+
+    CLI.print('Moving NeoForge sources...');
+
     return true;
   }
 
@@ -494,21 +522,35 @@ class Build implements ICommand
     switch (loader)
     {
       case 'fabric':
-        CLI.print('Creating meta-inf folder for fabric...');
+        CLI.print('Creating META-INF folder for Fabric...');
         IO.makeDir(resourcePath.joinPaths('META-INF'));
 
         Template.writeFabricManifest(defines, resourcePath.joinPaths('fabric.mod.json'));
         Template.writeFabricMixins(defines, resourcePath);
-        Template.writeFabricAccessWidener(defines, resourcePath.joinPaths('META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
+        FabricAccessWidener.writeFabricAccessWidener(defines, resourcePath.joinPaths('META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
+      case 'quilt':
+        CLI.print('Creating META-INF folder for Quilt...');
+        IO.makeDir(resourcePath.joinPaths('META-INF'));
+
+        Template.writeFabricManifest(defines, resourcePath.joinPaths('quilt.mod.json'));
+        Template.writeFabricMixins(defines, resourcePath);
+        FabricAccessWidener.writeFabricAccessWidener(defines, resourcePath.joinPaths('META-INF/${defines.pickhaxe.mod.id}.accesswidener'));
       case 'forge':
-        CLI.print('Creating meta-inf folder for forge...');
+        CLI.print('Creating META-INF folder for Forge...');
         IO.makeDir(resourcePath.joinPaths('META-INF'));
 
         Template.writeForgePackFile(defines, resourcePath.joinPaths('pack.mcmeta'));
         Template.writeForgeManifest(defines, resourcePath.joinPaths('META-INF/mods.toml'));
-        Template.writeForgeAccessTransformer(defines, resourcePath.joinPaths('META-INF/accesstransformer.cfg'));
+        ForgeAccessTransformer.writeForgeAccessTransformer(defines, resourcePath.joinPaths('META-INF/accesstransformer.cfg'));
+      case 'neoforge':
+        CLI.print('Creating META-INF folder for NeoForge...');
+        IO.makeDir(resourcePath.joinPaths('META-INF'));
+
+        Template.writeForgePackFile(defines, resourcePath.joinPaths('pack.mcmeta'));
+        Template.writeForgeManifest(defines, resourcePath.joinPaths('META-INF/mods.toml'));
+        ForgeAccessTransformer.writeForgeAccessTransformer(defines, resourcePath.joinPaths('META-INF/accesstransformer.cfg'));
       default:
-        CLI.print('WARNING: Unknown loader Forge...');
+        CLI.print('WARNING: Unknown loader ${loader}...');
     }
   }
 
@@ -521,6 +563,9 @@ class Build implements ICommand
     CLI.print('Performing Haxe build...');
 
     var args:Array<String> = [];
+
+    // Enable pretty message reporting.
+    args = args.concat(['-D', 'message.reporting=pretty']);
 
     // Include the user's class path.
     args = args.concat(['--class-path', defines.pickhaxe.mod.classPath]);
